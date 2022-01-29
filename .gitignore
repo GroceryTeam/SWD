@@ -55,6 +55,7 @@ nunit-*.xml
 [Rr]eleasePS/
 dlldata.c
 
+
 # Benchmark Results
 BenchmarkDotNet.Artifacts/
 
@@ -361,3 +362,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# appsetting KuanK
+SWD_GSM/appsettings.json
