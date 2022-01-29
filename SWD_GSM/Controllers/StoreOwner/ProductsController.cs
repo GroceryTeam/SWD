@@ -71,7 +71,10 @@ namespace SWD_GSM.Controllers.StoreOwner
         {
             try
             {
-                if (model.ConversionRate <= 0 || model.BuyPrice < 0 || model.SellPrice < 0 || model.LowerThreshold < 0)
+                if (model.ConversionRate <= 0 
+                    || model.BuyPrice < 0 
+                    || model.SellPrice < 0 
+                    || model.LowerThreshold < 0)
                 {
                     return BadRequest();
                 }

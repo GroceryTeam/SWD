@@ -1,6 +1,8 @@
 ﻿using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
+using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels;
+using BusinessLayer.ResponseModels.ErrorModels.StoreOwner;
 using BusinessLayer.ResponseModels.ViewModels;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using System;
@@ -14,5 +16,6 @@ namespace BusinessLayer.Interfaces.SystemAdmin
     public interface IUserService
     {
         Task<StoreOwnerViewModel> Login(LoginModel login);
+        Task<SignupErrorModel> Signup(StoreOwnerCreateModel model);
     }
 }
