@@ -5,6 +5,7 @@ using System.Collections.Generic;
 
 namespace DataAcessLayer.Models
 {
+ //??   
     public partial class Brand
     {
         public enum BrandStatus
