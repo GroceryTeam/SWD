@@ -1,4 +1,6 @@
-﻿using BusinessLayer.Interfaces.Cashier;
+﻿using BusinessLayer.Interfaces;
+using BusinessLayer.Interfaces.Cashier;
+using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
@@ -6,25 +8,24 @@ using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SWD_GSM.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SWD_GSM.Controllers.Cashier
+namespace SWD_GSM.Controllers.StoreOwner
 {
-    [Route(CashierRoute)]
+    [Route(StoreOwnerRoute)]
     [ApiController]
     [ApiExplorerSettings(GroupName = Role)]
     [Authorize(Roles = Role)]
-    public class ReceiptController : BaseCashierController
+    public class DailyRevenuesController : BaseStoreOwnerController
     {
-        private readonly IReceiptService _receiptService;
+        private readonly IDailyRevenueService _dailyRevenuesService;
 
-        public ReceiptController(IReceiptService receiptService)
+        public DailyRevenuesController(IDailyRevenueService dailyRevenuesService)
         {
-            _receiptService = receiptService;
+            _dailyRevenuesService = dailyRevenuesService;
         }
         [NonAction]
     

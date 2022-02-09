@@ -1,13 +1,12 @@
 ﻿using BusinessLayer.Interfaces;
-using BusinessLayer.Interfaces.Cashier;
 using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
+using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SWD_GSM.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,28 +18,29 @@ namespace SWD_GSM.Controllers.StoreOwner
     [ApiController]
     [ApiExplorerSettings(GroupName = Role)]
     [Authorize(Roles = Role)]
-    public class DailyRevenueController : BaseStoreOwnerController
+    public class BillsController : BaseStoreOwnerController
     {
-        private readonly IDailyRevenueService _dailyRevenueService;
+        private readonly IBillService _billService;
 
-        public DailyRevenueController(IDailyRevenueService dailyRevenueService)
+        public BillsController(IBillService billService)
         {
-            _dailyRevenueService = dailyRevenueService;
+            _billService = billService;
         }
-        [NonAction]
     
-
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int StoreId, [FromQuery] PagingRequestModel paging)
         {
-            return null;
+            var bills = await _billService.GetBills(StoreId, paging);
+            return Ok(bills);
         }
+
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int BrandId, int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            return null;
+            var bill = await _billService.GetBillById(id);
+            return Ok(bill);
         }
-       
+
     }
 }
 

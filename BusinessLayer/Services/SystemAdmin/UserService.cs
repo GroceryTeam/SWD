@@ -70,6 +70,24 @@ namespace BusinessLayer.Services.SystemAdmin
             };
             return productResult;
         }
+        public async Task<UserViewModel> GetUserById(int userId)
+        {
+            var user = await _unitOfWork.UserRepository
+              .Get().Where(x => x.Id == userId)
+              .Select
+                (x => new UserViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Username = x.Username,
+                    Email = x.Email,
+                    Phone = x.Phone,
+                    Status = (int)x.Status
+                }
+                ).FirstOrDefaultAsync();
+            return user;
+        }
+
         public async Task<StoreOwnerViewModel> Login(LoginModel login)
         {
             var cashier = await _unitOfWork.UserRepository
@@ -121,6 +139,27 @@ namespace BusinessLayer.Services.SystemAdmin
             await _unitOfWork.UserRepository.Add(newUser);
             await _unitOfWork.SaveChangesAsync();
             return null;
+        }
+
+        public async Task<bool> DisableUser(int userId)
+        {
+            var user = await  _unitOfWork.UserRepository.Get()
+                .Where(x => x.Id.Equals(userId))
+                .FirstOrDefaultAsync();
+            user.Status = UserStatus.Disabled;
+            _unitOfWork.UserRepository.Update(user);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
+        }
+        public async Task<bool> EnableUser(int userId)
+        {
+            var user = await _unitOfWork.UserRepository.Get()
+                .Where(x => x.Id.Equals(userId))
+                .FirstOrDefaultAsync();
+            user.Status = UserStatus.Enabled;
+            _unitOfWork.UserRepository.Update(user);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
         }
     }
 }

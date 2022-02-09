@@ -7,7 +7,6 @@ using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SWD_GSM.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +19,11 @@ namespace SWD_GSM.Controllers.SystemAdmin
     [ApiExplorerSettings(GroupName = Role)]
     [Authorize(Roles = Role)]
 
-    public class StoreController : BaseSystemAdminController
+    public class StoresController : BaseSystemAdminController
     {
         private readonly IStoreService _storeService;
 
-        public StoreController(IStoreService storeService)
+        public StoresController(IStoreService storeService)
         {
             _storeService = storeService;
         }

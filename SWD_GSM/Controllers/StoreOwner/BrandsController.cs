@@ -7,7 +7,6 @@ using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SWD_GSM.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,14 +18,15 @@ namespace SWD_GSM.Controllers.StoreOwner
     [ApiController]
     [ApiExplorerSettings(GroupName = Role)]
     [Authorize(Roles = Role)]
-    public class StockController : BaseStoreOwnerController
+    public class BrandsController : BaseStoreOwnerController
     {
-        private readonly IStoreService _storeService;
+        private readonly IBrandService _brandService;
 
-        public StockController(IStoreService storeService)
+        public BrandsController(IBrandService brandService)
         {
-            _storeService = storeService;
+            _brandService = brandService;
         }
+
         [HttpGet]
         public async Task<IActionResult> Get(int BrandId, [FromQuery] ProductSearchModel searchModel, [FromQuery] PagingRequestModel paging)
         {

@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces;
+﻿using BusinessLayer.Constants;
+using BusinessLayer.Interfaces;
 using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
@@ -7,7 +8,6 @@ using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SWD_GSM.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,11 +20,11 @@ namespace SWD_GSM.Controllers.StoreOwner
     [ApiExplorerSettings(GroupName = Role)]
     [Authorize(Roles = Role)]
 
-    public class EventController : BaseStoreOwnerController
+    public class EventsController : BaseStoreOwnerController
     {
         private readonly IEventService _eventService;
 
-        public EventController(IEventService eventService)
+        public EventsController(IEventService eventService)
         {
             _eventService = eventService;
         }

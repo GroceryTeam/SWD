@@ -1,13 +1,12 @@
 ﻿using BusinessLayer.Interfaces;
+using BusinessLayer.Interfaces.Cashier;
 using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
-using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SWD_GSM.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,29 +18,28 @@ namespace SWD_GSM.Controllers.StoreOwner
     [ApiController]
     [ApiExplorerSettings(GroupName = Role)]
     [Authorize(Roles = Role)]
-    public class BillController : BaseStoreOwnerController
+    public class ReceiptsController : BaseStoreOwnerController
     {
-        private readonly IBillService _billService;
+        private readonly BusinessLayer.Interfaces.StoreOwner.IReceiptService _receiptService;
 
-        public BillController(IBillService billService)
+        public ReceiptsController(BusinessLayer.Interfaces.StoreOwner.IReceiptService receiptService)
         {
-            _billService = billService;
+            _receiptService = receiptService;
         }
+        [NonAction]
     
+
         [HttpGet]
-        public async Task<IActionResult> Get(int StoreId, [FromQuery] PagingRequestModel paging)
+        public async Task<IActionResult> Get()
         {
-            var bills = await _billService.GetBills(StoreId, paging);
-            return Ok(bills);
+            return null;
         }
-
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int id)
+        public async Task<IActionResult> GetById(int BrandId, int id)
         {
-            var bill = await _billService.GetBillById(id);
-            return Ok(bill);
+            return null;
         }
-
+       
     }
 }
 

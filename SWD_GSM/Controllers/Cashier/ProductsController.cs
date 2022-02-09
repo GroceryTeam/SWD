@@ -3,7 +3,6 @@ using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SWD_GSM.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +22,6 @@ namespace SWD_GSM.Controllers.Cashier
         {
            _productService = productService;
         }
-        [NonAction]
-    
 
         [HttpGet]
         public async Task<IActionResult> Get(int BrandId, [FromQuery] ProductSearchModel searchModel, [FromQuery] PagingRequestModel paging)

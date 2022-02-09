@@ -11,7 +11,6 @@ using BusinessLayer.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SWD_GSM.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,17 +22,28 @@ namespace SWD_GSM.Controllers.SystemAdmin
     [ApiController]
     [ApiExplorerSettings(GroupName = Role)]
     [Authorize(Roles = Role)]
-
-
-    public class UserController : BaseSystemAdminController
+    public class UsersController : BaseSystemAdminController
     {
         private readonly IUserService _userService;
 
-        public UserController(IUserService userService)
+        public UsersController(IUserService userService)
         {
             _userService = userService;
         }
-
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var paging = PagingUtil.getDefaultPaging();
+                var user = await _userService.GetUserById(id);
+                return Ok(user);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
         [HttpGet]
         public async Task<IActionResult> Get([FromQuery] UserSearchModel searchModel, [FromQuery] PagingRequestModel paging)
         {
@@ -54,54 +64,33 @@ namespace SWD_GSM.Controllers.SystemAdmin
             }
         }
 
-        [HttpPost]
-        [AllowAnonymous]
-        public async Task<IActionResult> Signup([FromBody] StoreOwnerCreateModel model)
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                if (model.Username.Trim().Length == 0 
-                    || model.Password.Trim().Length == 0
-                    || model.Phone.Trim().Length == 0
-                    || model.Email.Trim().Length == 0)
-                {
-                    return BadRequest();
-                }
-                var error = await _userService.Signup(model);
-                if (error!=null)
-                {
-                    return Conflict(error);
-                }
+                await _userService.DisableUser(id);
+                return NoContent();
             }
             catch (Exception)
             {
-                return BadRequest();
+                return NotFound();
             }
-            return Ok();
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int BrandId, int id)
+        [HttpPut("enable-user/{id}")]
+        public async Task<IActionResult> EnableUser(int id)
         {
-            return null;
+            try
+            {
+                await _userService.EnableUser(id);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
         }
 
-
-        //[NonAction]
-        //private PagingRequestModel getDefaultPaging()
-        //{
-        //    return new PagingRequestModel
-        //    {
-        //        PageIndex = PageConstant.DefaultPageIndex,
-        //        PageSize = PageConstant.DefaultPageSize
-        //    };
-        //}
-        //[NonAction]
-        //private PagingRequestModel checkDefaultPaging(PagingRequestModel paging)
-        //{
-        //    if (paging.PageIndex <= 0) paging.PageIndex = PageConstant.DefaultPageIndex;
-        //    if (paging.PageSize <= 0) paging.PageSize = PageConstant.DefaultPageSize;
-        //    return paging;
-        //}
     }
 }
 

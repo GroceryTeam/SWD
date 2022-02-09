@@ -1,5 +1,4 @@
 ﻿using BusinessLayer.Interfaces;
-using BusinessLayer.Interfaces.Cashier;
 using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
@@ -8,7 +7,6 @@ using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using SWD_GSM.Constants;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,17 +18,15 @@ namespace SWD_GSM.Controllers.StoreOwner
     [ApiController]
     [ApiExplorerSettings(GroupName = Role)]
     [Authorize(Roles = Role)]
-    public class CashierController : BaseStoreOwnerController
+
+    public class StoresController : BaseStoreOwnerController
     {
-        private readonly ICashierService _cashierService;
+        private readonly IStockService _stockService;
 
-        public CashierController(ICashierService cashierService)
+        public StoresController(IStockService stockService)
         {
-            _cashierService = cashierService;
+            _stockService = stockService;
         }
-        [NonAction]
-    
-
         [HttpGet]
         public async Task<IActionResult> Get(int BrandId, [FromQuery] ProductSearchModel searchModel, [FromQuery] PagingRequestModel paging)
         {
@@ -41,7 +37,6 @@ namespace SWD_GSM.Controllers.StoreOwner
         {
             return null;
         }
-       
     }
 }
 

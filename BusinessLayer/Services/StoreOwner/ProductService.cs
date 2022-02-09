@@ -107,7 +107,6 @@ namespace BusinessLayer.Services.StoreOwner
                 ).FirstOrDefaultAsync();
             return product;
         }
-
         public async Task<int> AddProduct(int brandId, ProductCreateModel model)
         {
             var product = new Product()
