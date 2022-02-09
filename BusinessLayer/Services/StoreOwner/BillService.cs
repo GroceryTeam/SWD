@@ -3,6 +3,7 @@ using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.ResponseModels.ViewModels;
+using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.Services;
 using DataAcessLayer.Interfaces;
 using DataAcessLayer.Models;
@@ -18,8 +19,54 @@ namespace BusinessLayer.Services.StoreOwner
 {
     public class BillService : BaseService, IBillService
     {
-        public BillService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public BillService(IUnitOfWork unitOfWork) : base(unitOfWork){}
+
+        public async Task<BasePagingViewModel<BillsViewModel>> GetBills(int storeId, PagingRequestModel paging)
         {
+            var billData = await _unitOfWork.BillRepository.Get()
+                                    .Where(bill => bill.StoreId == storeId)
+                                    .Select(bill => new BillsViewModel()
+                                    {
+                                        Id = bill.Id,
+                                        CashierId = bill.CashierId,
+                                        StoreId = bill.StoreId,
+                                        DateCreated = bill.DateCreated,
+                                        TotalPrice = bill.TotalPrice
+                                    }).ToListAsync();
+
+            int totalCount = billData.Count();
+
+            billData = billData.Skip((paging.PageIndex - 1) * paging.PageSize)
+                                .Take(paging.PageSize).ToList();
+
+            var billResult = new BasePagingViewModel<BillsViewModel>()
+            {
+                PageIndex = paging.PageIndex,
+                PageSize = paging.PageSize,
+                TotalItem = totalCount,
+                Data = billData,
+                TotalPage = (int)Math.Ceiling((decimal)totalCount / (decimal)paging.PageSize),
+            };
+
+            return billResult;
+        }
+
+        public async Task<BillsViewModel> GetBillById(int billId)
+        {
+            var bill = await _unitOfWork.BillRepository.Get()
+                .Include(bill => bill.BillDetails)
+                .Include(bill => bill.Cashier)
+                .Select(bill => new BillsViewModel() { 
+                    Id = bill.Id,
+                    StoreId = bill.StoreId,
+                    CashierId = bill.CashierId,
+                    DateCreated = bill.DateCreated,
+                    TotalPrice = bill.TotalPrice,
+                    BillDetails = bill.BillDetails,
+                    Cashier = bill.Cashier
+                })
+                .FirstOrDefaultAsync();
+            return bill;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using BusinessLayer.Interfaces;
-using BusinessLayer.Interfaces.Cashier;
+using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
@@ -27,20 +27,21 @@ namespace SWD_GSM.Controllers.StoreOwner
         {
             _billService = billService;
         }
-        [NonAction]
     
-
         [HttpGet]
-        public async Task<IActionResult> Get(int BrandId, [FromQuery] ProductSearchModel searchModel, [FromQuery] PagingRequestModel paging)
+        public async Task<IActionResult> Get(int storeId, [FromQuery] PagingRequestModel paging)
         {
-            return null;
+            var bills = await _billService.GetBills(storeId, paging);
+            return Ok(bills);
         }
+
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int BrandId, int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            return null;
+            var bill = await _billService.GetBillById(id);
+            return Ok(bill);
         }
-       
+
     }
 }
 
