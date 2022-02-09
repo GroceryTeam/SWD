@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLayer", "BusinessLa
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataAcessLayer", "DataAcessLayer\DataAcessLayer.csproj", "{D06E965B-ADD9-4C0F-9CB5-2EED27F39AAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utilities", "Utilities\Utilities.csproj", "{E081C831-2052-40E4-A93C-38CC80AF4184}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utilities", "Utilities\Utilities.csproj", "{E081C831-2052-40E4-A93C-38CC80AF4184}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

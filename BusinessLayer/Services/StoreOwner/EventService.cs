@@ -31,15 +31,31 @@ namespace BusinessLayer.Services.StoreOwner
 
         public async Task<EventsViewModel> GetEventById(int brandId, int eventId)
         {
+            // var eventDetails = await _unitOfWork.EventDetailRepository.Get().Where(x => x.EventId == eventId).ToListAsync();
             var _event = await _unitOfWork.EventRepository
-              .Get().Where(x => x.BrandId == brandId).Where(x => x.Id == eventId).Select
+              .Get()
+              .Where(x => x.BrandId == brandId)
+              .Where(x => x.Id == eventId)
+               .Include(x => x.EventDetails)
+              .Select
                 (x => new EventsViewModel()
                 {
                     Id = x.Id,
                     EventName = x.EventName,
-                    Status = (int)x.Status
-                }
-                ).FirstOrDefaultAsync();
+                    Status = (int)x.Status,
+                    EventDetails =
+                       (List<EventDetailViewModel>)x.EventDetails
+                    .Select
+                        (x => new EventDetailViewModel()
+                        {
+                            EventId = x.EventId,
+                            NewPrice = x.NewPrice,
+                            OriginalPrice = x.Product.SellPrice,
+                            ProductId = x.ProductId,
+                            ProductName = x.Product.Name
+                        }
+                        )
+                }).FirstOrDefaultAsync<EventsViewModel>();
             return _event;
         }
 
