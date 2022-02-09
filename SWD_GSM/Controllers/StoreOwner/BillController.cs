@@ -29,9 +29,9 @@ namespace SWD_GSM.Controllers.StoreOwner
         }
     
         [HttpGet]
-        public async Task<IActionResult> Get(int storeId, [FromQuery] PagingRequestModel paging)
+        public async Task<IActionResult> Get(int StoreId, [FromQuery] PagingRequestModel paging)
         {
-            var bills = await _billService.GetBills(storeId, paging);
+            var bills = await _billService.GetBills(StoreId, paging);
             return Ok(bills);
         }
 
