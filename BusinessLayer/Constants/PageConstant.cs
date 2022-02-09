@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace SWD_GSM.Constants
+namespace BusinessLayer.Constants
 {
     public static class PageConstant
     {

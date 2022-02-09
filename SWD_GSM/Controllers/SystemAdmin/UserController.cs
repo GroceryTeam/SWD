@@ -1,10 +1,13 @@
-﻿using BusinessLayer.Interfaces;
+﻿using BusinessLayer.Constants;
+using BusinessLayer.Interfaces;
 using BusinessLayer.Interfaces.SystemAdmin;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
+using BusinessLayer.RequestModels.SearchModels.SystemAdmin;
+using BusinessLayer.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,6 +33,27 @@ namespace SWD_GSM.Controllers.SystemAdmin
         {
             _userService = userService;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Get([FromQuery] UserSearchModel searchModel, [FromQuery] PagingRequestModel paging)
+        {
+            if (searchModel is null)
+            {
+                throw new ArgumentNullException(nameof(searchModel));
+            }
+
+            try
+            {
+                paging = PagingUtil.checkDefaultPaging(paging);
+                var users = await _userService.GetUserList(searchModel, paging);
+                return Ok(users);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpPost]
         [AllowAnonymous]
         public async Task<IActionResult> Signup([FromBody] StoreOwnerCreateModel model)
@@ -60,6 +84,24 @@ namespace SWD_GSM.Controllers.SystemAdmin
         {
             return null;
         }
+
+
+        //[NonAction]
+        //private PagingRequestModel getDefaultPaging()
+        //{
+        //    return new PagingRequestModel
+        //    {
+        //        PageIndex = PageConstant.DefaultPageIndex,
+        //        PageSize = PageConstant.DefaultPageSize
+        //    };
+        //}
+        //[NonAction]
+        //private PagingRequestModel checkDefaultPaging(PagingRequestModel paging)
+        //{
+        //    if (paging.PageIndex <= 0) paging.PageIndex = PageConstant.DefaultPageIndex;
+        //    if (paging.PageSize <= 0) paging.PageSize = PageConstant.DefaultPageSize;
+        //    return paging;
+        //}
     }
 }
 

@@ -12,8 +12,10 @@
   <ItemGroup>
     <Folder Include="RequestModels\CreateModels\SystemAdmin\" />
     <Folder Include="RequestModels\SearchModels\Cashier\" />
+    <Folder Include="RequestModels\SearchModels\SystemAdmin\" />
     <Folder Include="ResponseModels\ErrorModels\Cashier\" />
     <Folder Include="ResponseModels\ErrorModels\SystemAdmin\" />
+    <Folder Include="ResponseModels\ViewModels\SystemAdmin\" />
   </ItemGroup>
 
 </Project>

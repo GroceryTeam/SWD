@@ -5,10 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using static DataAcessLayer.Models.User;
 
-namespace BusinessLayer.RequestModels.SearchModels.StoreOwner
+namespace BusinessLayer.RequestModels.SearchModels.SystemAdmin
 {
+
     public class UserSearchModel
     {
+
         public string SearchTerm { get; set; }
         public UserStatus? Status { get; set; }
     }
