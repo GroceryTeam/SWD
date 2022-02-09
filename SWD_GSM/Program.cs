@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-//using Microsoft.Extensions.Logging.AzureAppServices;
+using Microsoft.Extensions.Logging.AzureAppServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,8 +23,8 @@ namespace SWD_GSM
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                });
-                /*.ConfigureLogging(logging =>
+                })
+                .ConfigureLogging(logging =>
                 logging.AddAzureWebAppDiagnostics())
                 .ConfigureServices(services =>
                 services.Configure<AzureFileLoggerOptions>(options =>
@@ -36,6 +36,6 @@ namespace SWD_GSM
                 .Configure<AzureBlobLoggerOptions>(options =>
                 {
                     options.BlobName = "log.txt";
-                }));*/
+                }));
     }
 }

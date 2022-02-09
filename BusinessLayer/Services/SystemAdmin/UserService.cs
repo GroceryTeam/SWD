@@ -91,7 +91,8 @@ namespace BusinessLayer.Services.SystemAdmin
         public async Task<StoreOwnerViewModel> Login(LoginModel login)
         {
             var cashier = await _unitOfWork.UserRepository
-                .Get().Where(x => x.Username == login.Username && x.Password == login.Password)
+                .Get()
+                .Where(x => x.Username == login.Username && x.Password == login.Password)
                 .Where(x => x.Status == UserStatus.Enabled)
                 .Select(x => new StoreOwnerViewModel()
                 {
