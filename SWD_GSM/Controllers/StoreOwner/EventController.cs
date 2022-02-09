@@ -28,15 +28,57 @@ namespace SWD_GSM.Controllers.StoreOwner
         {
             _eventService = eventService;
         }
-        [HttpGet]
-        public async Task<IActionResult> Get(int BrandId, [FromQuery] ProductSearchModel searchModel, [FromQuery] PagingRequestModel paging)
+
+        [NonAction]
+        private PagingRequestModel getDefaultPaging()
         {
-            return null;
+            return new PagingRequestModel
+            {
+                PageIndex = PageConstant.DefaultPageIndex,
+                PageSize = PageConstant.DefaultPageSize
+            };
         }
+        [NonAction]
+        private PagingRequestModel checkDefaultPaging(PagingRequestModel paging)
+        {
+            if (paging.PageIndex <= 0) paging.PageIndex = PageConstant.DefaultPageIndex;
+            if (paging.PageSize <= 0) paging.PageSize = PageConstant.DefaultPageSize;
+            return paging;
+        }
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int BrandId, int id)
         {
-            return null;
+            try
+            {
+                var paging = getDefaultPaging();
+                var _event = await _eventService.GetEventById(BrandId, id);
+                return Ok(_event);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> Get(int BrandId, [FromQuery] EventSearchModel searchModel, [FromQuery] PagingRequestModel paging)
+        {
+            if (searchModel is null)
+            {
+                throw new ArgumentNullException(nameof(searchModel));
+            }
+
+            try
+            {
+                paging = checkDefaultPaging(paging);
+                var products = await _eventService.GetEventList(BrandId, searchModel, paging);
+                return Ok(products);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
     }
 }
