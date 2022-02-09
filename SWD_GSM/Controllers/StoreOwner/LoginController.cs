@@ -31,25 +31,24 @@ namespace SWD_GSM.Controllers.StoreOwner
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginModel login)
         {
-            if (login == null)
-            {
-                return BadRequest();
-            }
-            var user = await _userService.Login(login);
-            if (user != null)
-            {
-                string tokenString = CreateAuthenToken.GetToken(Role);
-                return Ok(new BaseLoginViewModel<StoreOwnerViewModel>()
+                if (login == null)
                 {
-                    Token = tokenString,
-                    Information = user
-                });
-            }
-            else
-            {
-                return Unauthorized();
-            }
+                    return BadRequest();
+                }
+                var user = await _userService.Login(login);
+                if (user != null)
+                {
+                    string tokenString = CreateAuthenToken.GetToken(Role);
+                    return Ok(new BaseLoginViewModel<StoreOwnerViewModel>()
+                    {
+                        Token = tokenString,
+                        Information = user
+                    });
+                }
+                else
+                {
+                    return Unauthorized();
+                }
         }
-
     }
 }

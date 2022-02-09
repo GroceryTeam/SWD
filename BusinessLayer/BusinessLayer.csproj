@@ -10,7 +10,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="RequestModels\CreateModels\Cashier\" />
     <Folder Include="RequestModels\CreateModels\SystemAdmin\" />
     <Folder Include="RequestModels\SearchModels\Cashier\" />
     <Folder Include="RequestModels\SearchModels\SystemAdmin\" />

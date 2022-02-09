@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Interfaces.Cashier;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
+using BusinessLayer.RequestModels.CreateModels.Cashier;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.ResponseModels.ViewModels;
 using BusinessLayer.Services;
@@ -21,5 +22,10 @@ namespace BusinessLayer.Services.Cashier
         public BillService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
         }
+        //public async Task<int> AddBill(int storeId,int cashierId,BillCreateModel model)
+        //{
+
+
+        //}
     }
 }

@@ -18,12 +18,12 @@ namespace SWD_GSM.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var identity = HttpContext.User.Identity as ClaimsIdentity;
-            if (identity != null)
-            {
-                IEnumerable<Claim> claims = identity.Claims;
-            }
-            return Ok("Role: " + identity.FindFirst(ClaimTypes.Role).Value);
+            //var identity = HttpContext.User.Identity as ClaimsIdentity;
+            //if (identity != null)
+            //{
+            //    IEnumerable<Claim> claims = identity.Claims;
+            //}
+            return Ok("Auke");
             //return Ok("Ohhhh");
         }
     }
