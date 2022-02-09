@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.Interfaces.Cashier;
 using BusinessLayer.RequestModels;
-using BusinessLayer.RequestModels.SearchModels.StoreOwner;
+using BusinessLayer.RequestModels.SearchModels.Cashier;
+using BusinessLayer.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -24,15 +25,30 @@ namespace SWD_GSM.Controllers.Cashier
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(int BrandId, [FromQuery] ProductSearchModel searchModel, [FromQuery] PagingRequestModel paging)
+        public async Task<IActionResult> Get(int StoreId, [FromQuery] ProductSearchModel searchModel, [FromQuery] PagingRequestModel paging)
         {
-            return null;
+            if (searchModel is null)
+            {
+                throw new ArgumentNullException(nameof(searchModel));
+            }
+
+            try
+            {
+                //check storeId
+                paging = PagingUtil.checkDefaultPaging(paging);
+                var products = await _productService.GetProductList(StoreId, searchModel, paging);
+                return Ok(products);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int BrandId, int id)
-        {
-            return null;
-        }
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> GetById(int BrandId, int id)
+        //{
+        //    return null;
+        //}
        
     }
 }

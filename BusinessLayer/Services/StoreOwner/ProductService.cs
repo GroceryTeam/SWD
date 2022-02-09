@@ -30,7 +30,8 @@ namespace BusinessLayer.Services.StoreOwner
         public async Task<BasePagingViewModel<ProductsViewModel>> GetProductList(int brandId, ProductSearchModel searchModel, PagingRequestModel paging)
         {
             var productsData = await _unitOfWork.ProductRepository
-                .Get().Where(x => x.BrandId == brandId)
+                .Get()
+                .Where(x => x.BrandId == brandId)
                 .Select
                 (x => new ProductsViewModel()
                 {
@@ -67,6 +68,9 @@ namespace BusinessLayer.Services.StoreOwner
                                             : true)
                         .Where(x => (searchModel.Status != null)
                                             ? x.Status == (int)searchModel.Status
+                                            : true)
+                         .Where(x => (searchModel.CategoryId != null)
+                                            ? x.CategoryId == searchModel.CategoryId
                                             : true)
                         .ToList();
 

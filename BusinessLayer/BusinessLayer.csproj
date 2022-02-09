@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <Folder Include="RequestModels\CreateModels\SystemAdmin\" />
-    <Folder Include="RequestModels\SearchModels\Cashier\" />
     <Folder Include="ResponseModels\ErrorModels\Cashier\" />
     <Folder Include="ResponseModels\ErrorModels\SystemAdmin\" />
   </ItemGroup>
