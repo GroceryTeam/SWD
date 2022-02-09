@@ -19,11 +19,11 @@ namespace SWD_GSM.Controllers.StoreOwner
     [ApiController]
     [ApiExplorerSettings(GroupName = Role)]
     [Authorize(Roles = Role)]
-    public class ReceiptController : BaseStoreOwnerController
+    public class CashierController : BaseStoreOwnerController
     {
         private readonly IReceiptService _receiptService;
 
-        public ReceiptController(IReceiptService receiptService)
+        public CashierController(IReceiptService receiptService)
         {
             _receiptService = receiptService;
         }

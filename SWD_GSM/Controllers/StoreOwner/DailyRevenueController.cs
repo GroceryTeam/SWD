@@ -20,11 +20,11 @@ namespace SWD_GSM.Controllers.StoreOwner
     [ApiController]
     [ApiExplorerSettings(GroupName = Role)]
     [Authorize(Roles = Role)]
-    public class CashierController : BaseStoreOwnerController
+    public class DailyRevenueController : BaseStoreOwnerController
     {
         private readonly ICashierService _cashierService;
 
-        public CashierController(ICashierService cashierService)
+        public DailyRevenueController(ICashierService cashierService)
         {
             _cashierService = cashierService;
         }
