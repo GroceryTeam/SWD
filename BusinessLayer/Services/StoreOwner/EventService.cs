@@ -14,12 +14,71 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities;
+using BusinessLayer.Interfaces.StoreOwner;
+using BusinessLayer.RequestModels.CreateModels.StoreOwner;
+using BusinessLayer.RequestModels.SearchModels.StoreOwner;
+using BusinessLayer.ResponseModels.ErrorModels.StoreOwner;
+using static DataAcessLayer.Models.Event;
+using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
+
 namespace BusinessLayer.Services.StoreOwner
 {
     public class EventService : BaseService, IEventService
     {
         public EventService(IUnitOfWork unitOfWork) : base(unitOfWork)
         {
+        }
+
+        public async Task<EventsViewModel> GetEventById(int brandId, int eventId)
+        {
+            var _event = await _unitOfWork.EventRepository
+              .Get().Where(x => x.BrandId == brandId).Where(x => x.Id == eventId).Select
+                (x => new EventsViewModel()
+                {
+                    Id = x.Id,
+                    EventName = x.EventName,
+                    Status = (int)x.Status
+                }
+                ).FirstOrDefaultAsync();
+            return _event;
+        }
+
+        public async Task<BasePagingViewModel<EventsViewModel>> GetEventList(int brandId, EventSearchModel searchModel, PagingRequestModel paging)
+        {
+            var eventData = await _unitOfWork.EventRepository
+                .Get().Where(x => x.BrandId == brandId)
+                .Select
+                (x => new EventsViewModel()
+                {
+                    Id = x.Id,
+                    EventName = x.EventName,
+                    Status = (int)x.Status
+                }
+                ).ToListAsync();
+
+            eventData = eventData
+                        .Where(x =>
+                            StringNormalizer.VietnameseNormalize(x.EventName)
+                            .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
+                        .Where(x => (searchModel.Status != null)
+                                            ? x.Status == (int)searchModel.Status
+                                            : true)
+                        .ToList();
+
+            int totalItem = eventData.Count;
+
+            eventData = eventData.Skip((paging.PageIndex - 1) * paging.PageSize)
+                .Take(paging.PageSize).ToList();
+
+            var eventResult = new BasePagingViewModel<EventsViewModel>()
+            {
+                PageIndex = paging.PageIndex,
+                PageSize = paging.PageSize,
+                TotalItem = totalItem,
+                TotalPage = (int)Math.Ceiling((decimal)totalItem / (decimal)paging.PageSize),
+                Data = eventData
+            };
+            return eventResult;
         }
     }
 }
