@@ -3,7 +3,7 @@ using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
-using BusinessLayer.ResponseModel.ViewModels.StoreOwner;
+using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.ResponseModels.ErrorModels.StoreOwner;
 using BusinessLayer.ResponseModels.ViewModels;
 using System;
