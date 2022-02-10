@@ -129,8 +129,9 @@ namespace SWD_GSM
                  BusinessLayer.Services.SystemAdmin.BrandService>();
             services.AddTransient<BusinessLayer.Interfaces.SystemAdmin.IStoreService,
                 BusinessLayer.Services.SystemAdmin.StoreService>();
-            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<BusinessLayer.Interfaces.SystemAdmin.IUserService, BusinessLayer.Services.SystemAdmin.UserService>();
             //storeowner
+            services.AddTransient<BusinessLayer.Interfaces.StoreOwner.IUserService, BusinessLayer.Services.StoreOwner.UserService>();
             services.AddTransient<BusinessLayer.Interfaces.StoreOwner.IProductService,
                  BusinessLayer.Services.StoreOwner.ProductService>();
             services.AddTransient<BusinessLayer.Interfaces.StoreOwner.ICategoryService,

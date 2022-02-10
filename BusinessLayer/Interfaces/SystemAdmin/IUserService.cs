@@ -18,8 +18,7 @@ namespace BusinessLayer.Interfaces.SystemAdmin
     public interface IUserService
     {
         Task<BasePagingViewModel<UserViewModel>> GetUserList(UserSearchModel searchModel, PagingRequestModel paging);
-        Task<StoreOwnerViewModel> Login(LoginModel login);
-        Task<SignupErrorModel> Signup(StoreOwnerCreateModel model);
+        
         Task<UserViewModel> GetUserById(int userId);
         Task<bool> DisableUser(int userId); 
         Task<bool> EnableUser(int userId);

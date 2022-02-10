@@ -1,4 +1,4 @@
-﻿using BusinessLayer.Interfaces.SystemAdmin;
+﻿using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.ResponseModels.ViewModels;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;

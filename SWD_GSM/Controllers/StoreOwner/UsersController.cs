@@ -1,6 +1,6 @@
 ﻿using BusinessLayer.Constants;
 using BusinessLayer.Interfaces;
-using BusinessLayer.Interfaces.SystemAdmin;
+using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.CreateModels.StoreOwner;
