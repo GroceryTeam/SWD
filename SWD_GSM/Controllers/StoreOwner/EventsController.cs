@@ -5,6 +5,7 @@ using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
+using BusinessLayer.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -29,29 +30,13 @@ namespace SWD_GSM.Controllers.StoreOwner
             _eventService = eventService;
         }
 
-        [NonAction]
-        private PagingRequestModel getDefaultPaging()
-        {
-            return new PagingRequestModel
-            {
-                PageIndex = PageConstant.DefaultPageIndex,
-                PageSize = PageConstant.DefaultPageSize
-            };
-        }
-        [NonAction]
-        private PagingRequestModel checkDefaultPaging(PagingRequestModel paging)
-        {
-            if (paging.PageIndex <= 0) paging.PageIndex = PageConstant.DefaultPageIndex;
-            if (paging.PageSize <= 0) paging.PageSize = PageConstant.DefaultPageSize;
-            return paging;
-        }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int BrandId, int id)
         {
             try
             {
-                var paging = getDefaultPaging();
+                var paging = PagingUtil.getDefaultPaging();
                 var _event = await _eventService.GetEventById(BrandId, id);
                 return Ok(_event);
             }
@@ -71,7 +56,7 @@ namespace SWD_GSM.Controllers.StoreOwner
 
             try
             {
-                paging = checkDefaultPaging(paging);
+                paging = PagingUtil.checkDefaultPaging(paging);
                 var products = await _eventService.GetEventList(BrandId, searchModel, paging);
                 return Ok(products);
             }

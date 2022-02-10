@@ -75,7 +75,8 @@ namespace BusinessLayer.Services.StoreOwner
                 .Include(bill => bill.Cashier)
                 .Include(bill => bill.BillDetails)
                 .ThenInclude(bd => bd.Product)
-                .IgnoreAutoIncludes()
+                .Where(x => x.Id == billId)
+                //.IgnoreAutoIncludes()
                 .Select(bill => new BillsViewModel() { 
                     Id = bill.Id,
                     StoreId = bill.StoreId,
