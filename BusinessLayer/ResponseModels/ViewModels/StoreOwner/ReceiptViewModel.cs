@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
 {
-    public class ReceiptsViewModel
+    public class ReceiptViewModel
     {
         public int Id { get; set; }
         public int StoreId { get; set; }

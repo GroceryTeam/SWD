@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.StoreOwner;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
@@ -19,13 +20,13 @@ namespace BusinessLayer.Services.StoreOwner
 {
     public class BillService : BaseService, IBillService
     {
-        public BillService(IUnitOfWork unitOfWork) : base(unitOfWork){}
+        public BillService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper) { }
 
-        public async Task<BasePagingViewModel<BillsViewModel>> GetBills(int storeId, PagingRequestModel paging)
+        public async Task<BasePagingViewModel<BillViewModel>> GetBills(int storeId, PagingRequestModel paging)
         {
             var billData = await _unitOfWork.BillRepository.Get()
                                     .Where(bill => bill.StoreId == storeId)
-                                    .Select(bill => new BillsViewModel()
+                                    .Select(bill => new BillViewModel()
                                     {
                                         Id = bill.Id,
                                         CashierId = bill.CashierId,
@@ -39,7 +40,7 @@ namespace BusinessLayer.Services.StoreOwner
             billData = billData.Skip((paging.PageIndex - 1) * paging.PageSize)
                                 .Take(paging.PageSize).ToList();
 
-            var billResult = new BasePagingViewModel<BillsViewModel>()
+            var billResult = new BasePagingViewModel<BillViewModel>()
             {
                 PageIndex = paging.PageIndex,
                 PageSize = paging.PageSize,
@@ -51,17 +52,17 @@ namespace BusinessLayer.Services.StoreOwner
             return billResult;
         }
 
-        public async Task<BillsViewModel> GetBillById(int billId)
+        public async Task<BillViewModel> GetBillById(int billId)
         {
             var details = await _unitOfWork.BillDetailRepository
                 .Get().Where(bd => bd.BillId == billId)
                 .Include(bd => bd.Product)
-                .Select(bd => new BillDetailsViewModel()
+                .Select(bd => new BillDetailViewModel()
                 {
                     BuyPrice = bd.BuyPrice, 
                     SellPrice = bd.SellPrice,
                     Quantity = bd.Quantity,
-                    Product = new ProductsViewModel()
+                    Product = new ProductViewModel()
                     { 
                         Id = bd.Product.Id,
                         Name = bd.Product.Name,
@@ -77,7 +78,7 @@ namespace BusinessLayer.Services.StoreOwner
                 .ThenInclude(bd => bd.Product)
                 .Where(x => x.Id == billId)
                 //.IgnoreAutoIncludes()
-                .Select(bill => new BillsViewModel() { 
+                .Select(bill => new BillViewModel() { 
                     Id = bill.Id,
                     StoreId = bill.StoreId,
                     CashierId = bill.CashierId,

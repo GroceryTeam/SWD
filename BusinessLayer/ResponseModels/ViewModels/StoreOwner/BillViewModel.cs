@@ -7,11 +7,11 @@ using DataAcessLayer.Models;
 
 namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
 {
-    public class BillsViewModel
+    public class BillViewModel
     {
-        public BillsViewModel()
+        public BillViewModel()
         {
-            BillDetails = new HashSet<BillDetailsViewModel>();
+            BillDetails = new HashSet<BillDetailViewModel>();
         }
 
         public int Id { get; set; }
@@ -22,6 +22,6 @@ namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
 
         public virtual DataAcessLayer.Models.Cashier Cashier { get; set; }
         public virtual Store Store { get; set; }
-        public virtual ICollection<BillDetailsViewModel> BillDetails { get; set; }
+        public virtual ICollection<BillDetailViewModel> BillDetails { get; set; }
     }
 }

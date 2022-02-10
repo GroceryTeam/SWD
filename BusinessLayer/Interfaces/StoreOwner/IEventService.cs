@@ -14,7 +14,7 @@ namespace BusinessLayer.Interfaces.StoreOwner
 {
     public interface IEventService
     {
-        Task<EventsViewModel> GetEventById(int brandId, int productId);
-        Task<BasePagingViewModel<EventsViewModel>> GetEventList(int brandId, EventSearchModel searchModel, PagingRequestModel paging);
+        Task<EventViewModel> GetEventById(int brandId, int productId);
+        Task<BasePagingViewModel<EventViewModel>> GetEventList(int brandId, EventSearchModel searchModel, PagingRequestModel paging);
     }
 }

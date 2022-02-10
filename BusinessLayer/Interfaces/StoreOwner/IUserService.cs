@@ -12,7 +12,7 @@ namespace BusinessLayer.Interfaces.StoreOwner
 {
     public interface IUserService
     {
-        Task<StoreOwnerViewModel> Login(LoginModel login);
+        Task<UserViewModel> Login(LoginModel login);
         Task<SignupErrorModel> Signup(StoreOwnerCreateModel model);
     }
 }

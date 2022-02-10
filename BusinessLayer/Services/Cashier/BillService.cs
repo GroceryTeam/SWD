@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.Cashier;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.Cashier;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.CreateModels.Cashier;
@@ -19,7 +20,7 @@ namespace BusinessLayer.Services.Cashier
 {
     public class BillService : BaseService, IBillService
     {
-        public BillService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public BillService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
         //public async Task<int> AddBill(int storeId,int cashierId,BillCreateModel model)

@@ -14,7 +14,7 @@ namespace BusinessLayer.Interfaces.StoreOwner
 {
     public interface IReceiptService
     {
-        Task<ReceiptsViewModel> GetReceiptById(int storeId, int receiptId);
-        Task<BasePagingViewModel<ReceiptsViewModel>> GetReceiptList(int storeId, PagingRequestModel paging);
+        Task<ReceiptViewModel> GetReceiptById(int storeId, int receiptId);
+        Task<BasePagingViewModel<ReceiptViewModel>> GetReceiptList(int storeId, PagingRequestModel paging);
     }
 }

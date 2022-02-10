@@ -1,9 +1,12 @@
+using AutoMapper;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.Interfaces.SystemAdmin;
+using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.Services;
 using BusinessLayer.Services.StoreOwner;
 using BusinessLayer.Services.SystemAdmin;
+using BusinessLayer.Utilities;
 using DataAcessLayer;
 using DataAcessLayer.Interfaces;
 using DataAcessLayer.Models;
@@ -157,6 +160,9 @@ namespace SWD_GSM
                 BusinessLayer.Services.Cashier.BillService>();
             services.AddTransient<BusinessLayer.Interfaces.Cashier.IReceiptService,
                  BusinessLayer.Services.Cashier.ReceiptService>();
+
+            IMapper mapper = AutoMapperConfig.config.CreateMapper();
+            services.AddSingleton(mapper);
 
         }
 

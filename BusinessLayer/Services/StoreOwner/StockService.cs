@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.StoreOwner;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
@@ -18,7 +19,7 @@ namespace BusinessLayer.Services.StoreOwner
 {
     public class StockService : BaseService, IStockService
     {
-        public StockService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public StockService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
     }

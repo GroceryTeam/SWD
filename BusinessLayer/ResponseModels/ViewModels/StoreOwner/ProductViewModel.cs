@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
 {
-    public class ProductsViewModel
+    public class ProductViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

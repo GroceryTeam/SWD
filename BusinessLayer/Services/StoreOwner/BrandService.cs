@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.StoreOwner;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
@@ -18,7 +19,7 @@ namespace BusinessLayer.Services.StoreOwner
 {
     public class BrandService : BaseService, IBrandService
     {
-        public BrandService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public BrandService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
     }

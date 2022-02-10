@@ -10,6 +10,6 @@ namespace BusinessLayer.Interfaces.Cashier
 {
     public interface ICategoryService
     {
-        Task<List<CategoriesViewModel>> GetCategoryList();
+        Task<List<CategoryViewModel>> GetCategoryList();
     }
 }

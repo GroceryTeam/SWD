@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.Cashier;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.Cashier;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
@@ -18,7 +19,7 @@ namespace BusinessLayer.Services.Cashier
 {
     public class ReceiptService : BaseService, IReceiptService
     {
-        public ReceiptService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public ReceiptService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
     }

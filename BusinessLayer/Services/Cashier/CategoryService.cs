@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.Cashier;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.Cashier;
 using BusinessLayer.ResponseModels.ViewModels;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.Services;
@@ -14,16 +15,16 @@ namespace BusinessLayer.Services.Cashier
 {
     public class CategoryService : BaseService, ICategoryService
     {
-        public CategoryService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public CategoryService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
         //viet ham cho service
-        public async Task<List<CategoriesViewModel>> GetCategoryList()
+        public async Task<List<CategoryViewModel>> GetCategoryList()
         {
             var categories = await _unitOfWork.CategoryRepository
                 .Get()
                 .Select
-                (x => new CategoriesViewModel()
+                (x => new CategoryViewModel()
                 {
                     Id = x.Id,
                     Name = x.Name

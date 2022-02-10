@@ -39,7 +39,7 @@ namespace SWD_GSM.Controllers.StoreOwner
                 if (user != null)
                 {
                     string tokenString = CreateAuthenToken.GetToken(Role);
-                    return Ok(new BaseLoginViewModel<StoreOwnerViewModel>()
+                    return Ok(new BaseLoginViewModel<UserViewModel>()
                     {
                         Token = tokenString,
                         Information = user

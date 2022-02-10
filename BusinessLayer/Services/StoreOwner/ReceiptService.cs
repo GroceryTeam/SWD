@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.StoreOwner;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
@@ -21,12 +22,12 @@ namespace BusinessLayer.Services.StoreOwner
 {
     public class ReceiptService : BaseService, IReceiptService
     {
-        public ReceiptService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public ReceiptService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
 
         }
 
-        public async Task<ReceiptsViewModel> GetReceiptById(int storeId, int receiptId)
+        public async Task<ReceiptViewModel> GetReceiptById(int storeId, int receiptId)
         {
             var _receipt = await _unitOfWork.ReceiptRepository
               .Get()
@@ -34,7 +35,7 @@ namespace BusinessLayer.Services.StoreOwner
               .ThenInclude(x => x.Product)
               .Where(receipt => receipt.StoreId == storeId)
               .Where(receipt => receipt.Id == receiptId)
-              .Select(receipt => new ReceiptsViewModel()
+              .Select(receipt => new ReceiptViewModel()
               {
                     Id = receipt.Id,
                     StoreId = receipt.StoreId,
@@ -55,13 +56,13 @@ namespace BusinessLayer.Services.StoreOwner
             return _receipt;
         }
 
-        public async Task<BasePagingViewModel<ReceiptsViewModel>> GetReceiptList(int storeId, PagingRequestModel paging)
+        public async Task<BasePagingViewModel<ReceiptViewModel>> GetReceiptList(int storeId, PagingRequestModel paging)
         {
             var receiptData = await _unitOfWork.ReceiptRepository.Get()
                                     .Include(_receipt => _receipt.ReceiptDetails)
                                     .ThenInclude(x => x.Product)
                                     .Where(receipt => receipt.StoreId == storeId)
-                                    .Select(receipt => new ReceiptsViewModel()
+                                    .Select(receipt => new ReceiptViewModel()
                                     {
                                         Id = receipt.Id,
                                         StoreId = receipt.StoreId,                                        
@@ -84,7 +85,7 @@ namespace BusinessLayer.Services.StoreOwner
             receiptData = receiptData.Skip((paging.PageIndex - 1) * paging.PageSize)
                                 .Take(paging.PageSize).ToList();
 
-            var receiptResult = new BasePagingViewModel<ReceiptsViewModel>()
+            var receiptResult = new BasePagingViewModel<ReceiptViewModel>()
             {
                 PageIndex = paging.PageIndex,
                 PageSize = paging.PageSize,

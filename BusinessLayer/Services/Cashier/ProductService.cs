@@ -14,18 +14,19 @@ using System.Text;
 using System.Threading.Tasks;
 using Utilities;
 using BusinessLayer.Interfaces.Cashier;
-using BusinessLayer.ResponseModel.ViewModels.Cashier;
+using BusinessLayer.ResponseModels.ViewModels.Cashier;
 using BusinessLayer.RequestModels.SearchModels.Cashier;
 using static DataAcessLayer.Models.Event;
+using AutoMapper;
 
 namespace BusinessLayer.Services.Cashier
 {
     public class ProductService : BaseService, IProductService
     {
-        public ProductService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
-        public async Task<BasePagingViewModel<ProductsViewModel>> GetProductList(int storeId, ProductSearchModel searchModel, PagingRequestModel paging)
+        public async Task<BasePagingViewModel<ProductViewModel>> GetProductList(int storeId, ProductSearchModel searchModel, PagingRequestModel paging)
         {
             var productsData = await _unitOfWork.ProductRepository
                 .Get()
@@ -42,7 +43,7 @@ namespace BusinessLayer.Services.Cashier
                          .ToList();
             //apply event
             var products = productsData.Select
-                                (x => new ProductsViewModel()
+                                (x => new ProductViewModel()
                                 {
                                     Id = x.Id,
                                     Name = x.Name,
@@ -60,7 +61,7 @@ namespace BusinessLayer.Services.Cashier
             productsData = productsData.Skip((paging.PageIndex - 1) * paging.PageSize)
                 .Take(paging.PageSize).ToList();
 
-            var productResult = new BasePagingViewModel<ProductsViewModel>()
+            var productResult = new BasePagingViewModel<ProductViewModel>()
             {
                 PageIndex = paging.PageIndex,
                 PageSize = paging.PageSize,

@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.StoreOwner;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.ResponseModels.ErrorModels.StoreOwner;
@@ -18,16 +19,16 @@ namespace BusinessLayer.Services.StoreOwner
 {
     public class UserService : BaseService, IUserService
     {
-        public UserService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
-        public async Task<StoreOwnerViewModel> Login(LoginModel login)
+        public async Task<UserViewModel> Login(LoginModel login)
         {
             var cashier = await _unitOfWork.UserRepository
                 .Get()
                 .Where(x => x.Username == login.Username && x.Password == login.Password)
                 .Where(x => x.Status == UserStatus.Enabled)
-                .Select(x => new StoreOwnerViewModel()
+                .Select(x => new UserViewModel()
                 {
                     Id = x.Id,
                     Username = x.Username,

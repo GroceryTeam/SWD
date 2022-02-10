@@ -19,38 +19,42 @@ using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using static DataAcessLayer.Models.Product;
 using BusinessLayer.ResponseModels.ErrorModels.StoreOwner;
+using AutoMapper;
 
 namespace BusinessLayer.Services.StoreOwner
 {
     public class ProductService : BaseService, IProductService
     {
-        public ProductService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork,mapper)
         {
         }
-        public async Task<BasePagingViewModel<ProductsViewModel>> GetProductList(int brandId, ProductSearchModel searchModel, PagingRequestModel paging)
+        public async Task<BasePagingViewModel<ProductViewModel>> GetProductList(int brandId, ProductSearchModel searchModel, PagingRequestModel paging)
         {
             var productsData = await _unitOfWork.ProductRepository
                 .Get()
                 .Where(x => x.BrandId == brandId)
-                .Select
-                (x => new ProductsViewModel()
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    UnpackedProductId = x.UnpackedProductId,
-                    UnpackedProductName = x.UnpackedProduct.Name,
-                    BuyPrice = x.BuyPrice,
-                    SellPrice = x.SellPrice,
-                    CategoryId = x.CategoryId,
-                    CategoryName = x.Category.Name,
-                    ConversionRate = x.ConversionRate,
-                    UnitLabel = x.UnitLabel,
-                    LowerThreshold = x.LowerThreshold,
-                    Status = (int)x.Status
-                }
-                ).ToListAsync();
+                //.Select
+                //(x => new ProductViewModel()
+                //{
+                //    Id = x.Id,
+                //    Name = x.Name,
+                //    UnpackedProductId = x.UnpackedProductId,
+                //    UnpackedProductName = x.UnpackedProduct.Name,
+                //    BuyPrice = x.BuyPrice,
+                //    SellPrice = x.SellPrice,
+                //    CategoryId = x.CategoryId,
+                //    CategoryName = x.Category.Name,
+                //    ConversionRate = x.ConversionRate,
+                //    UnitLabel = x.UnitLabel,
+                //    LowerThreshold = x.LowerThreshold,
+                //    Status = (int)x.Status
+                //}
+                //)
+                .ToListAsync();
+            var mappedProductsData = _mapper.Map<List<Product>, List<ProductViewModel>>(productsData);
+            mappedProductsData.ForEach(x=>x.Status = (int)x.Status);
 
-            productsData = productsData
+            mappedProductsData = mappedProductsData
                         .Where(x =>
                             StringNormalizer.VietnameseNormalize(x.Name)
                             .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
@@ -74,26 +78,26 @@ namespace BusinessLayer.Services.StoreOwner
                                             : true)
                         .ToList();
 
-            int totalItem = productsData.Count;
+            int totalItem = mappedProductsData.Count;
 
-            productsData = productsData.Skip((paging.PageIndex - 1) * paging.PageSize)
+            mappedProductsData = mappedProductsData.Skip((paging.PageIndex - 1) * paging.PageSize)
                 .Take(paging.PageSize).ToList();
 
-            var productResult = new BasePagingViewModel<ProductsViewModel>()
+            var productResult = new BasePagingViewModel<ProductViewModel>()
             {
                 PageIndex = paging.PageIndex,
                 PageSize = paging.PageSize,
                 TotalItem = totalItem,
                 TotalPage = (int)Math.Ceiling((decimal)totalItem / (decimal)paging.PageSize),
-                Data = productsData
+                Data = mappedProductsData
             };
             return productResult;
         }
-        public async Task<ProductsViewModel> GetProductById(int brandId, int productId)
+        public async Task<ProductViewModel> GetProductById(int brandId, int productId)
         {
             var product = await _unitOfWork.ProductRepository
               .Get().Where(x => x.BrandId == brandId).Where(x => x.Id == productId).Select
-                (x => new ProductsViewModel()
+                (x => new ProductViewModel()
                 {
                     Id = x.Id,
                     Name = x.Name,
@@ -128,6 +132,18 @@ namespace BusinessLayer.Services.StoreOwner
             };
             await _unitOfWork.ProductRepository.Add(product);
             await _unitOfWork.SaveChangesAsync();
+
+            //var stock = new Stock()
+            //{
+            //    Price = product.SellPrice,
+            //    Product = product,
+            //    ProductId = product.Id,
+            //    Quantity = 0,
+            //    Status = Stock.StockDetail.NearlyOutOfStock,
+            //    Store = 
+                
+            //}
+
             return product.Id;
         }
         public async Task<bool> UpdateProduct(int brandId, int productId, ProductCreateModel model)
@@ -188,5 +204,7 @@ namespace BusinessLayer.Services.StoreOwner
             }
             return result;
         }
+
+
     }
 }

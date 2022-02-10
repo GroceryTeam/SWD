@@ -10,6 +10,6 @@ namespace BusinessLayer.Interfaces.StoreOwner
 {
     public interface ICategoryService
     {
-        Task<List<CategoriesViewModel>> GetCategoryList();
+        Task<List<CategoryViewModel>> GetCategoryList();
     }
 }

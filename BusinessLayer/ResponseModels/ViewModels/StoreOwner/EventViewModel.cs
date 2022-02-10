@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
 {
-    public class EventsViewModel
+    public class EventViewModel
     {
         public int Id { get; set; }
         public string EventName { get; set; }

@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.StoreOwner;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.CreateModels.StoreOwner;
@@ -22,7 +23,7 @@ namespace BusinessLayer.Services.StoreOwner
 {
     public class CashierSevice : BaseService, ICashierService
     {
-        public CashierSevice(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public CashierSevice(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
 
         }

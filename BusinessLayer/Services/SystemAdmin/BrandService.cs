@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.SystemAdmin;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.SystemAdmin;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
@@ -22,7 +23,7 @@ namespace BusinessLayer.Services.SystemAdmin
 {
     public class BrandService : BaseService, IBrandService
     {
-        public BrandService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public BrandService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
         public async Task<BasePagingViewModel<BrandViewModel>> GetBrandList(BrandSearchModel searchModel, PagingRequestModel paging)

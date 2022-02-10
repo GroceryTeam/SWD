@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLayer.ResponseModel.ViewModels.Cashier
+namespace BusinessLayer.ResponseModels.ViewModels.Cashier
 {
-    public class ProductsViewModel
+    public class ProductViewModel
     {
         public int Id { get; set; }
         public string Name { get; set; }

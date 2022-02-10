@@ -13,9 +13,7 @@ namespace BusinessLayer.Interfaces.StoreOwner
 {
     public interface IBillService
     {
-        public Task<BasePagingViewModel<BillsViewModel>> GetBills(int storeId, PagingRequestModel paging);
-        public Task<BillsViewModel> GetBillById(int billId);
+        public Task<BasePagingViewModel<BillViewModel>> GetBills(int storeId, PagingRequestModel paging);
+        public Task<BillViewModel> GetBillById(int billId);
     }
-
-    
 }

@@ -16,8 +16,8 @@ namespace BusinessLayer.Interfaces.StoreOwner
 {
     public interface IProductService
     {
-        Task<BasePagingViewModel<ProductsViewModel>> GetProductList(int brandId, ProductSearchModel searchModel, PagingRequestModel paging);
-        Task<ProductsViewModel> GetProductById(int brandId, int productId);
+        Task<BasePagingViewModel<ProductViewModel>> GetProductList(int brandId, ProductSearchModel searchModel, PagingRequestModel paging);
+        Task<ProductViewModel> GetProductById(int brandId, int productId);
         Task<int> AddProduct(int brandId, ProductCreateModel model);
         Task<bool> UpdateProduct(int brandÍd, int productId, ProductCreateModel model);
         Task<DeleteProductErrorModel> DeleteProduct(int brandId, int productId);

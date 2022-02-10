@@ -20,16 +20,17 @@ using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using BusinessLayer.ResponseModels.ErrorModels.StoreOwner;
 using static DataAcessLayer.Models.Event;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
+using AutoMapper;
 
 namespace BusinessLayer.Services.StoreOwner
 {
     public class EventService : BaseService, IEventService
     {
-        public EventService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public EventService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
 
-        public async Task<EventsViewModel> GetEventById(int brandId, int eventId)
+        public async Task<EventViewModel> GetEventById(int brandId, int eventId)
         {
             // var eventDetails = await _unitOfWork.EventDetailRepository.Get().Where(x => x.EventId == eventId).ToListAsync();
             var _event = await _unitOfWork.EventRepository
@@ -38,7 +39,7 @@ namespace BusinessLayer.Services.StoreOwner
               .Where(x => x.Id == eventId)
                .Include(x => x.EventDetails)
               .Select
-                (x => new EventsViewModel()
+                (x => new EventViewModel()
                 {
                     Id = x.Id,
                     EventName = x.EventName,
@@ -55,16 +56,16 @@ namespace BusinessLayer.Services.StoreOwner
                             ProductName = x.Product.Name
                         }
                         )
-                }).FirstOrDefaultAsync<EventsViewModel>();
+                }).FirstOrDefaultAsync<EventViewModel>();
             return _event;
         }
 
-        public async Task<BasePagingViewModel<EventsViewModel>> GetEventList(int brandId, EventSearchModel searchModel, PagingRequestModel paging)
+        public async Task<BasePagingViewModel<EventViewModel>> GetEventList(int brandId, EventSearchModel searchModel, PagingRequestModel paging)
         {
             var eventData = await _unitOfWork.EventRepository
                 .Get().Where(x => x.BrandId == brandId)
                 .Select
-                (x => new EventsViewModel()
+                (x => new EventViewModel()
                 {
                     Id = x.Id,
                     EventName = x.EventName,
@@ -86,7 +87,7 @@ namespace BusinessLayer.Services.StoreOwner
             eventData = eventData.Skip((paging.PageIndex - 1) * paging.PageSize)
                 .Take(paging.PageSize).ToList();
 
-            var eventResult = new BasePagingViewModel<EventsViewModel>()
+            var eventResult = new BasePagingViewModel<EventViewModel>()
             {
                 PageIndex = paging.PageIndex,
                 PageSize = paging.PageSize,

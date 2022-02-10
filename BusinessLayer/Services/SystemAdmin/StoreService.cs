@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.SystemAdmin;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.SystemAdmin;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
@@ -18,7 +19,7 @@ namespace BusinessLayer.Services.SystemAdmin
 {
     public class StoreService : BaseService, IStoreService
     {
-        public StoreService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public StoreService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
     }

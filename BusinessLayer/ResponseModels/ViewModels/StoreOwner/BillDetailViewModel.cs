@@ -7,14 +7,14 @@ using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 
 namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
 {
-    public class BillDetailsViewModel
+    public class BillDetailViewModel
     {
-        public BillDetailsViewModel() {}
+        public BillDetailViewModel() {}
 
         public int BuyPrice { get; set; }
         public int SellPrice { get; set; }
         public int Quantity { get; set; }
 
-        public ProductsViewModel Product { get; set; }
+        public ProductViewModel Product { get; set; }
     }
 }

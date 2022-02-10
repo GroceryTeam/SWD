@@ -1,13 +1,9 @@
-﻿using BusinessLayer.Interfaces.SystemAdmin;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.SystemAdmin;
 using BusinessLayer.RequestModels;
-using BusinessLayer.RequestModels.CreateModels;
-using BusinessLayer.RequestModels.CreateModels.StoreOwner;
-using BusinessLayer.RequestModels.SearchModels;
-using BusinessLayer.RequestModels.SearchModels.StoreOwner;
+
 using BusinessLayer.RequestModels.SearchModels.SystemAdmin;
-using BusinessLayer.ResponseModels.ErrorModels.StoreOwner;
 using BusinessLayer.ResponseModels.ViewModels;
-using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.ResponseModels.ViewModels.SystemAdmin;
 using BusinessLayer.Services;
 using DataAcessLayer.Interfaces;
@@ -27,7 +23,7 @@ namespace BusinessLayer.Services.SystemAdmin
 {
     public class UserService : BaseService, IUserService
     {
-        public UserService(IUnitOfWork unitOfWork) : base(unitOfWork)
+        public UserService(IUnitOfWork unitOfWork,IMapper mapper) : base(unitOfWork, mapper)
         {
         }
         public async Task<BasePagingViewModel<UserViewModel>> GetUserList(UserSearchModel searchModel, PagingRequestModel paging)
