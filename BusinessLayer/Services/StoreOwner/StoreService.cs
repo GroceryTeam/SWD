@@ -1,10 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLayer.Interfaces.StoreOwner;
-using BusinessLayer.RequestModels;
-using BusinessLayer.RequestModels.CreateModels;
-using BusinessLayer.RequestModels.SearchModels;
-using BusinessLayer.ResponseModels.ViewModels;
-using BusinessLayer.Services;
+using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using DataAcessLayer.Interfaces;
 using DataAcessLayer.Models;
 using Microsoft.EntityFrameworkCore;
@@ -21,6 +17,17 @@ namespace BusinessLayer.Services.StoreOwner
     {
         public StoreService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
+        }
+        public async Task<List<StoreViewModel>> GetStoreList(int brandId)
+        {
+            var storesData = await _unitOfWork.StoreRepository
+                .Get()
+                .Where(x => x.BrandId == brandId)
+                .ToListAsync();
+            var mappedStoresData = _mapper.Map<List<Store>, List<StoreViewModel>>(storesData);
+            mappedStoresData.ForEach(x => x.ApprovedStatus = (int)x.ApprovedStatus);
+
+            return mappedStoresData;
         }
     }
 }

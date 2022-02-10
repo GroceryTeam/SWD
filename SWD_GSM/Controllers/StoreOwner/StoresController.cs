@@ -21,16 +21,24 @@ namespace SWD_GSM.Controllers.StoreOwner
 
     public class StoresController : BaseStoreOwnerController
     {
-        private readonly IStockService _stockService;
+        private readonly IStoreService _storeService;
 
-        public StoresController(IStockService stockService)
+        public StoresController(IStoreService storeService)
         {
-            _stockService = stockService;
+            _storeService = storeService;
         }
         [HttpGet]
-        public async Task<IActionResult> Get(int BrandId, [FromQuery] ProductSearchModel searchModel, [FromQuery] PagingRequestModel paging)
+        public async Task<IActionResult> Get(int BrandId)
         {
-            return null;
+            try
+            {
+                var stores = await _storeService.GetStoreList(BrandId);
+                return Ok(stores);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int BrandId, int id)

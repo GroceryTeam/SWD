@@ -23,10 +23,38 @@ namespace BusinessLayer.Services.Cashier
         public BillService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
-        //public async Task<int> AddBill(int storeId,int cashierId,BillCreateModel model)
-        //{
+        public async Task<int> AddBill(int storeId, int cashierId, BillCreateModel model)
+        {
+            var mappedBill = _mapper.Map<BillCreateModel, Bill>(model);
+            mappedBill.StoreId = storeId;
+            mappedBill.CashierId = cashierId;
+            mappedBill.DateCreated = DateTime.Now;
 
+            foreach (var detail in model.Details)
+            {
+                var productInDetail = _unitOfWork.ProductRepository
+                    .Get()
+                    .Where(x => x.Id == detail.ProductId)
+                    .Include(x=>x.Stocks)
+                    .FirstOrDefault();
+                var correspondingStock = productInDetail.Stocks
+                    .Where(x => x.StoreId == storeId)
+                    .Where(x => x.ProductId == productInDetail.Id)
+                    .FirstOrDefault();
+                mappedBill.BillDetails.Add(new BillDetail
+                {
+                    ProductId = detail.ProductId,
+                    BillId = mappedBill.Id,
+                    BuyPrice = productInDetail.BuyPrice,
+                    SellPrice = correspondingStock.Price,
+                    Quantity = detail.Quantity
+                });
+            }
+            await _unitOfWork.BillRepository.Add(mappedBill);
+            await _unitOfWork.SaveChangesAsync();
 
-        //}
+            return mappedBill.Id;
+
+        }
     }
 }
