@@ -40,8 +40,10 @@ namespace BusinessLayer.Services.Cashier
                          .Where(x => (searchModel.CategoryId != null)
                                             ? x.CategoryId == searchModel.CategoryId
                                             : true)
+                         .Where(x => x.Status == Product.ProductStatus.Selling)
                          .ToList();
             //apply event
+            //map thuong
             var products = productsData.Select
                                 (x => new ProductViewModel()
                                 {
@@ -49,14 +51,17 @@ namespace BusinessLayer.Services.Cashier
                                     Name = x.Name,
                                     UnpackedProductName = x.UnpackedProduct.Name,
                                     OriginalPrice = x.SellPrice,
-                                    EventPrice = x.Stocks.Where(x => x.StoreId == storeId).FirstOrDefault().Price,
+                                    EventPrice = x.Stocks
+                                    .Where(a => a.StoreId == storeId)
+                                    .Where(a => a.ProductId == x.Id)
+                                    .FirstOrDefault().Price,
                                     CategoryId = x.CategoryId,
                                     ConversionRate = x.ConversionRate,
                                     UnitLabel = x.UnitLabel,
                                 }
                                 ).ToList();
 
-            int totalItem = productsData.Count;
+        int totalItem = productsData.Count;
 
             productsData = productsData.Skip((paging.PageIndex - 1) * paging.PageSize)
                 .Take(paging.PageSize).ToList();

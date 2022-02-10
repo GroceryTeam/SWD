@@ -15,7 +15,8 @@ namespace DataAcessLayer.Interfaces
         IGenericRepository<BillDetail> BillDetailRepository { get; }
         IGenericRepository<Brand> BrandRepository { get; }
         IGenericRepository<Cashier> CashierRepository { get; }
-        IGenericRepository<DailyRevenue> DailyrevenueRepository { get; }
+        IGenericRepository<UserBrand> UserBrandRepository { get; }
+        IGenericRepository<DailyRevenue> DailyRevenueRepository { get; }
         IGenericRepository<Event> EventRepository { get; }
         IGenericRepository<EventDetail> EventDetailRepository { get; }
         IGenericRepository<Receipt> ReceiptRepository { get; }

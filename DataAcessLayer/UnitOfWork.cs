@@ -16,9 +16,10 @@ namespace DataAcessLayer
         public IGenericRepository<Category> CategoryRepository { get; }
         public IGenericRepository<Bill> BillRepository { get; }
         public IGenericRepository<BillDetail> BillDetailRepository { get; }
+        public IGenericRepository<UserBrand> UserBrandRepository { get; }
         public IGenericRepository<Brand> BrandRepository { get; }
         public IGenericRepository<Cashier> CashierRepository { get; }
-        public IGenericRepository<DailyRevenue> DailyrevenueRepository { get; }
+        public IGenericRepository<DailyRevenue> DailyRevenueRepository { get; }
         public IGenericRepository<Event> EventRepository { get; }
         public IGenericRepository<EventDetail> EventDetailRepository { get; }
         public IGenericRepository<Receipt> ReceiptRepository { get; }
@@ -40,7 +41,8 @@ namespace DataAcessLayer
             IGenericRepository<ReceiptDetail> receiptDetailRepository,
             IGenericRepository<Stock> stockRepository,
             IGenericRepository<Store> storeRepository,
-            IGenericRepository<User> userRepository
+            IGenericRepository<User> userRepository,
+            IGenericRepository<UserBrand> userBrandRepository
             )
         {
             _dbContext = dbContext;
@@ -51,14 +53,16 @@ namespace DataAcessLayer
             BillDetailRepository = billDetailRepository;
             BrandRepository = brandRepository;
             CashierRepository = cashierRepository;
-            DailyrevenueRepository = dailyrevenueRepository;
+            DailyRevenueRepository = dailyrevenueRepository;
             EventRepository = eventRepository;
+            EventDetailRepository = eventDetailRepository;
             ReceiptRepository = receiptRepository;
             ReceiptDetailRepository = receiptDetailRepository;
             StockRepository = stockRepository;
             StoreRepository = storeRepository;
             UserRepository = userRepository;
-    }
+            UserBrandRepository = userBrandRepository;
+        }
 
         public GroceryCloudContext Context()
         {

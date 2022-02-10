@@ -4,6 +4,7 @@ using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.ResponseModels.ViewModels;
+using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.Services;
 using DataAcessLayer.Interfaces;
 using DataAcessLayer.Models;
@@ -21,6 +22,21 @@ namespace BusinessLayer.Services.StoreOwner
     {
         public BrandService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
+        }
+
+        public async Task<List<BrandViewModel>> GetBrandList(int userId)
+        {
+            var userBrandData = await _unitOfWork.UserBrandRepository
+                .Get()
+                .Where(x => x.UserId == userId)
+                .Include(x=>x.Brand)
+                .ThenInclude(x=>x.Stores)
+                .Select(x => x.Brand)
+                .ToListAsync();
+            var mappedBrandsData = _mapper.Map<List<Brand>, List<BrandViewModel>>(userBrandData);
+            mappedBrandsData.ForEach(x => x.Status = (int)x.Status);
+
+            return mappedBrandsData;
         }
     }
 }

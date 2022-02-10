@@ -28,9 +28,17 @@ namespace SWD_GSM.Controllers.StoreOwner
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get(int BrandId, [FromQuery] ProductSearchModel searchModel, [FromQuery] PagingRequestModel paging)
+        public async Task<IActionResult> Get(int UserId)
         {
-            return null;
+            try
+            {
+                var brands = await _brandService.GetBrandList(UserId);
+                return Ok(brands);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int BrandId, int id)

@@ -25,7 +25,7 @@ namespace BusinessLayer.Services.StoreOwner
 {
     public class ProductService : BaseService, IProductService
     {
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork,mapper)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
         }
         public async Task<BasePagingViewModel<ProductViewModel>> GetProductList(int brandId, ProductSearchModel searchModel, PagingRequestModel paging)
@@ -52,7 +52,7 @@ namespace BusinessLayer.Services.StoreOwner
                 //)
                 .ToListAsync();
             var mappedProductsData = _mapper.Map<List<Product>, List<ProductViewModel>>(productsData);
-            mappedProductsData.ForEach(x=>x.Status = (int)x.Status);
+            mappedProductsData.ForEach(x => x.Status = (int)x.Status);
 
             mappedProductsData = mappedProductsData
                         .Where(x =>
@@ -96,55 +96,63 @@ namespace BusinessLayer.Services.StoreOwner
         public async Task<ProductViewModel> GetProductById(int brandId, int productId)
         {
             var product = await _unitOfWork.ProductRepository
-              .Get().Where(x => x.BrandId == brandId).Where(x => x.Id == productId).Select
-                (x => new ProductViewModel()
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    UnpackedProductId = x.UnpackedProductId,
-                    UnpackedProductName = x.UnpackedProduct.Name,
-                    BuyPrice = x.BuyPrice,
-                    SellPrice = x.SellPrice,
-                    CategoryId = x.CategoryId,
-                    CategoryName = x.Category.Name,
-                    ConversionRate = x.ConversionRate,
-                    UnitLabel = x.UnitLabel,
-                    LowerThreshold = x.LowerThreshold,
-                    Status = (int)x.Status
-                }
-                ).FirstOrDefaultAsync();
-            return product;
+              .Get()
+              .Where(x => x.BrandId == brandId)
+              .Where(x => x.Id == productId)
+              .FirstOrDefaultAsync();
+            if (product != null)
+            {
+                var mappedProduct = _mapper.Map<Product, ProductViewModel>(product);
+                mappedProduct.Status = (int)product.Status;
+                return mappedProduct;
+            }
+            return null;
         }
         public async Task<int> AddProduct(int brandId, ProductCreateModel model)
         {
-            var product = new Product()
-            {
-                Name = model.Name,
-                UnpackedProductId = model.UnpackedProductId,
-                BuyPrice = model.BuyPrice,
-                SellPrice = model.SellPrice,
-                CategoryId = model.CategoryId,
-                ConversionRate = model.ConversionRate,
-                UnitLabel = model.UnitLabel,
-                BrandId = brandId,
-                LowerThreshold = model.LowerThreshold,
-                Status = Product.ProductStatus.Selling
-            };
-            await _unitOfWork.ProductRepository.Add(product);
+            //var product = new Product()
+            //{
+            //    Name = model.Name,
+            //    UnpackedProductId = model.UnpackedProductId,
+            //    BuyPrice = model.BuyPrice,
+            //    SellPrice = model.SellPrice,
+            //    CategoryId = model.CategoryId,
+            //    ConversionRate = model.ConversionRate,
+            //    UnitLabel = model.UnitLabel,
+            //    BrandId = brandId,
+            //    LowerThreshold = model.LowerThreshold,
+            //    Status = Product.ProductStatus.Selling
+            //};
+            var mappedProduct = _mapper.Map<ProductCreateModel, Product>(model);
+            mappedProduct.BrandId = brandId;
+            mappedProduct.Status = Product.ProductStatus.Selling;
+
+            await _unitOfWork.ProductRepository.Add(mappedProduct);
             await _unitOfWork.SaveChangesAsync();
 
-            //var stock = new Stock()
-            //{
-            //    Price = product.SellPrice,
-            //    Product = product,
-            //    ProductId = product.Id,
-            //    Quantity = 0,
-            //    Status = Stock.StockDetail.NearlyOutOfStock,
-            //    Store = 
-                
-            //}
+            //update model
+            mappedProduct = await _unitOfWork.Context().Products
+                .Where(x => x.Id == mappedProduct.Id)
+                .Include(x => x.Brand)
+                .ThenInclude(x => x.Stores)
+                .FirstOrDefaultAsync();
+            foreach (Store store in mappedProduct.Brand.Stores)
+            {
+                //cho nay ko map gi nha
+                var stock = new Stock()
+                {
+                    Price = mappedProduct.SellPrice,
+                    Product = mappedProduct,
+                    ProductId = mappedProduct.Id,
+                    Quantity = 0,
+                    Status = Stock.StockDetail.NearlyOutOfStock,
+                    StoreId = store.Id
+                };
+                await _unitOfWork.StockRepository.Add(stock);
+            }
+            await _unitOfWork.SaveChangesAsync();
 
-            return product.Id;
+            return mappedProduct.Id;
         }
         public async Task<bool> UpdateProduct(int brandId, int productId, ProductCreateModel model)
         {
@@ -167,6 +175,11 @@ namespace BusinessLayer.Services.StoreOwner
             product.LowerThreshold = model.LowerThreshold;
             product.Status = model.Status;
 
+            //product = _mapper.Map<ProductCreateModel, Product>(model);
+            //product.BrandId = brandId;
+            //product.Id = productId;
+
+
             _unitOfWork.ProductRepository.Update(product);
             await _unitOfWork.SaveChangesAsync();
             return true;
@@ -176,9 +189,10 @@ namespace BusinessLayer.Services.StoreOwner
             var product = await _unitOfWork.ProductRepository.Get()
                 .Where(x => x.BrandId.Equals(brandId))
                 .Where(x => x.Id.Equals(productId))
-                .Include(x=>x.InverseUnpackedProduct)
+                .Include(x => x.InverseUnpackedProduct)
                 .FirstOrDefaultAsync();
-            var result = new DeleteProductErrorModel() {
+            var result = new DeleteProductErrorModel()
+            {
                 InverseUnpackedProducts = new List<ProductErrorModel>()
             };
             if (product == null)
