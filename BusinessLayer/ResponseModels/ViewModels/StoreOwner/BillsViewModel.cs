@@ -11,7 +11,7 @@ namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
     {
         public BillsViewModel()
         {
-            BillDetails = new HashSet<BillDetail>();
+            BillDetails = new HashSet<BillDetailsViewModel>();
         }
 
         public int Id { get; set; }
@@ -22,6 +22,6 @@ namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
 
         public virtual DataAcessLayer.Models.Cashier Cashier { get; set; }
         public virtual Store Store { get; set; }
-        public virtual ICollection<BillDetail> BillDetails { get; set; }
+        public virtual ICollection<BillDetailsViewModel> BillDetails { get; set; }
     }
 }

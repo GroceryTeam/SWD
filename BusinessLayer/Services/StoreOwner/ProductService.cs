@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using Utilities;
 using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels.CreateModels.StoreOwner;
-using BusinessLayer.ResponseModel.ViewModels.StoreOwner;
+using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using static DataAcessLayer.Models.Product;
 using BusinessLayer.ResponseModels.ErrorModels.StoreOwner;

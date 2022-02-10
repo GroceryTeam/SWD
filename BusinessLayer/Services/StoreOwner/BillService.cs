@@ -53,16 +53,36 @@ namespace BusinessLayer.Services.StoreOwner
 
         public async Task<BillsViewModel> GetBillById(int billId)
         {
+            var details = await _unitOfWork.BillDetailRepository
+                .Get().Where(bd => bd.BillId == billId)
+                .Include(bd => bd.Product)
+                .Select(bd => new BillDetailsViewModel()
+                {
+                    BuyPrice = bd.BuyPrice, 
+                    SellPrice = bd.SellPrice,
+                    Quantity = bd.Quantity,
+                    Product = new ProductsViewModel()
+                    { 
+                        Id = bd.Product.Id,
+                        Name = bd.Product.Name,
+                        CategoryId = bd.Product.CategoryId,
+                        UnitLabel = bd.Product.UnitLabel
+                    },
+                })
+                .ToListAsync();
+
             var bill = await _unitOfWork.BillRepository.Get()
-                .Include(bill => bill.BillDetails)
                 .Include(bill => bill.Cashier)
+                .Include(bill => bill.BillDetails)
+                .ThenInclude(bd => bd.Product)
+                .IgnoreAutoIncludes()
                 .Select(bill => new BillsViewModel() { 
                     Id = bill.Id,
                     StoreId = bill.StoreId,
                     CashierId = bill.CashierId,
                     DateCreated = bill.DateCreated,
                     TotalPrice = bill.TotalPrice,
-                    BillDetails = bill.BillDetails,
+                    BillDetails = details,
                     Cashier = bill.Cashier
                 })
                 .FirstOrDefaultAsync();
