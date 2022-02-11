@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
+using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using BusinessLayer.ResponseModels.ViewModels;
@@ -16,5 +17,6 @@ namespace BusinessLayer.Interfaces.StoreOwner
     {
         Task<EventViewModel> GetEventById(int brandId, int productId);
         Task<BasePagingViewModel<EventViewModel>> GetEventList(int brandId, EventSearchModel searchModel, PagingRequestModel paging);
+        Task<int> AddEvent(int brandId, EventCreateModel model);
     }
 }

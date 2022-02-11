@@ -25,9 +25,9 @@ namespace BusinessLayer.Utilities
                    mc.CreateMap<Brand, ResponseModels.ViewModels.StoreOwner.BrandViewModel>().ReverseMap();
                    mc.CreateMap<Store, ResponseModels.ViewModels.StoreOwner.StoreViewModel>().ReverseMap();
                    mc.CreateMap<Category, ResponseModels.ViewModels.StoreOwner.CategoryViewModel>().ReverseMap();
-                   mc.CreateMap<EventDetail, ResponseModels.ViewModels.StoreOwner.EventDetailViewModel>().ReverseMap(); mc.CreateMap<Event, ResponseModels.ViewModels.StoreOwner.EventDetailViewModel>().ReverseMap();
+                   mc.CreateMap<EventDetail, ResponseModels.ViewModels.StoreOwner.EventDetailViewModel>().ReverseMap();
                    mc.CreateMap<Event, ResponseModels.ViewModels.StoreOwner.EventViewModel>().ReverseMap();
-                   mc.CreateMap<ReceiptDetail, ResponseModels.ViewModels.StoreOwner.ReceiptDetailViewModel>().ReverseMap(); mc.CreateMap<Event, ResponseModels.ViewModels.StoreOwner.EventDetailViewModel>().ReverseMap();
+                   mc.CreateMap<ReceiptDetail, ResponseModels.ViewModels.StoreOwner.ReceiptDetailViewModel>().ReverseMap(); 
                    mc.CreateMap<Receipt, ResponseModels.ViewModels.StoreOwner.ReceiptViewModel>().ReverseMap();
                    mc.CreateMap<Receipt, ResponseModels.ViewModels.StoreOwner.ReceiptViewModel>().ReverseMap();
                    mc.CreateMap<User, ResponseModels.ViewModels.StoreOwner.UserViewModel>().ReverseMap();
@@ -41,6 +41,8 @@ namespace BusinessLayer.Utilities
                    mc.CreateMap<BillDetail, BillDetailCreateModel>().ReverseMap();
                    mc.CreateMap<Product, ProductCreateModel>().ReverseMap();
                    mc.CreateMap<User, StoreOwnerCreateModel>().ReverseMap();
+                   mc.CreateMap<EventDetail, EventDetailCreateModel>().ReverseMap();
+                   mc.CreateMap<Event, EventCreateModel>().ReverseMap();
                });
         }
     }

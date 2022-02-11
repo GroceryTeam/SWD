@@ -97,5 +97,27 @@ namespace BusinessLayer.Services.StoreOwner
             };
             return eventResult;
         }
+
+        public async Task<int> AddEvent(int brandId, EventCreateModel model)
+        {
+            var mappedEvent = _mapper.Map<EventCreateModel, Event>(model);
+            mappedEvent.Status = EventStatus.Disabled;
+            await _unitOfWork.EventRepository.Add(mappedEvent);
+
+            foreach (var detail in model.Details)
+            {
+                mappedEvent.EventDetails.Add(new EventDetail
+                {
+                 EventId=mappedEvent.Id,
+                  NewPrice = detail.NewPrice,
+                  ProductId = detail.ProductId
+                });
+            }
+            await _unitOfWork.SaveChangesAsync();
+
+            return mappedEvent.Id;
+
+        }
+
     }
 }

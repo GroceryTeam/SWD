@@ -29,6 +29,7 @@ namespace BusinessLayer.Services.Cashier
             mappedBill.StoreId = storeId;
             mappedBill.CashierId = cashierId;
             mappedBill.DateCreated = DateTime.Now;
+            await _unitOfWork.BillRepository.Add(mappedBill);
 
             foreach (var detail in model.Details)
             {
@@ -52,7 +53,6 @@ namespace BusinessLayer.Services.Cashier
                 correspondingStock.Quantity -= detail.Quantity;
                 _unitOfWork.StockRepository.Update(correspondingStock);
             }
-            await _unitOfWork.BillRepository.Add(mappedBill);
             await _unitOfWork.SaveChangesAsync();
 
             return mappedBill.Id;

@@ -3,6 +3,7 @@ using BusinessLayer.Interfaces;
 using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
+using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using BusinessLayer.Utilities;
@@ -64,6 +65,23 @@ namespace SWD_GSM.Controllers.StoreOwner
             {
                 return BadRequest();
             }
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateNewEvent(int BrandId, [FromBody] EventCreateModel model)
+        {
+            try
+            {
+                if (model.Details.Count<=0)
+                {
+                    return BadRequest();
+                }
+                var id = await _eventService.AddEvent(BrandId, model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
     }
 }
