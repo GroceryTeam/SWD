@@ -66,6 +66,7 @@ namespace SWD_GSM.Controllers.StoreOwner
                 return BadRequest();
             }
         }
+      
         [HttpPost]
         public async Task<IActionResult> CreateNewEvent(int BrandId, [FromBody] EventCreateModel model)
         {
@@ -76,6 +77,19 @@ namespace SWD_GSM.Controllers.StoreOwner
                     return BadRequest();
                 }
                 var id = await _eventService.AddEvent(BrandId, model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] EventCreateModel model)
+        {
+            try
+            {
+                await _eventService.UpdateEvent(id, model);
             }
             catch (Exception)
             {

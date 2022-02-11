@@ -18,5 +18,6 @@ namespace DataAcessLayer.Interfaces
         void Update(TEntity entity);
 
         Task Delete(int id);
+        Task DeleteComplex(object firstKey, object secondKey);
     }
 }

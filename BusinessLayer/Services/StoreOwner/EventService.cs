@@ -118,6 +118,37 @@ namespace BusinessLayer.Services.StoreOwner
             return mappedEvent.Id;
 
         }
+        public async Task<bool> UpdateEvent(int eventId, EventCreateModel model)
+        {
+            var @event = await _unitOfWork.EventRepository.Get()
+                .Where(x => x.Id.Equals(eventId))
+                .FirstOrDefaultAsync();
+            if (@event == null)
+            {
+                return false;
+            }
 
+            @event.EventName = model.EventName;
+
+            var oldEventDetailIdList = _unitOfWork.EventDetailRepository.Get().Where(x => x.EventId == eventId).Select(x => new { x.EventId,x.ProductId}).ToList();
+            foreach (var _id in oldEventDetailIdList)
+            {
+                await _unitOfWork.EventDetailRepository.DeleteComplex(_id.EventId,_id.ProductId);
+            }
+            @event.EventDetails.Clear();
+            foreach (var detail in model.Details)
+            {
+                @event.EventDetails.Add(new EventDetail
+                {
+                    EventId = @event.Id,
+                    NewPrice = detail.NewPrice,
+                    ProductId = detail.ProductId
+                });
+            }
+
+            _unitOfWork.EventRepository.Update(@event);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
+        }
     }
 }

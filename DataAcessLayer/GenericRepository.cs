@@ -12,8 +12,8 @@ namespace DataAcessLayer
 {
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
-        private readonly DbSet<TEntity> _dbSet;
-        private readonly GroceryCloudContext _dbContext;
+        public readonly DbSet<TEntity> _dbSet;
+        public readonly GroceryCloudContext _dbContext;
         public GenericRepository(GroceryCloudContext dbContext)
         {
             _dbSet = dbContext.Set<TEntity>();
@@ -57,6 +57,11 @@ namespace DataAcessLayer
         public async Task Delete(int id)
         {
             var entity = await GetById(id);
+            _dbSet.Remove(entity);
+        }
+        public async Task DeleteComplex(object firstKey, object secondKey)
+        {
+            var entity = await _dbSet.FindAsync(firstKey,secondKey);
             _dbSet.Remove(entity);
         }
     }
