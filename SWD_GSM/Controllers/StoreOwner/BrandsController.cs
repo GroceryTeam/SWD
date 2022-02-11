@@ -40,11 +40,6 @@ namespace SWD_GSM.Controllers.StoreOwner
                 return BadRequest();
             }
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int BrandId, int id)
-        {
-            return null;
-        }
     }
 }
 

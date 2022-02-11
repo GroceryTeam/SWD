@@ -49,7 +49,7 @@ namespace BusinessLayer.Services.Cashier
                                 {
                                     Id = x.Id,
                                     Name = x.Name,
-                                    UnpackedProductName = x.UnpackedProduct.Name,
+                                    UnpackedProductName = x.UnpackedProduct!=null ? x.UnpackedProduct.Name: null,
                                     OriginalPrice = x.SellPrice,
                                     EventPrice = x.Stocks
                                     .Where(a => a.StoreId == storeId)
@@ -58,10 +58,14 @@ namespace BusinessLayer.Services.Cashier
                                     CategoryId = x.CategoryId,
                                     ConversionRate = x.ConversionRate,
                                     UnitLabel = x.UnitLabel,
+                                    Quantity = x.Stocks
+                                    .Where(a => a.StoreId == storeId)
+                                    .Where(a => a.ProductId == x.Id)
+                                    .FirstOrDefault().Quantity
                                 }
                                 ).ToList();
 
-        int totalItem = productsData.Count;
+            int totalItem = productsData.Count;
 
             productsData = productsData.Skip((paging.PageIndex - 1) * paging.PageSize)
                 .Take(paging.PageSize).ToList();
@@ -75,6 +79,39 @@ namespace BusinessLayer.Services.Cashier
                 Data = products
             };
             return productResult;
+        }
+
+        public async Task<ProductViewModel> GetProductById(int storeId, int productId)
+        {
+            var product = await _unitOfWork.ProductRepository
+              .Get()
+              .Where(x => x.Id == productId)
+              .Include(x => x.Stocks)
+              .Include(x => x.InverseUnpackedProduct)
+              .FirstOrDefaultAsync();
+            if (product != null)
+            {
+                var productData = new ProductViewModel()
+                {
+                    Id = product.Id,
+                    Name = product.Name,
+                    UnpackedProductName = product.UnpackedProduct != null ? product.UnpackedProduct.Name : null,
+                    OriginalPrice = product.SellPrice,
+                    EventPrice = product.Stocks
+                                    .Where(a => a.StoreId == storeId)
+                                    .Where(a => a.ProductId == product.Id)
+                                    .FirstOrDefault().Price,
+                    CategoryId = product.CategoryId,
+                    ConversionRate = product.ConversionRate,
+                    UnitLabel = product.UnitLabel,
+                    Quantity = product.Stocks
+                                    .Where(a => a.StoreId == storeId)
+                                    .Where(a => a.ProductId == product.Id)
+                                    .FirstOrDefault().Quantity
+                };
+                return productData;
+            }
+            return null;
         }
     }
 }

@@ -44,12 +44,24 @@ namespace SWD_GSM.Controllers.Cashier
                 return BadRequest();
             }
         }
-        //[HttpGet("{id}")]
-        //public async Task<IActionResult> GetById(int BrandId, int id)
-        //{
-        //    return null;
-        //}
-       
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int StoreId, int id)
+        {
+            try
+            {
+                var product = await _productService.GetProductById(StoreId, id);
+                if (product != null)
+                {
+                    return Ok(product);
+                }
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }
 

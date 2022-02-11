@@ -2,6 +2,7 @@
 using BusinessLayer.Interfaces.Cashier;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
+using BusinessLayer.RequestModels.CreateModels.Cashier;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using Microsoft.AspNetCore.Authorization;
@@ -20,24 +21,24 @@ namespace SWD_GSM.Controllers.Cashier
     [Authorize(Roles = Role)]
     public class BillsController : BaseCashierController
     {
-        private readonly IProductService _productService;
+        private readonly IBillService _billService;
 
-        public BillsController(IProductService service)
+        public BillsController(IBillService billService)
         {
-            _productService = service;
+            _billService = billService;
         }
-
-        [HttpGet]
-        public async Task<IActionResult> Get(int BrandId, [FromQuery] ProductSearchModel searchModel, [FromQuery] PagingRequestModel paging)
+        [HttpPost]
+        public async Task<IActionResult> Create(int StoreId, int CashierId, [FromBody] BillCreateModel model)
         {
-            return null;
+            try
+            {
+                await _billService.AddBill(StoreId, CashierId, model);
+            } catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
-        [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int BrandId, int id)
-        {
-            return null;
-        }
-       
     }
 }
 

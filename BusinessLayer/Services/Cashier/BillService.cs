@@ -49,6 +49,8 @@ namespace BusinessLayer.Services.Cashier
                     SellPrice = correspondingStock.Price,
                     Quantity = detail.Quantity
                 });
+                correspondingStock.Quantity -= detail.Quantity;
+                _unitOfWork.StockRepository.Update(correspondingStock);
             }
             await _unitOfWork.BillRepository.Add(mappedBill);
             await _unitOfWork.SaveChangesAsync();
@@ -56,5 +58,7 @@ namespace BusinessLayer.Services.Cashier
             return mappedBill.Id;
 
         }
+
+
     }
 }

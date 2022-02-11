@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace BusinessLayer.ResponseModels.ViewModels.Cashier
+namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
 {
     public class CashierViewModel
     {

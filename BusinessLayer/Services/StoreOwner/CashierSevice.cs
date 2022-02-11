@@ -4,8 +4,9 @@ using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels;
+using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using BusinessLayer.ResponseModels.ViewModels;
-using BusinessLayer.ResponseModels.ViewModels.Cashier;
+using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.Services;
 using DataAcessLayer.Interfaces;
 using DataAcessLayer.Models;
@@ -27,19 +28,38 @@ namespace BusinessLayer.Services.StoreOwner
         {
 
         }
-        public async Task<CashierViewModel> Login(LoginModel login)
+        public async Task<BasePagingViewModel<CashierViewModel>> GetCashierList(CashierSearchModel searchModel, PagingRequestModel paging)
         {
-            var cashier = await _unitOfWork.CashierRepository
-                .Get().Where(x => x.Username == login.Username && x.Password == login.Password)
-                .Where(x => x.Status == CashierStatus.Working)
-                .Select(x => new CashierViewModel()
-                {
-                    Id = x.Id,
-                    Username = x.Username,
-                    Name = x.Name,
-                    StoreId = x.StoreId
-                }).FirstOrDefaultAsync();
-            return cashier;
+            var cashiersData = await _unitOfWork.CashierRepository
+                .Get()
+                .Include(x=>x.Store).ThenInclude(x=>x.Brand)
+                .Where(x => searchModel.BrandId!=null? x.Store.Brand.Id == searchModel.BrandId:true)
+                .Where(x => searchModel.StoreId != null ? x.Store.Id == searchModel.StoreId : true)
+                .Where(x => searchModel.IncludeDisabledCashier? true : x.Status == CashierStatus.Working)
+                .ToListAsync();
+            var mappedCashiersData = _mapper.Map<List<DataAcessLayer.Models.Cashier>, List<CashierViewModel>>(cashiersData);
+            mappedCashiersData.ForEach(x => x.Status = (int)x.Status);
+
+            mappedCashiersData = mappedCashiersData
+                        .Where(x =>
+                            StringNormalizer.VietnameseNormalize(x.Name)
+                            .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
+                        .ToList();
+
+            int totalItem = mappedCashiersData.Count;
+
+            mappedCashiersData = mappedCashiersData.Skip((paging.PageIndex - 1) * paging.PageSize)
+                .Take(paging.PageSize).ToList();
+
+            var cashierResult = new BasePagingViewModel<CashierViewModel>()
+            {
+                PageIndex = paging.PageIndex,
+                PageSize = paging.PageSize,
+                TotalItem = totalItem,
+                TotalPage = (int)Math.Ceiling((decimal)totalItem / (decimal)paging.PageSize),
+                Data = mappedCashiersData
+            };
+            return cashierResult;
         }
     }
 }

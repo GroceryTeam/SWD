@@ -58,7 +58,6 @@ namespace SWD_GSM.Controllers.StoreOwner
         {
             try
             {
-                var paging = PagingUtil.getDefaultPaging();
                 var product = await _productService.GetProductById(BrandId, id);
                 if (product!=null)
                 {

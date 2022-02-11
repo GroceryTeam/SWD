@@ -15,5 +15,6 @@ namespace BusinessLayer.Interfaces.Cashier
     public interface IProductService
     {
         Task<BasePagingViewModel<ProductViewModel>> GetProductList(int brandId, ProductSearchModel searchModel, PagingRequestModel paging);
+        Task<ProductViewModel> GetProductById(int storeId, int productId);
     }
 }

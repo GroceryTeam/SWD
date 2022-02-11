@@ -1,9 +1,11 @@
 using AutoMapper;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Interfaces.StoreOwner;
+using BusinessLayer.Interfaces.Cashier;
 using BusinessLayer.Interfaces.SystemAdmin;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.Services;
+using BusinessLayer.Services.Cashier;
 using BusinessLayer.Services.StoreOwner;
 using BusinessLayer.Services.SystemAdmin;
 using BusinessLayer.Utilities;
@@ -150,7 +152,8 @@ namespace SWD_GSM
             services.AddTransient<IDailyRevenueService, DailyRevenueService>();
             services.AddTransient<IEventService, EventService>();
             services.AddTransient<IStockService, StockService>();
-            services.AddTransient<ICashierService, CashierSevice>();
+            services.AddTransient<BusinessLayer.Interfaces.StoreOwner.ICashierService,
+                BusinessLayer.Services.StoreOwner.CashierSevice>();
             //cashier
             services.AddTransient<BusinessLayer.Interfaces.Cashier.IProductService,
                  BusinessLayer.Services.Cashier.ProductService>();
@@ -160,7 +163,8 @@ namespace SWD_GSM
                 BusinessLayer.Services.Cashier.BillService>();
             services.AddTransient<BusinessLayer.Interfaces.Cashier.IReceiptService,
                  BusinessLayer.Services.Cashier.ReceiptService>();
-
+            services.AddTransient<BusinessLayer.Interfaces.Cashier.ICashierService,
+                BusinessLayer.Services.Cashier.CashierService>();
             IMapper mapper = AutoMapperConfig.config.CreateMapper();
             services.AddSingleton(mapper);
 

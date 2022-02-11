@@ -31,6 +31,7 @@ namespace BusinessLayer.Utilities
                    mc.CreateMap<Receipt, ResponseModels.ViewModels.StoreOwner.ReceiptViewModel>().ReverseMap();
                    mc.CreateMap<Receipt, ResponseModels.ViewModels.StoreOwner.ReceiptViewModel>().ReverseMap();
                    mc.CreateMap<User, ResponseModels.ViewModels.StoreOwner.UserViewModel>().ReverseMap();
+                   mc.CreateMap<Cashier, ResponseModels.ViewModels.StoreOwner.CashierViewModel>().ReverseMap();
 
                    mc.CreateMap<Brand, ResponseModels.ViewModels.SystemAdmin.BrandViewModel>().ReverseMap();
                    mc.CreateMap<User, ResponseModels.ViewModels.SystemAdmin.UserViewModel>().ReverseMap();

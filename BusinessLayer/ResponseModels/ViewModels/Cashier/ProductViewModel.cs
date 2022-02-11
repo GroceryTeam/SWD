@@ -19,6 +19,7 @@ namespace BusinessLayer.ResponseModels.ViewModels.Cashier
         //public string CategoryName { get; set; }
         public int? ConversionRate { get; set; }
         public string UnitLabel { get; set; }
+        public int Quantity { get; set; }
         //public int? LowerThreshold { get; set; }
         //public int Status { get; set; }
     }
