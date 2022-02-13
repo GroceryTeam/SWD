@@ -1,5 +1,7 @@
 ﻿using BusinessLayer.Interfaces;
 using BusinessLayer.Interfaces.StoreOwner;
+using BusinessLayer.RequestModels;
+using BusinessLayer.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -24,9 +26,10 @@ namespace SWD_GSM.Controllers.Cashier
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int BrandId, [FromQuery] PagingRequestModel paging)
         {
-            var categories = await _categoryService.GetCategoryList();
+            paging = PagingUtil.getDefaultPaging();
+            var categories = await _categoryService.GetCategoryList(BrandId, paging);
             return Ok(categories);
         }
 

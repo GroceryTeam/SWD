@@ -1,4 +1,6 @@
-﻿using BusinessLayer.ResponseModels.ViewModels;
+﻿using BusinessLayer.RequestModels;
+using BusinessLayer.RequestModels.CreateModels.StoreOwner;
+using BusinessLayer.ResponseModels.ViewModels;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using System;
 using System.Collections.Generic;
@@ -10,6 +12,8 @@ namespace BusinessLayer.Interfaces.StoreOwner
 {
     public interface ICategoryService
     {
-        Task<List<CategoryViewModel>> GetCategoryList();
+        Task<BasePagingViewModel<CategoryViewModel>> GetCategoryList(int brandId, PagingRequestModel paging);
+        Task<int> AddCategory(int brandId, CategoryCreateModel model);
+        Task<bool> UpdateCategory(int brandId, int categoryId, string CategoryName);
     }
 }

@@ -1,5 +1,8 @@
 ﻿using BusinessLayer.Interfaces;
 using BusinessLayer.Interfaces.StoreOwner;
+using BusinessLayer.RequestModels;
+using BusinessLayer.RequestModels.CreateModels.StoreOwner;
+using BusinessLayer.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -25,10 +28,43 @@ namespace SWD_GSM.Controllers.StoreOwner
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get(int BrandId, [FromQuery] PagingRequestModel paging)
         {
-            var categories = await _categoryService.GetCategoryList();
+            paging = PagingUtil.getDefaultPaging();
+            var categories = await _categoryService.GetCategoryList(BrandId, paging);
             return Ok(categories);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateNewCategory([FromBody] CategoryCreateModel model)
+        {
+            try
+            {
+                var id = await _categoryService.AddCategory(model.BrandId, model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] CategoryCreateModel model)
+        {
+            try
+            {
+                if (model.Name.Length == 0)
+                {
+                    return BadRequest();
+                }
+                await _categoryService.UpdateCategory(model.BrandId, id, model.Name);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
 
     }
