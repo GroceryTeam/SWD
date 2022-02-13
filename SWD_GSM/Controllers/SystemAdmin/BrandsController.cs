@@ -74,7 +74,7 @@ namespace SWD_GSM.Controllers.SystemAdmin
                 return NotFound();
             }
         }
-        [HttpPut("enable-user/{id}")]
+        [HttpPut("enable-brand/{id}")]
         public async Task<IActionResult> EnableUser(int id)
         {
             try

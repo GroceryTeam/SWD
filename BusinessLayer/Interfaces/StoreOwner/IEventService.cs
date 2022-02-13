@@ -19,5 +19,7 @@ namespace BusinessLayer.Interfaces.StoreOwner
         Task<BasePagingViewModel<EventViewModel>> GetEventList(int brandId, EventSearchModel searchModel, PagingRequestModel paging);
         Task<int> AddEvent(int brandId, EventCreateModel model);
         Task<bool> UpdateEvent(int eventId, EventCreateModel model);
+        Task ApplyEvent(int brandId, int eventId);
+        Task UnApplyEvent(int brandId, int eventId);
     }
 }

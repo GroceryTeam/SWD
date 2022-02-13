@@ -97,6 +97,53 @@ namespace SWD_GSM.Controllers.StoreOwner
             }
             return Ok();
         }
+        [HttpPut("apply-event/{id}")]
+        public async Task<IActionResult> ApplyEvent(int BrandId, int id)
+        {
+            try
+            {
+                await _eventService.ApplyEvent(BrandId,id);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        [HttpPut("unapply-event/{id}")]
+        public async Task<IActionResult> UnapplyEvent(int BrandId, int id)
+        {
+            try
+            {
+                await _eventService.UnApplyEvent(BrandId, id);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        //get appliedEvent
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> Delete(int BrandId, int id)
+        //{
+        //    try
+        //    {
+        //        var result = await _productService.DeleteProduct(BrandId, id);
+        //        if (result.InverseUnpackedProducts.Count == 0)
+        //        {
+        //            return NoContent();
+        //        }
+        //        else
+        //        {
+        //            return Conflict(result);
+        //        }
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return NotFound();
+        //    }
+        //}
     }
 }
 

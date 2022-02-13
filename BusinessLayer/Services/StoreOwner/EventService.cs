@@ -108,9 +108,9 @@ namespace BusinessLayer.Services.StoreOwner
             {
                 mappedEvent.EventDetails.Add(new EventDetail
                 {
-                 EventId=mappedEvent.Id,
-                  NewPrice = detail.NewPrice,
-                  ProductId = detail.ProductId
+                    EventId = mappedEvent.Id,
+                    NewPrice = detail.NewPrice,
+                    ProductId = detail.ProductId
                 });
             }
             await _unitOfWork.SaveChangesAsync();
@@ -130,10 +130,10 @@ namespace BusinessLayer.Services.StoreOwner
 
             @event.EventName = model.EventName;
 
-            var oldEventDetailIdList = _unitOfWork.EventDetailRepository.Get().Where(x => x.EventId == eventId).Select(x => new { x.EventId,x.ProductId}).ToList();
+            var oldEventDetailIdList = _unitOfWork.EventDetailRepository.Get().Where(x => x.EventId == eventId).Select(x => new { x.EventId, x.ProductId }).ToList();
             foreach (var _id in oldEventDetailIdList)
             {
-                await _unitOfWork.EventDetailRepository.DeleteComplex(_id.EventId,_id.ProductId);
+                await _unitOfWork.EventDetailRepository.DeleteComplex(_id.EventId, _id.ProductId);
             }
             @event.EventDetails.Clear();
             foreach (var detail in model.Details)
@@ -149,6 +149,34 @@ namespace BusinessLayer.Services.StoreOwner
             _unitOfWork.EventRepository.Update(@event);
             await _unitOfWork.SaveChangesAsync();
             return true;
+        }
+        public async Task ApplyEvent(int brandId, int eventId)
+        {
+            var appliedEvent = await _unitOfWork.EventRepository.Get()
+                .Where(x => x.Status == EventStatus.Enabled)
+                .Where(x => x.BrandId == brandId)
+                .FirstOrDefaultAsync();
+            if (appliedEvent != null) appliedEvent.Status = EventStatus.Disabled;
+            var newAppliedEvent = await _unitOfWork.EventRepository.Get()
+                .Where(x => x.Id == eventId)
+                .FirstOrDefaultAsync();
+            newAppliedEvent.Status = EventStatus.Enabled;
+            _unitOfWork.EventRepository.Update(appliedEvent);
+            _unitOfWork.EventRepository.Update(newAppliedEvent);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task UnApplyEvent(int brandId, int eventId)
+        {
+            var appliedEvent = await _unitOfWork.EventRepository.Get()
+                .Where(x => x.Id == eventId)
+                .FirstOrDefaultAsync();
+            appliedEvent.Status = EventStatus.Disabled;
+            _unitOfWork.EventRepository.Update(appliedEvent);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task DeleteEvent(int eventId)
+        {
+           await _unitOfWork.EventRepository.Delete(eventId);
         }
     }
 }
