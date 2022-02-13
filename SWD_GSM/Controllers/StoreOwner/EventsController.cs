@@ -124,26 +124,27 @@ namespace SWD_GSM.Controllers.StoreOwner
             return Ok();
         }
         //get appliedEvent
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> Delete(int BrandId, int id)
-        //{
-        //    try
-        //    {
-        //        var result = await _productService.DeleteProduct(BrandId, id);
-        //        if (result.InverseUnpackedProducts.Count == 0)
-        //        {
-        //            return NoContent();
-        //        }
-        //        else
-        //        {
-        //            return Conflict(result);
-        //        }
-        //    }
-        //    catch (Exception)
-        //    {
-        //        return NotFound();
-        //    }
-        //}
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int BrandId, int id)
+        {
+            try
+            {
+                //var result = await _eventService.DeleteEvent(BrandId, id);
+                //if (result.InverseUnpackedProducts.Count == 0)
+                //{
+                //    return NoContent();
+                //}
+                //else
+                //{
+                //    return Conflict(result);
+                //}
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+        }
     }
 }
 
