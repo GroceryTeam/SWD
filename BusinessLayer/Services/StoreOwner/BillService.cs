@@ -25,32 +25,34 @@ namespace BusinessLayer.Services.StoreOwner
 
         public async Task<BasePagingViewModel<BillViewModel>> GetBills(int storeId, BillSearchModel searchModel, PagingRequestModel paging)
         {
-            /*var billData = await _unitOfWork.BillRepository.Get()
-                                    .Where(bill => bill.StoreId == storeId)
+            var billData = await _unitOfWork.BillRepository.Get()
+                                    .Where(bill => bill.StoreId == storeId
+                                    ).Include(x=>x.Cashier)
                                     .Select(bill => new BillViewModel()
                                     {
                                         Id = bill.Id,
                                         CashierId = bill.CashierId,
                                         StoreId = bill.StoreId,
                                         DateCreated = bill.DateCreated,
-                                        TotalPrice = bill.TotalPrice
+                                        TotalPrice = bill.TotalPrice,
+                                        CashierName = bill.Cashier.Name,
                                     }).ToListAsync();
 
-            int totalCount = billData.Count();*/
 
-            var billsData = await _unitOfWork.BillRepository
-                .Get()
-                .Where(x => x.StoreId == storeId)
-                .ToListAsync();
+            //var billsData = await _unitOfWork.BillRepository
+            //    .Get()
+            //    .Where(x => x.StoreId == storeId)
+            //    .ToListAsync();
 
-            var mappedBillsData = _mapper.Map<List<Bill>, List<BillViewModel>>(billsData);
-            mappedBillsData = mappedBillsData
+            //var mappedBillsData = _mapper.Map<List<Bill>, List<BillViewModel>>(billsData);
+            //mappedBillsData.ForEach(x=>)'
+            billData = billData
                 .Where(x => (x.DateCreated >= searchModel.StartDate) && (x.DateCreated <= searchModel.EndDate))
                 .ToList();
 
-            int totalCount = mappedBillsData.Count();
+            int totalCount = billData.Count();
 
-            mappedBillsData = mappedBillsData.Skip((paging.PageIndex - 1) * paging.PageSize)
+            billData = billData.Skip((paging.PageIndex - 1) * paging.PageSize)
                                 .Take(paging.PageSize).ToList();
 
             var billResult = new BasePagingViewModel<BillViewModel>()
@@ -58,7 +60,7 @@ namespace BusinessLayer.Services.StoreOwner
                 PageIndex = paging.PageIndex,
                 PageSize = paging.PageSize,
                 TotalItem = totalCount,
-                Data = mappedBillsData,
+                Data = billData,
                 TotalPage = (int)Math.Ceiling((decimal)totalCount / (decimal)paging.PageSize),
             };
 
@@ -75,13 +77,8 @@ namespace BusinessLayer.Services.StoreOwner
                     BuyPrice = bd.BuyPrice, 
                     SellPrice = bd.SellPrice,
                     Quantity = bd.Quantity,
-                    Product = new ProductViewModel()
-                    { 
-                        Id = bd.Product.Id,
-                        Name = bd.Product.Name,
-                        CategoryId = bd.Product.CategoryId,
-                        UnitLabel = bd.Product.UnitLabel
-                    },
+                    ProductName = bd.Product.Name,
+                    ProductId = bd.Product.Id,
                 })
                 .ToListAsync();
 
@@ -98,7 +95,7 @@ namespace BusinessLayer.Services.StoreOwner
                     DateCreated = bill.DateCreated,
                     TotalPrice = bill.TotalPrice,
                     BillDetails = details,
-                    Cashier = bill.Cashier
+                    CashierName = bill.Cashier.Name
                 })
                 .FirstOrDefaultAsync();
             return bill;

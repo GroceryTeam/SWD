@@ -68,7 +68,7 @@ namespace SWD_GSM.Controllers.StoreOwner
         }
       
         [HttpPost]
-        public async Task<IActionResult> CreateNewEvent(int BrandId, [FromBody] EventCreateModel model)
+        public async Task<IActionResult> CreateNewEvent([FromBody] EventCreateModel model)
         {
             try
             {
@@ -76,7 +76,7 @@ namespace SWD_GSM.Controllers.StoreOwner
                 {
                     return BadRequest();
                 }
-                var id = await _eventService.AddEvent(BrandId, model);
+                var id = await _eventService.AddEvent(model.BrandId, model);
             }
             catch (Exception)
             {
@@ -139,6 +139,7 @@ namespace SWD_GSM.Controllers.StoreOwner
                 //    return Conflict(result);
                 //}
                 return Ok();
+
             }
             catch (Exception)
             {

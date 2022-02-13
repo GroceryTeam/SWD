@@ -33,28 +33,28 @@ namespace BusinessLayer.Services.StoreOwner
             var productsData = await _unitOfWork.ProductRepository
                 .Get()
                 .Where(x => x.BrandId == brandId)
-                //.Select
-                //(x => new ProductViewModel()
-                //{
-                //    Id = x.Id,
-                //    Name = x.Name,
-                //    UnpackedProductId = x.UnpackedProductId,
-                //    UnpackedProductName = x.UnpackedProduct.Name,
-                //    BuyPrice = x.BuyPrice,
-                //    SellPrice = x.SellPrice,
-                //    CategoryId = x.CategoryId,
-                //    CategoryName = x.Category.Name,
-                //    ConversionRate = x.ConversionRate,
-                //    UnitLabel = x.UnitLabel,
-                //    LowerThreshold = x.LowerThreshold,
-                //    Status = (int)x.Status
-                //}
-                //)
+                .Select
+                (x => new ProductViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    UnpackedProductId = x.UnpackedProductId,
+                    UnpackedProductName = x.UnpackedProduct.Name,
+                    BuyPrice = x.BuyPrice,
+                    SellPrice = x.SellPrice,
+                    CategoryId = x.CategoryId,
+                    CategoryName = x.Category.Name,
+                    ConversionRate = x.ConversionRate,
+                    UnitLabel = x.UnitLabel,
+                    LowerThreshold = x.LowerThreshold,
+                    Status = (int)x.Status
+                }
+                )
                 .ToListAsync();
-            var mappedProductsData = _mapper.Map<List<Product>, List<ProductViewModel>>(productsData);
-            mappedProductsData.ForEach(x => x.Status = (int)x.Status);
+            //var mappedProductsData = _mapper.Map<List<Product>, List<ProductViewModel>>(productsData);
+            //mappedProductsData.ForEach(x => x.Status = (int)x.Status);
 
-            mappedProductsData = mappedProductsData
+            productsData = productsData
                         .Where(x =>
                             StringNormalizer.VietnameseNormalize(x.Name)
                             .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
@@ -78,9 +78,9 @@ namespace BusinessLayer.Services.StoreOwner
                                             : true)
                         .ToList();
 
-            int totalItem = mappedProductsData.Count;
+            int totalItem = productsData.Count;
 
-            mappedProductsData = mappedProductsData.Skip((paging.PageIndex - 1) * paging.PageSize)
+            productsData = productsData.Skip((paging.PageIndex - 1) * paging.PageSize)
                 .Take(paging.PageSize).ToList();
 
             var productResult = new BasePagingViewModel<ProductViewModel>()
@@ -89,7 +89,7 @@ namespace BusinessLayer.Services.StoreOwner
                 PageSize = paging.PageSize,
                 TotalItem = totalItem,
                 TotalPage = (int)Math.Ceiling((decimal)totalItem / (decimal)paging.PageSize),
-                Data = mappedProductsData
+                Data = productsData
             };
             return productResult;
         }
