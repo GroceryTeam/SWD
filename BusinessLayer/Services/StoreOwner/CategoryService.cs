@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
+using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.ResponseModels.ViewModels;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.Services;
@@ -42,5 +43,32 @@ namespace BusinessLayer.Services.StoreOwner
             };
             return categoryResult;
         }
+
+        public async Task<int> AddCategory(int brandId, CategoryCreateModel model)
+        {
+            var mappedCategory = _mapper.Map<CategoryCreateModel, Category>(model);
+            await _unitOfWork.CategoryRepository.Add(mappedCategory);
+            await _unitOfWork.SaveChangesAsync();
+            return mappedCategory.Id;
+        }
+
+        public async Task<bool> UpdateCategory(int brandId, int categoryId, string CategoryName)
+        {
+            var category = await _unitOfWork.CategoryRepository.Get()
+                .Where(x => x.BrandId.Equals(brandId))
+                .Where(x => x.Id.Equals(categoryId))
+                .FirstOrDefaultAsync();
+            if (category == null)
+            {
+                return false;
+            }
+
+            category.Name = CategoryName;
+
+            _unitOfWork.CategoryRepository.Update(category);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
+        }
+
     }
 }

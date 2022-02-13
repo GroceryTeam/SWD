@@ -43,6 +43,7 @@ namespace BusinessLayer.Utilities
                    mc.CreateMap<EventDetail, EventDetailCreateModel>().ReverseMap();
                    mc.CreateMap<Event, EventCreateModel>().ReverseMap();
                    mc.CreateMap<Bill, BillViewModel>().ReverseMap();
+                   mc.CreateMap<CategoryCreateModel, Category>().ReverseMap();
                });
         }
     }
