@@ -1,6 +1,7 @@
 ﻿using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
+using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using BusinessLayer.ResponseModels.ViewModels;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using System;
@@ -13,7 +14,7 @@ namespace BusinessLayer.Interfaces.StoreOwner
 {
     public interface IBillService
     {
-        public Task<BasePagingViewModel<BillViewModel>> GetBills(int storeId, PagingRequestModel paging);
+        public Task<BasePagingViewModel<BillViewModel>> GetBills(int storeId, BillSearchModel searchModel, PagingRequestModel paging);
         public Task<BillViewModel> GetBillById(int billId);
     }
 }
