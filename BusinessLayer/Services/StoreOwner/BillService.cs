@@ -3,6 +3,7 @@ using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
+using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using BusinessLayer.ResponseModels.ViewModels;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.Services;
@@ -22,9 +23,9 @@ namespace BusinessLayer.Services.StoreOwner
     {
         public BillService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper) { }
 
-        public async Task<BasePagingViewModel<BillViewModel>> GetBills(int storeId, PagingRequestModel paging)
+        public async Task<BasePagingViewModel<BillViewModel>> GetBills(int storeId, BillSearchModel searchModel, PagingRequestModel paging)
         {
-            var billData = await _unitOfWork.BillRepository.Get()
+            /*var billData = await _unitOfWork.BillRepository.Get()
                                     .Where(bill => bill.StoreId == storeId)
                                     .Select(bill => new BillViewModel()
                                     {
@@ -35,9 +36,21 @@ namespace BusinessLayer.Services.StoreOwner
                                         TotalPrice = bill.TotalPrice
                                     }).ToListAsync();
 
-            int totalCount = billData.Count();
+            int totalCount = billData.Count();*/
 
-            billData = billData.Skip((paging.PageIndex - 1) * paging.PageSize)
+            var billsData = await _unitOfWork.BillRepository
+                .Get()
+                .Where(x => x.StoreId == storeId)
+                .ToListAsync();
+
+            var mappedBillsData = _mapper.Map<List<Bill>, List<BillViewModel>>(billsData);
+            mappedBillsData = mappedBillsData
+                .Where(x => (x.DateCreated >= searchModel.StartDate) && (x.DateCreated <= searchModel.EndDate))
+                .ToList();
+
+            int totalCount = mappedBillsData.Count();
+
+            mappedBillsData = mappedBillsData.Skip((paging.PageIndex - 1) * paging.PageSize)
                                 .Take(paging.PageSize).ToList();
 
             var billResult = new BasePagingViewModel<BillViewModel>()
@@ -45,7 +58,7 @@ namespace BusinessLayer.Services.StoreOwner
                 PageIndex = paging.PageIndex,
                 PageSize = paging.PageSize,
                 TotalItem = totalCount,
-                Data = billData,
+                Data = mappedBillsData,
                 TotalPage = (int)Math.Ceiling((decimal)totalCount / (decimal)paging.PageSize),
             };
 
@@ -90,5 +103,7 @@ namespace BusinessLayer.Services.StoreOwner
                 .FirstOrDefaultAsync();
             return bill;
         }
+
+
     }
 }

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BusinessLayer.RequestModels.CreateModels.Cashier;
 using BusinessLayer.RequestModels.CreateModels.StoreOwner;
+using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using DataAcessLayer.Models;
 using System;
 using System.Collections.Generic;
@@ -37,12 +38,11 @@ namespace BusinessLayer.Utilities
                    mc.CreateMap<User, ResponseModels.ViewModels.SystemAdmin.UserViewModel>().ReverseMap();
 
                     //create model
-                    mc.CreateMap<Bill,BillCreateModel>().ReverseMap();
-                   mc.CreateMap<BillDetail, BillDetailCreateModel>().ReverseMap();
                    mc.CreateMap<Product, ProductCreateModel>().ReverseMap();
                    mc.CreateMap<User, StoreOwnerCreateModel>().ReverseMap();
                    mc.CreateMap<EventDetail, EventDetailCreateModel>().ReverseMap();
                    mc.CreateMap<Event, EventCreateModel>().ReverseMap();
+                   mc.CreateMap<Bill, BillViewModel>().ReverseMap();
                });
         }
     }

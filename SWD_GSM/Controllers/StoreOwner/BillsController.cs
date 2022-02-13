@@ -4,6 +4,7 @@ using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
+using BusinessLayer.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -28,17 +29,30 @@ namespace SWD_GSM.Controllers.StoreOwner
         }
     
         [HttpGet]
-        public async Task<IActionResult> Get(int StoreId, [FromQuery] PagingRequestModel paging)
+        public async Task<IActionResult> Get(int StoreId, [FromQuery] BillSearchModel searchModel, [FromQuery] PagingRequestModel paging)
         {
-            var bills = await _billService.GetBills(StoreId, paging);
-            return Ok(bills);
+
+                paging = PagingUtil.getDefaultPaging();
+                var bills = await _billService.GetBills(StoreId, searchModel, paging);
+                return Ok(bills);
+  
+            
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
         {
-            var bill = await _billService.GetBillById(id);
-            return Ok(bill);
+            try
+            {
+                var paging = PagingUtil.getDefaultPaging();
+                var bill = await _billService.GetBillById(id);
+                return Ok(bill);
+            } 
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            
         }
 
     }
