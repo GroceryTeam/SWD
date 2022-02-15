@@ -92,7 +92,7 @@ namespace SWD_GSM.Controllers.StoreOwner
             //return Ok();
             return null;
         }
-        [HttpDelete("/{id}")]
+        [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int BrandId, int id)
         {
             //try

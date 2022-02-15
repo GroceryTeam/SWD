@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static DataAcessLayer.Models.Event;
 
 namespace SWD_GSM.Controllers.StoreOwner
 {
@@ -97,32 +98,45 @@ namespace SWD_GSM.Controllers.StoreOwner
             }
             return Ok();
         }
-        [HttpPut("apply-event/{id}")]
-        public async Task<IActionResult> ApplyEvent(int BrandId, int id)
+        [HttpPut("change-status/{id}")]
+        public async Task<IActionResult> ChangeStatus(int id, [FromBody] EventCreateModel model)
         {
-            try
-            {
-                await _eventService.ApplyEvent(BrandId,id);
-            }
-            catch (Exception)
+            if (model.Status==null)
             {
                 return BadRequest();
-            }
-            return Ok();
-        }
-        [HttpPut("unapply-event/{id}")]
-        public async Task<IActionResult> UnapplyEvent(int BrandId, int id)
-        {
-            try
+            }else
             {
-                await _eventService.UnApplyEvent(BrandId, id);
+                try
+                {
+                    if (model.Status==(int)EventStatus.Enabled)
+                    {
+                        await _eventService.ApplyEvent(model.BrandId, id);
+                    } else
+                    {
+                        await _eventService.UnApplyEvent(model.BrandId, id);
+                    }
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
+                return Ok();
             }
-            catch (Exception)
-            {
-                return BadRequest();
-            }
-            return Ok();
+              
         }
+        //[HttpPut("unapply-event/{id}")]
+        //public async Task<IActionResult> UnapplyEvent(int BrandId, int id)
+        //{
+        //    try
+        //    {
+        //        await _eventService.UnApplyEvent(BrandId, id);
+        //    }
+        //    catch (Exception)
+        //    {
+        //        return BadRequest();
+        //    }
+        //    return Ok();
+        //}
         //get appliedEvent
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(int BrandId, int id)

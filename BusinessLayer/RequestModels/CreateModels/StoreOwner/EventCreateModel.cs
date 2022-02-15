@@ -10,7 +10,10 @@ namespace BusinessLayer.RequestModels.CreateModels.StoreOwner
     {
         public int BrandId { get; set; }
         public string EventName { get; set; }
+        public int Status { get; set; }
+        
         public List<EventDetailCreateModel> Details { get; set; }
+
 
     }
 }
