@@ -3,6 +3,7 @@ using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.SearchModels;
+using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using BusinessLayer.ResponseModels.ViewModels;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using BusinessLayer.Services;
@@ -56,7 +57,7 @@ namespace BusinessLayer.Services.StoreOwner
             return _receipt;
         }
 
-        public async Task<BasePagingViewModel<ReceiptViewModel>> GetReceiptList(int storeId, PagingRequestModel paging)
+        public async Task<BasePagingViewModel<ReceiptViewModel>> GetReceiptList(int storeId, ReceiptSearchModel model, PagingRequestModel paging)
         {
             var receiptData = await _unitOfWork.ReceiptRepository.Get()
                                     .Include(_receipt => _receipt.ReceiptDetails)
@@ -79,6 +80,10 @@ namespace BusinessLayer.Services.StoreOwner
                                                 Quantity = x.Quantity
                                             })
                                     }).ToListAsync();
+
+            receiptData = receiptData
+                .Where(x => (x.DateCreated >= model.StartDate) && (x.DateCreated <= model.EndDate))
+                .ToList();
 
             int totalCount = receiptData.Count();
 

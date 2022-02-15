@@ -29,12 +29,12 @@ namespace SWD_GSM.Controllers.StoreOwner
         }
     
         [HttpGet]
-        public async Task<IActionResult> Get(int StoreId, [FromQuery] PagingRequestModel paging)
+        public async Task<IActionResult> Get(int StoreId, [FromQuery] ReceiptSearchModel model, [FromQuery] PagingRequestModel paging)
         {
             try
             {
                 paging = PagingUtil.checkDefaultPaging(paging);
-                var receipts = await _receiptService.GetReceiptList(StoreId, paging);
+                var receipts = await _receiptService.GetReceiptList(StoreId, model, paging);
                 return Ok(receipts);
             }
             catch (Exception)
