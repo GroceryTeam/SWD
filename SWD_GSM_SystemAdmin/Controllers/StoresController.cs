@@ -31,6 +31,7 @@ namespace SWD_GSM_SystemAdmin.Controllers.SystemAdmin
         [HttpGet]
         public async Task<IActionResult> Get(int BrandId, StoreSearchModel model, PagingRequestModel paging)
         {
+            return null;
             //var productsData = await _unitOfWork.ProductRepository
             //     .Get()
             //     .Where(x => x.BrandId == brandId)

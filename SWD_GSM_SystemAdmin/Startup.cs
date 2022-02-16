@@ -51,7 +51,7 @@ namespace SWD_GSM_SystemAdmin
             {
                 option.ConstraintMap["slugify"] = typeof(SlugifyParameterTransformer);
             });
-            services.AddDbContext<GroceryCloudContext>(
+            services.AddDbContext<GroceryCloud16th2Context>(
                options => options.UseSqlServer(Configuration.GetConnectionString("GroceryCloud")));
 
             services.AddControllers();

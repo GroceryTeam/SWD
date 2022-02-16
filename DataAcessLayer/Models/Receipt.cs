@@ -10,6 +10,7 @@ namespace DataAcessLayer.Models
         public Receipt()
         {
             ReceiptDetails = new HashSet<ReceiptDetail>();
+            Stocks = new HashSet<Stock>();
         }
 
         public int Id { get; set; }
@@ -19,5 +20,6 @@ namespace DataAcessLayer.Models
 
         public virtual Store Store { get; set; }
         public virtual ICollection<ReceiptDetail> ReceiptDetails { get; set; }
+        public virtual ICollection<Stock> Stocks { get; set; }
     }
 }

@@ -10,6 +10,6 @@ namespace BusinessLayer.RequestModels.SearchModels.StoreOwner
     public class EventSearchModel
     {
         public string SearchTerm { get; set; }
-        public EventStatus? Status { get; set; }
+        public int Status { get; set; }
     }
 }

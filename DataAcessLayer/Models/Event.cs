@@ -7,15 +7,14 @@ namespace DataAcessLayer.Models
 {
     public partial class Event
     {
-        public Event()
-        {
-            EventDetails = new HashSet<EventDetail>();
-        }
-
         public enum EventStatus
         {
             Enabled,
             Disabled
+        }
+        public Event()
+        {
+            EventDetails = new HashSet<EventDetail>();
         }
 
         public int Id { get; set; }

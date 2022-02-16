@@ -48,7 +48,8 @@ namespace BusinessLayer.Services.Cashier
                     BillId = mappedBill.Id,
                     BuyPrice = productInDetail.BuyPrice,
                     SellPrice = correspondingStock.Price,
-                    Quantity = detail.Quantity
+                    Quantity = detail.Quantity,
+                    
                 });
                 correspondingStock.Quantity -= detail.Quantity;
                 _unitOfWork.StockRepository.Update(correspondingStock);

@@ -17,6 +17,7 @@ namespace DataAcessLayer.Models
         public int CashierId { get; set; }
         public DateTime DateCreated { get; set; }
         public int TotalPrice { get; set; }
+
         public virtual Cashier Cashier { get; set; }
         public virtual Store Store { get; set; }
         public virtual ICollection<BillDetail> BillDetails { get; set; }

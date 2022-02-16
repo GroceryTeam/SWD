@@ -12,8 +12,10 @@ namespace DataAcessLayer.Models
         public int BuyPrice { get; set; }
         public int SellPrice { get; set; }
         public int Quantity { get; set; }
+        public int StockId { get; set; }
 
         public virtual Bill Bill { get; set; }
         public virtual Product Product { get; set; }
+        public virtual Stock Stock { get; set; }
     }
 }
