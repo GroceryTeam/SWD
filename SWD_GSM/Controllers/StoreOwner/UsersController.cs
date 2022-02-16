@@ -21,7 +21,6 @@ namespace SWD_GSM.Controllers.StoreOwner
     [Route(StoreOwnerRoute)]
     [ApiController]
     [ApiExplorerSettings(GroupName = Role)]
-    [Authorize(Roles = Role)]
     public class UsersController : BaseStoreOwnerController
     {
         private readonly IUserService _userService;

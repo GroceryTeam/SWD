@@ -27,16 +27,20 @@ namespace SWD_GSM.Controllers.StoreOwner
         {
             _billService = billService;
         }
-    
+
         [HttpGet]
         public async Task<IActionResult> Get(int StoreId, [FromQuery] BillSearchModel searchModel, [FromQuery] PagingRequestModel paging)
         {
-
-                paging = PagingUtil.getDefaultPaging();
+            try
+            {
+                paging = PagingUtil.checkDefaultPaging(paging);
                 var bills = await _billService.GetBills(StoreId, searchModel, paging);
                 return Ok(bills);
-  
-            
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpGet("{id}")]
@@ -44,15 +48,13 @@ namespace SWD_GSM.Controllers.StoreOwner
         {
             try
             {
-                var paging = PagingUtil.getDefaultPaging();
                 var bill = await _billService.GetBillById(id);
                 return Ok(bill);
-            } 
+            }
             catch (Exception)
             {
                 return BadRequest();
             }
-            
         }
 
     }

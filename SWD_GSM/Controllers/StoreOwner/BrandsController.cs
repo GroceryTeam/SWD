@@ -40,6 +40,7 @@ namespace SWD_GSM.Controllers.StoreOwner
                 return BadRequest();
             }
         }
+
     }
 }
 

@@ -17,11 +17,10 @@ namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
         public int Id { get; set; }
         public int StoreId { get; set; }
         public int CashierId { get; set; }
+        public string CashierName { get; set; }
         public DateTime DateCreated { get; set; }
         public int TotalPrice { get; set; }
-
-        public virtual DataAcessLayer.Models.Cashier Cashier { get; set; }
-        public virtual Store Store { get; set; }
+  
         public virtual ICollection<BillDetailViewModel> BillDetails { get; set; }
     }
 }

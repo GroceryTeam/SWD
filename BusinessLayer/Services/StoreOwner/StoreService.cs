@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLayer.Interfaces.StoreOwner;
+using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using DataAcessLayer.Interfaces;
 using DataAcessLayer.Models;
@@ -28,6 +29,59 @@ namespace BusinessLayer.Services.StoreOwner
             mappedStoresData.ForEach(x => x.ApprovedStatus = (int)x.ApprovedStatus);
 
             return mappedStoresData;
+        }
+        public async Task<StoreViewModel> GetStoreById(int storeId)
+        {
+            var store = await _unitOfWork.StoreRepository
+              .Get()
+              .Where(x => x.Id == storeId)
+              .FirstOrDefaultAsync();
+            if (store != null)
+            {
+                var mappedStore = _mapper.Map<Store, StoreViewModel>(store);
+                mappedStore.ApprovedStatus = (int)store.ApprovedStatus;
+                return mappedStore;
+            }
+            return null;
+        }
+        public async Task CreateStore(StoreCreateModel model)
+        {
+            var mappedStore = _mapper.Map<StoreCreateModel, Store>(model);
+            mappedStore.ApprovedStatus = Store.StoreApproveStatus.Pending;
+
+            await _unitOfWork.StoreRepository.Add(mappedStore);
+            await _unitOfWork.SaveChangesAsync();
+        }
+        public async Task<bool> UpdateStore(int storeId, StoreCreateModel model)
+        {
+            var store = await _unitOfWork.StoreRepository.Get()
+                .Where(x => x.Id.Equals(storeId))
+                .FirstOrDefaultAsync();
+            if (store == null)
+            {
+                return false;
+            }
+
+            store.Name = model.Name;
+            store.Address = model.Address;
+
+            _unitOfWork.StoreRepository.Update(store);
+            await _unitOfWork.SaveChangesAsync();
+            return true;
+        }
+        public async Task DeleteStore(int storeId)
+        {
+            var store = await _unitOfWork.StoreRepository.Get()
+                .Where(x => x.Id.Equals(storeId))
+                .FirstOrDefaultAsync();
+            if (store == null)
+            {
+                throw new Exception();
+            }
+
+            store.ApprovedStatus = Store.StoreApproveStatus.Disabled;
+            _unitOfWork.StoreRepository.Update(store);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

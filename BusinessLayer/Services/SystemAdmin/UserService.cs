@@ -83,9 +83,6 @@ namespace BusinessLayer.Services.SystemAdmin
                 ).FirstOrDefaultAsync();
             return user;
         }
-
-       
-
         public async Task<bool> DisableUser(int userId)
         {
             var user = await  _unitOfWork.UserRepository.Get()
