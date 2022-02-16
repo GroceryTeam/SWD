@@ -86,5 +86,15 @@ namespace BusinessLayer.Services.SystemAdmin
             }
             return null;
         }
+        public async Task ChangeStoreStatus(int storeId, int status)
+        {
+            var store = await _unitOfWork.StoreRepository.Get().Where(x => x.Id == storeId).FirstOrDefaultAsync();
+            if (store!=null)
+            {
+                store.ApprovedStatus = (Store.StoreApproveStatus)status;
+                _unitOfWork.StoreRepository.Update(store);
+                await _unitOfWork.SaveChangesAsync();
+            }
+        }
     }
 }

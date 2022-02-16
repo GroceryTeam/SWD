@@ -2,6 +2,7 @@
 using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
+using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using Microsoft.AspNetCore.Authorization;
@@ -38,6 +39,76 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
             catch (Exception)
             {
                 return BadRequest();
+            }
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var product = await _storeService.GetStoreById(id);
+                if (product != null)
+                {
+                    return Ok(product);
+                }
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPost]
+        public async Task<IActionResult> CreateNewStore([FromBody] StoreCreateModel model)
+        {
+            try
+            {
+                if (model.Name.Length == 0
+                    || model.Address.Length == 0
+                    || model.BrandId <= 0)
+                {
+                    return BadRequest();
+                }
+               await _storeService.CreateStore(model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        [HttpPut("{id}")]
+        public async Task<IActionResult> Put(int id, [FromBody] StoreCreateModel model)
+        {
+            //check store thuộc brnad
+            try
+            {
+                if (model.Name.Length == 0
+                    || model.Address.Length == 0
+                    || model.BrandId <= 0)
+                {
+                    return BadRequest();
+                }
+                await _storeService.UpdateStore(id, model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            //check store co thuoc brand ko
+            try
+            {
+                await _storeService.DeleteStore(id);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return NotFound();
             }
         }
     }

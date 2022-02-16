@@ -11,7 +11,8 @@ namespace DataAcessLayer.Models
         {
             Approved,
             Pending,
-            Rejected
+            Rejected,
+            Disabled
         }
         public Store()
         {
