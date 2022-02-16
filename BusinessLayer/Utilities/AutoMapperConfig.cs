@@ -36,8 +36,8 @@ namespace BusinessLayer.Utilities
 
                    mc.CreateMap<Brand, ResponseModels.ViewModels.SystemAdmin.BrandViewModel>().ReverseMap();
                    mc.CreateMap<User, ResponseModels.ViewModels.SystemAdmin.UserViewModel>().ReverseMap();
-
-                    //create model
+                   mc.CreateMap<Store, ResponseModels.ViewModels.SystemAdmin.StoreViewModel>().ReverseMap();
+                   //create model
                    mc.CreateMap<Product, ProductCreateModel>().ReverseMap();
                    mc.CreateMap<User, StoreOwnerCreateModel>().ReverseMap();
                    mc.CreateMap<EventDetail, EventDetailCreateModel>().ReverseMap();
