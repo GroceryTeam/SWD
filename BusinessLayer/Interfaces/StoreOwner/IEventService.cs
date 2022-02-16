@@ -21,5 +21,6 @@ namespace BusinessLayer.Interfaces.StoreOwner
         Task<bool> UpdateEvent(int eventId, EventCreateModel model);
         Task ApplyEvent(int brandId, int eventId);
         Task UnApplyEvent(int brandId, int eventId);
+        Task DeleteEvent(int eventId);
     }
 }
