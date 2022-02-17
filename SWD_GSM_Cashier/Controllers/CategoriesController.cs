@@ -1,5 +1,5 @@
 ﻿using BusinessLayer.Interfaces;
-using BusinessLayer.Interfaces.StoreOwner;
+using BusinessLayer.Interfaces.Cashier;
 using BusinessLayer.RequestModels;
 using BusinessLayer.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -15,7 +15,7 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
     [Route(CashierRoute)]
     [ApiController]
     //[ApiExplorerSettings(GroupName = Role)]
-    [Authorize(Roles = Role)]
+    //[Authorize(Roles = Role)]
     public class CategoriesController : BaseCashierController
     {
         private readonly ICategoryService _categoryService;

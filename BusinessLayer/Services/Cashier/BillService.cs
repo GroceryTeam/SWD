@@ -27,10 +27,17 @@ namespace BusinessLayer.Services.Cashier
         }
         public async Task<int> AddBill(int storeId, int cashierId, BillCreateModel model)
         {
-            var mappedBill = _mapper.Map<BillCreateModel, Bill>(model);
-            mappedBill.StoreId = storeId;
-            mappedBill.CashierId = cashierId;
-            mappedBill.DateCreated = DateTime.Now;
+            //var mappedBill = _mapper.Map<BillCreateModel, Bill>(model);
+            //mappedBill.StoreId = storeId;
+            //mappedBill.CashierId = cashierId;
+            //mappedBill.DateCreated = DateTime.Now;
+            var bill = new Bill()
+            {
+               TotalPrice = model.TotalPrice,
+               CashierId = cashierId,
+               DateCreated = DateTime.Now,
+               StoreId = storeId,
+            };
 
             foreach (var detail in model.Details)
             {
@@ -59,10 +66,10 @@ namespace BusinessLayer.Services.Cashier
                     sellingStock.Quantity -= quantityInThisBillDetail;
                     _unitOfWork.StockRepository.Update(sellingStock);
                     //va ghi vao bill
-                    mappedBill.BillDetails.Add(new BillDetail
+                    bill.BillDetails.Add(new BillDetail
                     {
                         ProductId = detail.ProductId,
-                        BillId = mappedBill.Id,
+                        BillId = bill.Id,
                         BuyPrice = sellingStock.BuyPrice,
                         SellPrice = productViewModel.EventPrice,
                         Quantity = detail.Quantity
@@ -81,10 +88,10 @@ namespace BusinessLayer.Services.Cashier
                 } while (remainingQuantity > 0);
             }
 
-            await _unitOfWork.BillRepository.Add(mappedBill);
+            await _unitOfWork.BillRepository.Add(bill);
             await _unitOfWork.SaveChangesAsync();
 
-            return mappedBill.Id;
+            return bill.Id;
 
         }
 

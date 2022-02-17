@@ -24,7 +24,7 @@ namespace DataAcessLayer.Interfaces
         IGenericRepository<Stock> StockRepository { get; }
         IGenericRepository<Store> StoreRepository { get; }
         IGenericRepository<User> UserRepository { get; }
-        GroceryCloudContext Context();
+        GroceryCloud16th2Context Context();
 
         Task SaveChangesAsync();
     }
