@@ -30,7 +30,12 @@ namespace BusinessLayer.Services.Cashier
         {
             var productsData = await _unitOfWork.ProductRepository
                 .Get()
-                 .Include(x => x.Stocks)
+                  .Include(x => x.Stocks)
+                  .Include(x => x.Brand)
+                     .ThenInclude(x => x.Events)
+                     .ThenInclude(x => x.EventDetails)
+                     .ThenInclude(x => x.Product)
+
                  .Include(x => x.InverseUnpackedProduct)
                .ToListAsync();
             productsData = productsData
@@ -42,27 +47,36 @@ namespace BusinessLayer.Services.Cashier
                                             : true)
                          .Where(x => x.Status == Product.ProductStatus.Selling)
                          .ToList();
-            //apply event
-            //map thuong
+           
+            var currentEvent = productsData[0].Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault();
             var products = productsData.Select
-                                (x => new ProductViewModel()
-                                {
-                                    Id = x.Id,
-                                    Name = x.Name,
-                                    UnpackedProductName = x.UnpackedProduct!=null ? x.UnpackedProduct.Name: null,
-                                    OriginalPrice = x.SellPrice,
-                                    EventPrice = x.Stocks
-                                    .Where(a => a.StoreId == storeId)
-                                    .Where(a => a.ProductId == x.Id)
-                                    .FirstOrDefault().Price,
-                                    CategoryId = x.CategoryId,
-                                    ConversionRate = x.ConversionRate,
-                                    UnitLabel = x.UnitLabel,
-                                    Quantity = x.Stocks
-                                    .Where(a => a.StoreId == storeId)
-                                    .Where(a => a.ProductId == x.Id)
-                                    .FirstOrDefault().Quantity
-                                }
+                                (x =>
+                                    {
+                                        int eventPrice = x.SellPrice;
+                                        if (currentEvent != null)
+                                        {
+                                            var eventEventProduct = currentEvent.EventDetails.Where(detail => detail.ProductId == x.Id).FirstOrDefault();
+                                            if (eventEventProduct != null)
+                                            {
+                                                eventPrice = eventEventProduct.NewPrice;
+                                            }
+                                        }
+                                        return new ProductViewModel()
+                                        {
+                                                Id = x.Id,
+                                                Name = x.Name,
+                                                UnpackedProductName = x.UnpackedProduct != null ? x.UnpackedProduct.Name : null,
+                                                OriginalPrice = x.SellPrice,
+                                                EventPrice = eventPrice,
+                                                CategoryId = x.CategoryId,
+                                                ConversionRate = x.ConversionRate,
+                                                UnitLabel = x.UnitLabel,
+                                                Quantity = x.Stocks
+                                         .Where(a => a.StoreId == storeId)
+                                         .Where(a => a.ProductId == x.Id)
+                                         .FirstOrDefault().Quantity
+                                        };
+                                    }
                                 ).ToList();
 
             int totalItem = productsData.Count;
@@ -87,20 +101,32 @@ namespace BusinessLayer.Services.Cashier
               .Get()
               .Where(x => x.Id == productId)
               .Include(x => x.Stocks)
+              .Include(x => x.Brand)
+                 .ThenInclude(x => x.Events)
+                 .ThenInclude(x => x.EventDetails)
+                 .ThenInclude(x => x.Product)
               .Include(x => x.InverseUnpackedProduct)
               .FirstOrDefaultAsync();
+            var currentEvent = product.Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault();
+
             if (product != null)
             {
+                int eventPrice = product.SellPrice;
+                if (currentEvent != null)
+                {
+                    var eventEventProduct = currentEvent.EventDetails.Where(x => x.ProductId == product.Id).FirstOrDefault();
+                    if (eventEventProduct != null)
+                    {
+                        eventPrice = eventEventProduct.NewPrice;
+                    }
+                }
                 var productData = new ProductViewModel()
                 {
                     Id = product.Id,
                     Name = product.Name,
                     UnpackedProductName = product.UnpackedProduct != null ? product.UnpackedProduct.Name : null,
                     OriginalPrice = product.SellPrice,
-                    EventPrice = product.Stocks
-                                    .Where(a => a.StoreId == storeId)
-                                    .Where(a => a.ProductId == product.Id)
-                                    .FirstOrDefault().Price,
+                    EventPrice = eventPrice,
                     CategoryId = product.CategoryId,
                     ConversionRate = product.ConversionRate,
                     UnitLabel = product.UnitLabel,

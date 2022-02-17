@@ -5,15 +5,16 @@ using System.Collections.Generic;
 
 namespace DataAcessLayer.Models
 {
-    public enum StoreApproveStatus
-    {
-        Approved,
-        Pending,
-        Rejected,
-        Disabled
-    }
+  
     public partial class Store
     {
+        public enum StoreApproveStatus
+        {
+            Approved,
+            Pending,
+            Rejected,
+            Disabled
+        }
         public Store()
         {
             Bills = new HashSet<Bill>();

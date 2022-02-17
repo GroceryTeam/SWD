@@ -40,7 +40,6 @@ namespace BusinessLayer.Services.StoreOwner
                     Name = x.Name,
                     UnpackedProductId = x.UnpackedProductId,
                     UnpackedProductName = x.UnpackedProduct.Name,
-                    BuyPrice = x.BuyPrice,
                     SellPrice = x.SellPrice,
                     CategoryId = x.CategoryId,
                     CategoryName = x.Category.Name,
@@ -130,26 +129,24 @@ namespace BusinessLayer.Services.StoreOwner
             await _unitOfWork.ProductRepository.Add(mappedProduct);
             await _unitOfWork.SaveChangesAsync();
 
-            //update model
             mappedProduct = await _unitOfWork.Context().Products
                 .Where(x => x.Id == mappedProduct.Id)
                 .Include(x => x.Brand)
                 .ThenInclude(x => x.Stores)
                 .FirstOrDefaultAsync();
-            foreach (Store store in mappedProduct.Brand.Stores)
-            {
-                //cho nay ko map gi nha
-                var stock = new Stock()
-                {
-                    Price = mappedProduct.SellPrice,
-                    Product = mappedProduct,
-                    ProductId = mappedProduct.Id,
-                    Quantity = 0,
-                    Status = Stock.StockDetail.NearlyOutOfStock,
-                    StoreId = store.Id
-                };
-                await _unitOfWork.StockRepository.Add(stock);
-            }
+            //foreach (Store store in mappedProduct.Brand.Stores)
+            //{
+            //    var stock = new Stock()
+            //    {
+            //        Price = mappedProduct.SellPrice,
+            //        Product = mappedProduct,
+            //        ProductId = mappedProduct.Id,
+            //        Quantity = 0,
+            //        Status = Stock.StockDetail.NearlyOutOfStock,
+            //        StoreId = store.Id
+            //    };
+            //    await _unitOfWork.StockRepository.Add(stock);
+            //}
             await _unitOfWork.SaveChangesAsync();
 
             return mappedProduct.Id;
@@ -167,7 +164,6 @@ namespace BusinessLayer.Services.StoreOwner
 
             product.Name = model.Name;
             product.UnpackedProductId = model.UnpackedProductId;
-            product.BuyPrice = model.BuyPrice;
             product.SellPrice = model.SellPrice;
             product.CategoryId = model.CategoryId;
             product.ConversionRate = model.ConversionRate;
