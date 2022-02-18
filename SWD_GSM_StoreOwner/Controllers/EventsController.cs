@@ -59,21 +59,21 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
             try
             {
                 paging = PagingUtil.checkDefaultPaging(paging);
-                var products = await _eventService.GetEventList(BrandId, searchModel, paging);
-                return Ok(products);
+                var events = await _eventService.GetEventList(BrandId, searchModel, paging);
+                return Ok(events);
             }
             catch (Exception)
             {
                 return BadRequest();
             }
         }
-      
+
         [HttpPost]
         public async Task<IActionResult> CreateNewEvent([FromBody] EventCreateModel model)
         {
             try
             {
-                if (model.Details.Count<=0)
+                if (model.Details.Count <= 0)
                 {
                     return BadRequest();
                 }
@@ -101,28 +101,23 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
         [HttpPut("change-status/{id}")]
         public async Task<IActionResult> ChangeStatus(int id, [FromBody] EventCreateModel model)
         {
-            if (model.Status==null)
+            try
             {
-                return BadRequest();
-            }else
-            {
-                try
+                if (model.Status == (int)EventStatus.Enabled)
                 {
-                    if (model.Status==(int)EventStatus.Enabled)
-                    {
-                        await _eventService.ApplyEvent(model.BrandId, id);
-                    } else
-                    {
-                        await _eventService.UnApplyEvent(model.BrandId, id);
-                    }
+                    await _eventService.ApplyEvent(model.BrandId, id);
                 }
-                catch (Exception)
+                else
                 {
-                    return BadRequest();
+                    await _eventService.UnApplyEvent(model.BrandId, id);
                 }
-                return Ok();
             }
-              
+            catch (Exception e)
+            {
+                return Ok(e.Message);
+            }
+            return Ok();
+
         }
         //[HttpPut("unapply-event/{id}")]
         //public async Task<IActionResult> UnapplyEvent(int BrandId, int id)

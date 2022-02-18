@@ -30,7 +30,7 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
         [HttpGet]
         public async Task<IActionResult> Get(int BrandId, [FromQuery] PagingRequestModel paging)
         {
-            paging = PagingUtil.getDefaultPaging();
+            paging = PagingUtil.checkDefaultPaging(paging);
             var categories = await _categoryService.GetCategoryList(BrandId, paging);
             return Ok(categories);
         }

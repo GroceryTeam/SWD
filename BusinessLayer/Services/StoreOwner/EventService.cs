@@ -63,13 +63,25 @@ namespace BusinessLayer.Services.StoreOwner
         public async Task<BasePagingViewModel<EventViewModel>> GetEventList(int brandId, EventSearchModel searchModel, PagingRequestModel paging)
         {
             var eventData = await _unitOfWork.EventRepository
-                .Get().Where(x => x.BrandId == brandId)
+                .Get()
+                .Where(x => x.BrandId == brandId)
+                .Include(x => x.EventDetails)
+                .ThenInclude(x=>x.Product)
                 .Select
                 (x => new EventViewModel()
                 {
                     Id = x.Id,
                     EventName = x.EventName,
-                    Status = (int)x.Status
+                    Status = (int)x.Status,
+                    EventDetails  =(List<EventDetailViewModel>)x.EventDetails.Select
+                                            (detail => new EventDetailViewModel()
+                                            {
+                                                EventId = detail.EventId,
+                                                NewPrice = detail.NewPrice,
+                                                OriginalPrice = detail.Product.SellPrice,
+                                                ProductId = detail.ProductId,
+                                                ProductName = detail.Product.Name
+                                            })
                 }
                 ).ToListAsync();
 
@@ -161,7 +173,7 @@ namespace BusinessLayer.Services.StoreOwner
                 .Where(x => x.Id == eventId)
                 .FirstOrDefaultAsync();
             newAppliedEvent.Status = EventStatus.Enabled;
-            _unitOfWork.EventRepository.Update(appliedEvent);
+            if (appliedEvent!=null) _unitOfWork.EventRepository.Update(appliedEvent);
             _unitOfWork.EventRepository.Update(newAppliedEvent);
             await _unitOfWork.SaveChangesAsync();
         }
