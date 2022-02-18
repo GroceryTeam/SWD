@@ -7,16 +7,15 @@ namespace DataAcessLayer.Models
 {
     public partial class Cashier
     {
+        public Cashier()
+        {
+            Bills = new HashSet<Bill>();
+        }
         public enum CashierStatus
         {
             Working,
             Disabled
         }
-        public Cashier()
-        {
-            Bills = new HashSet<Bill>();
-        }
-
         public int Id { get; set; }
         public string Name { get; set; }
         public int StoreId { get; set; }

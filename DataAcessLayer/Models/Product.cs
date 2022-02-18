@@ -7,11 +7,6 @@ namespace DataAcessLayer.Models
 {
     public partial class Product
     {
-        public enum ProductStatus
-        {
-            Selling,
-            Disabled
-        }
         public Product()
         {
             BillDetails = new HashSet<BillDetail>();
@@ -19,6 +14,11 @@ namespace DataAcessLayer.Models
             InverseUnpackedProduct = new HashSet<Product>();
             ReceiptDetails = new HashSet<ReceiptDetail>();
             Stocks = new HashSet<Stock>();
+        }
+        public enum ProductStatus
+        {
+            Selling,
+            Disabled
         }
 
         public int Id { get; set; }

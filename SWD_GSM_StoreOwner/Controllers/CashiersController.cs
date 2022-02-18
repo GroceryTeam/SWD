@@ -51,9 +51,21 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
             }
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int BrandId, int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            return null;
+            try
+            {
+                var product = await _cashierService.GetCashierById( id);
+                if (product != null)
+                {
+                    return Ok(product);
+                }
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> CreateNewCashier([FromBody] CashierCreateModel model)
@@ -83,7 +95,7 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
             return Ok();
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int CashierId,[FromBody] CashierCreateModel model)
+        public async Task<IActionResult> Put(int id,[FromBody] CashierCreateModel model)
         {
             try
             {
@@ -94,7 +106,7 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
                 {
                     return BadRequest();
                 }
-                await _cashierService.UpdateCashier(CashierId, model);
+                await _cashierService.UpdateCashier(id, model);
             }
             catch (Exception)
             {
@@ -103,11 +115,11 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
             return Ok();
         }
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int CashierId)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                await _cashierService.DeleteCashier(CashierId);
+                await _cashierService.DeleteCashier(id);
                 return NoContent();
             }
             catch (Exception)

@@ -1,20 +1,12 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 
 #nullable disable
 
 namespace DataAcessLayer.Models
 {
-  
     public partial class Store
     {
-        public enum StoreApproveStatus
-        {
-            Approved,
-            Pending,
-            Rejected,
-            Disabled
-        }
         public Store()
         {
             Bills = new HashSet<Bill>();
@@ -22,7 +14,13 @@ namespace DataAcessLayer.Models
             Receipts = new HashSet<Receipt>();
             Stocks = new HashSet<Stock>();
         }
-
+        public enum StoreApproveStatus
+        {
+            Approved,
+            Pending,
+            Rejected,
+            Disabled
+        }
         public int Id { get; set; }
         public int BrandId { get; set; }
         public string Name { get; set; }

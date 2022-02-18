@@ -79,6 +79,7 @@ namespace BusinessLayer.Services.StoreOwner
                     Quantity = bd.Quantity,
                     ProductName = bd.Product.Name,
                     ProductId = bd.Product.Id,
+                    StockId = bd.StockId
                 })
                 .ToListAsync();
 

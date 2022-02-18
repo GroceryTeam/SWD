@@ -63,18 +63,18 @@ namespace BusinessLayer.Services.Cashier
                                         }
                                         return new ProductViewModel()
                                         {
-                                                Id = x.Id,
-                                                Name = x.Name,
-                                                UnpackedProductName = x.UnpackedProduct != null ? x.UnpackedProduct.Name : null,
-                                                OriginalPrice = x.SellPrice,
-                                                EventPrice = eventPrice,
-                                                CategoryId = x.CategoryId,
-                                                ConversionRate = x.ConversionRate,
-                                                UnitLabel = x.UnitLabel,
-                                                Quantity = x.Stocks
+                                            Id = x.Id,
+                                            Name = x.Name,
+                                            UnpackedProductName = x.UnpackedProduct != null ? x.UnpackedProduct.Name : null,
+                                            OriginalPrice = x.SellPrice,
+                                            EventPrice = eventPrice,
+                                            CategoryId = x.CategoryId,
+                                            ConversionRate = x.ConversionRate,
+                                            UnitLabel = x.UnitLabel,
+                                            Quantity = x.Stocks
                                          .Where(a => a.StoreId == storeId)
                                          .Where(a => a.ProductId == x.Id)
-                                         .FirstOrDefault().Quantity
+                                         .ToList().Select(x => x.Quantity).Sum()
                                         };
                                     }
                                 ).ToList();

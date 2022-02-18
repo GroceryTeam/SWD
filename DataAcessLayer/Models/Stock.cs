@@ -7,17 +7,16 @@ namespace DataAcessLayer.Models
 {
     public partial class Stock
     {
+        public Stock()
+        {
+            BillDetails = new HashSet<BillDetail>();
+        }
         public enum StockDetail
         {
             SoldOut,
             Selling,
             Available
         }
-        public Stock()
-        {
-            BillDetails = new HashSet<BillDetail>();
-        }
-
         public int Id { get; set; }
         public int ProductId { get; set; }
         public int StoreId { get; set; }

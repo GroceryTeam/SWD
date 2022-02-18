@@ -13,8 +13,8 @@ namespace DataAcessLayer
     public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEntity : class
     {
         public readonly DbSet<TEntity> _dbSet;
-        public readonly GroceryCloud16th2Context _dbContext;
-        public GenericRepository(GroceryCloud16th2Context dbContext)
+        public readonly GroceryCloud18th2Context _dbContext;
+        public GenericRepository(GroceryCloud18th2Context dbContext)
         {
             _dbSet = dbContext.Set<TEntity>();
             _dbContext = dbContext;

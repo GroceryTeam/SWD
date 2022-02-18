@@ -33,9 +33,9 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
             try
             {
                 await _billService.AddBill(StoreId, CashierId, model);
-            } catch (Exception)
+            } catch (Exception e)
             {
-                return BadRequest();
+                return Ok(e.Message);
             }
             return Ok();
         }

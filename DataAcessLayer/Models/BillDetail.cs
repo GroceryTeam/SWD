@@ -7,6 +7,7 @@ namespace DataAcessLayer.Models
 {
     public partial class BillDetail
     {
+        public int Id { get; set; }
         public int BillId { get; set; }
         public int ProductId { get; set; }
         public int BuyPrice { get; set; }

@@ -38,7 +38,8 @@ namespace BusinessLayer.Services.Cashier
                DateCreated = DateTime.Now,
                StoreId = storeId,
             };
-
+            await _unitOfWork.BillRepository.Add(bill);
+            await _unitOfWork.SaveChangesAsync();
             foreach (var detail in model.Details)
             {
                 var remainingQuantity = detail.Quantity;
@@ -72,7 +73,8 @@ namespace BusinessLayer.Services.Cashier
                         BillId = bill.Id,
                         BuyPrice = sellingStock.BuyPrice,
                         SellPrice = productViewModel.EventPrice,
-                        Quantity = detail.Quantity
+                        Quantity = quantityInThisBillDetail,
+                         StockId = sellingStock.Id
                     }); ;
                     //xem thu het hang thi next thanh selling
                     if (sellingStock.Quantity == 0)
@@ -82,13 +84,17 @@ namespace BusinessLayer.Services.Cashier
                                .Where(x => x.Status == Stock.StockDetail.Available);
                         var nextStockId = availableStock.Min(x => x.Id);
                         var nextSellingStock = correspondingStocks.Where(x => x.Id == nextStockId).FirstOrDefault();
-                        nextSellingStock.Status = Stock.StockDetail.Selling;
-                        _unitOfWork.StockRepository.Update(nextSellingStock);
+                        if (nextSellingStock != null)
+                        {
+                            nextSellingStock.Status = Stock.StockDetail.Selling;
+                            _unitOfWork.StockRepository.Update(nextSellingStock);
+                        }
+                 
                     }
                 } while (remainingQuantity > 0);
             }
 
-            await _unitOfWork.BillRepository.Add(bill);
+             _unitOfWork.BillRepository.Update(bill);
             await _unitOfWork.SaveChangesAsync();
 
             return bill.Id;

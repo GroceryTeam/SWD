@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DataAcessLayer.Models
 {
-    public partial class GroceryCloud16th2Context : DbContext
+    public partial class GroceryCloud18th2Context : DbContext
     {
-        public GroceryCloud16th2Context()
+        public GroceryCloud18th2Context()
         {
         }
 
-        public GroceryCloud16th2Context(DbContextOptions<GroceryCloud16th2Context> options)
+        public GroceryCloud18th2Context(DbContextOptions<GroceryCloud18th2Context> options)
             : base(options)
         {
         }
@@ -38,7 +38,7 @@ namespace DataAcessLayer.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-8U6BLD8;Initial Catalog=GroceryCloud16th2;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                optionsBuilder.UseSqlServer("Data Source=groceryserverswd.database.windows.net;Initial Catalog=GroceryCloud18th2;User ID=groceryAdmin;Password=SWD@123123;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             }
         }
 
@@ -56,39 +56,36 @@ namespace DataAcessLayer.Models
                     .WithMany(p => p.Bills)
                     .HasForeignKey(d => d.CashierId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Bill__CashierId__49C3F6B7");
+                    .HasConstraintName("FK__Bill__CashierId__02084FDA");
 
                 entity.HasOne(d => d.Store)
                     .WithMany(p => p.Bills)
                     .HasForeignKey(d => d.StoreId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Bill__StoreId__48CFD27E");
+                    .HasConstraintName("FK__Bill__StoreId__01142BA1");
             });
 
             modelBuilder.Entity<BillDetail>(entity =>
             {
-                //entity.HasKey(e => new { e.BillId, e.ProductId })
-                //    .HasName("PK__BillDeta__DAB230064F8ED94A");
-
                 entity.ToTable("BillDetail");
 
                 entity.HasOne(d => d.Bill)
                     .WithMany(p => p.BillDetails)
                     .HasForeignKey(d => d.BillId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__BillDetai__BillI__4D94879B");
+                    .HasConstraintName("FK__BillDetai__BillI__05D8E0BE");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.BillDetails)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__BillDetai__Produ__4E88ABD4");
+                    .HasConstraintName("FK__BillDetai__Produ__06CD04F7");
 
                 entity.HasOne(d => d.Stock)
                     .WithMany(p => p.BillDetails)
                     .HasForeignKey(d => d.StockId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__BillDetai__Stock__4CA06362");
+                    .HasConstraintName("FK__BillDetai__Stock__04E4BC85");
             });
 
             modelBuilder.Entity<Brand>(entity =>
@@ -102,8 +99,8 @@ namespace DataAcessLayer.Models
             modelBuilder.Entity<Cashier>(entity =>
             {
                 entity.ToTable("Cashier");
-
-                entity.HasIndex(e => e.Username, "UQ__Cashier__536C85E481387404")
+                entity.Property(e => e.Status).HasConversion<int>();
+                entity.HasIndex(e => e.Username, "UQ__Cashier__536C85E459DF47AC")
                     .IsUnique();
 
                 entity.Property(e => e.Name).IsRequired();
@@ -118,7 +115,7 @@ namespace DataAcessLayer.Models
                     .WithMany(p => p.Cashiers)
                     .HasForeignKey(d => d.StoreId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Cashier__StoreId__32E0915F");
+                    .HasConstraintName("FK__Cashier__StoreId__6B24EA82");
             });
 
             modelBuilder.Entity<Category>(entity =>
@@ -131,7 +128,7 @@ namespace DataAcessLayer.Models
                     .WithMany(p => p.Categories)
                     .HasForeignKey(d => d.BrandId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Category__BrandI__35BCFE0A");
+                    .HasConstraintName("FK__Category__BrandI__6E01572D");
             });
 
             modelBuilder.Entity<DailyRevenue>(entity =>
@@ -148,32 +145,32 @@ namespace DataAcessLayer.Models
                     .WithMany()
                     .HasForeignKey(d => d.BrandId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__DailyReve__Brand__5812160E");
+                    .HasConstraintName("FK__DailyReve__Brand__10566F31");
 
                 entity.HasOne(d => d.Store)
                     .WithMany()
                     .HasForeignKey(d => d.StoreId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__DailyReve__Store__571DF1D5");
+                    .HasConstraintName("FK__DailyReve__Store__0F624AF8");
             });
 
             modelBuilder.Entity<Event>(entity =>
             {
                 entity.ToTable("Event");
-
+                entity.Property(e => e.Status).HasConversion<int>();
                 entity.Property(e => e.EventName).IsRequired();
 
                 entity.HasOne(d => d.Brand)
                     .WithMany(p => p.Events)
                     .HasForeignKey(d => d.BrandId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Event__BrandId__5165187F");
+                    .HasConstraintName("FK__Event__BrandId__09A971A2");
             });
 
             modelBuilder.Entity<EventDetail>(entity =>
             {
                 entity.HasKey(e => new { e.EventId, e.ProductId })
-                    .HasName("PK__EventDet__B204047CF768614E");
+                    .HasName("PK__EventDet__B204047CE496EBB4");
 
                 entity.ToTable("EventDetail");
 
@@ -181,13 +178,13 @@ namespace DataAcessLayer.Models
                     .WithMany(p => p.EventDetails)
                     .HasForeignKey(d => d.EventId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__EventDeta__Event__5441852A");
+                    .HasConstraintName("FK__EventDeta__Event__0C85DE4D");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.EventDetails)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__EventDeta__Produ__5535A963");
+                    .HasConstraintName("FK__EventDeta__Produ__0D7A0286");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -200,17 +197,17 @@ namespace DataAcessLayer.Models
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.BrandId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Product__BrandId__398D8EEE");
+                    .HasConstraintName("FK__Product__BrandId__71D1E811");
 
                 entity.HasOne(d => d.Category)
                     .WithMany(p => p.Products)
                     .HasForeignKey(d => d.CategoryId)
-                    .HasConstraintName("FK__Product__Categor__38996AB5");
+                    .HasConstraintName("FK__Product__Categor__70DDC3D8");
 
                 entity.HasOne(d => d.UnpackedProduct)
                     .WithMany(p => p.InverseUnpackedProduct)
                     .HasForeignKey(d => d.UnpackedProductId)
-                    .HasConstraintName("FK__Product__Unpacke__3A81B327");
+                    .HasConstraintName("FK__Product__Unpacke__72C60C4A");
             });
 
             modelBuilder.Entity<Receipt>(entity =>
@@ -223,13 +220,13 @@ namespace DataAcessLayer.Models
                     .WithMany(p => p.Receipts)
                     .HasForeignKey(d => d.StoreId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Receipt__StoreId__3D5E1FD2");
+                    .HasConstraintName("FK__Receipt__StoreId__75A278F5");
             });
 
             modelBuilder.Entity<ReceiptDetail>(entity =>
             {
                 entity.HasKey(e => new { e.ReceiptId, e.ProductId })
-                    .HasName("PK__ReceiptD__0748084C1EF53175");
+                    .HasName("PK__ReceiptD__0748084C2DEB1024");
 
                 entity.ToTable("ReceiptDetail");
 
@@ -237,62 +234,62 @@ namespace DataAcessLayer.Models
                     .WithMany(p => p.ReceiptDetails)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ReceiptDe__Produ__412EB0B6");
+                    .HasConstraintName("FK__ReceiptDe__Produ__797309D9");
 
                 entity.HasOne(d => d.Receipt)
                     .WithMany(p => p.ReceiptDetails)
                     .HasForeignKey(d => d.ReceiptId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__ReceiptDe__Recei__403A8C7D");
+                    .HasConstraintName("FK__ReceiptDe__Recei__787EE5A0");
             });
 
             modelBuilder.Entity<Stock>(entity =>
             {
                 entity.ToTable("Stock");
-
+                entity.Property(e => e.Status).HasConversion<int>();
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Stocks)
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Stock__ProductId__440B1D61");
+                    .HasConstraintName("FK__Stock__ProductId__7C4F7684");
 
                 entity.HasOne(d => d.Receipt)
                     .WithMany(p => p.Stocks)
                     .HasForeignKey(d => d.ReceiptId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Stock__ReceiptId__45F365D3");
+                    .HasConstraintName("FK__Stock__ReceiptId__7E37BEF6");
 
                 entity.HasOne(d => d.Store)
                     .WithMany(p => p.Stocks)
                     .HasForeignKey(d => d.StoreId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Stock__StoreId__44FF419A");
+                    .HasConstraintName("FK__Stock__StoreId__7D439ABD");
             });
 
             modelBuilder.Entity<Store>(entity =>
             {
                 entity.ToTable("Store");
-
+                entity.Property(e => e.ApprovedStatus).HasConversion<int>();
                 entity.Property(e => e.Name).IsRequired();
 
                 entity.HasOne(d => d.Brand)
                     .WithMany(p => p.Stores)
                     .HasForeignKey(d => d.BrandId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__Store__BrandId__2F10007B");
+                    .HasConstraintName("FK__Store__BrandId__6754599E");
             });
 
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("User");
-
-                entity.HasIndex(e => e.Username, "UQ__User__536C85E4FB77DB0B")
+                entity.Property(e => e.Status).HasConversion<int>();
+                entity.HasIndex(e => e.Username, "UQ__User__536C85E4926FF840")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Phone, "UQ__User__5C7E359E05E00F5C")
+                entity.HasIndex(e => e.Phone, "UQ__User__5C7E359E869C9140")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Email, "UQ__User__A9D105349E0ABC67")
+                entity.HasIndex(e => e.Email, "UQ__User__A9D1053462E6BED6")
                     .IsUnique();
 
                 entity.Property(e => e.Email)
@@ -315,7 +312,7 @@ namespace DataAcessLayer.Models
             modelBuilder.Entity<UserBrand>(entity =>
             {
                 entity.HasKey(e => new { e.UserId, e.BrandId })
-                    .HasName("PK__UserBran__EA25834971805303");
+                    .HasName("PK__UserBran__EA258349E5397B4C");
 
                 entity.ToTable("UserBrand");
 
@@ -323,13 +320,13 @@ namespace DataAcessLayer.Models
                     .WithMany(p => p.UserBrands)
                     .HasForeignKey(d => d.BrandId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__UserBrand__Brand__2C3393D0");
+                    .HasConstraintName("FK__UserBrand__Brand__6477ECF3");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.UserBrands)
                     .HasForeignKey(d => d.UserId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("FK__UserBrand__UserI__2B3F6F97");
+                    .HasConstraintName("FK__UserBrand__UserI__6383C8BA");
             });
 
             OnModelCreatingPartial(modelBuilder);

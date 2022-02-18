@@ -62,7 +62,21 @@ namespace BusinessLayer.Services.StoreOwner
             };
             return cashierResult;
         }
-
+        public async Task<CashierViewModel> GetCashierById(int cashierId)
+        {
+            var cashier = await _unitOfWork.CashierRepository
+              .Get()
+              .Where(x => x.Id == cashierId)
+              .FirstOrDefaultAsync();
+           
+            if (cashier != null)
+            {
+                var mappedCashier = _mapper.Map<DataAcessLayer.Models.Cashier, CashierViewModel>(cashier);
+                mappedCashier.Status = (int)cashier.Status;
+                return mappedCashier;
+            }
+            return null;
+        }
         public async Task<int> AddCashier(int storeId, CashierCreateModel model)
         {
 

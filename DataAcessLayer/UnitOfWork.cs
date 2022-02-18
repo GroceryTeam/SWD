@@ -10,7 +10,7 @@ namespace DataAcessLayer
 {
     public class UnitOfWork : IUnitOfWork
     {
-        private readonly GroceryCloud16th2Context _dbContext;
+        private readonly GroceryCloud18th2Context _dbContext;
 
         public IGenericRepository<Product> ProductRepository { get; }
         public IGenericRepository<Category> CategoryRepository { get; }
@@ -27,7 +27,7 @@ namespace DataAcessLayer
         public IGenericRepository<Stock> StockRepository { get; }
         public IGenericRepository<Store> StoreRepository { get; }
         public IGenericRepository<User> UserRepository { get; }
-        public UnitOfWork(GroceryCloud16th2Context dbContext,
+        public UnitOfWork(GroceryCloud18th2Context dbContext,
             IGenericRepository<Product> productRepository,
             IGenericRepository<Category> categoryRepository,
             IGenericRepository<Bill> billRepository,
@@ -64,7 +64,7 @@ namespace DataAcessLayer
             UserBrandRepository = userBrandRepository;
         }
 
-        public GroceryCloud16th2Context Context()
+        public GroceryCloud18th2Context Context()
         {
             return _dbContext;
         }

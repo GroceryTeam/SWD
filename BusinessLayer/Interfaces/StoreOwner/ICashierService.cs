@@ -18,7 +18,8 @@ namespace BusinessLayer.Interfaces.StoreOwner
         Task<BasePagingViewModel<CashierViewModel>> GetCashierList(CashierSearchModel searchModel, PagingRequestModel paging);
         Task<int> AddCashier(int storeId, CashierCreateModel model);
         Task<bool> UpdateCashier(int cashierId, CashierCreateModel model);
-        Task DeleteCashier(int cashierId);
+        Task DeleteCashier(int cashierId); 
+        Task<CashierViewModel> GetCashierById(int cashierId);
 
     }
 }
