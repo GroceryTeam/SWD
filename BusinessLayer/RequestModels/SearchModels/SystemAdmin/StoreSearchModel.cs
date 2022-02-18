@@ -10,6 +10,6 @@ namespace BusinessLayer.RequestModels.SearchModels.SystemAdmin
     {
         public string SearchTerm { get; set; }
         public int? BrandId { get; set; }
-        public int ApproveStatus { get; set; }
+        public int? ApproveStatus { get; set; }
     }
 }

@@ -119,7 +119,7 @@ namespace BusinessLayer.Services.StoreOwner
             var cashier = await _unitOfWork.CashierRepository.Get()
                 .Where(x => x.Id.Equals(cashierId))
                 .FirstOrDefaultAsync();
-
+            cashier.Status = CashierStatus.Disabled;
             _unitOfWork.CashierRepository.Update(cashier);
             await _unitOfWork.SaveChangesAsync();
         }

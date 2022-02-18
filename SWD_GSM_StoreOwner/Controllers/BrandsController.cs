@@ -2,6 +2,7 @@
 using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
+using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using Microsoft.AspNetCore.Authorization;
@@ -34,6 +35,27 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
             {
                 var brands = await _brandService.GetBrandList(UserId);
                 return Ok(brands);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpPut("user")]
+        public async Task<IActionResult> AddUserToBrand([FromBody] AddUserToBrandCreateModel model)
+        {
+            try
+            {
+                var result = await _brandService.AddUserToBrand(model.PhoneNo, model.Email, model.BrandId);
+                if (result == true)
+                {
+                    return Ok();
+
+                }
+                else
+                {
+                    return Conflict("Email/Phone number doesn't exist");
+                }
             }
             catch (Exception)
             {

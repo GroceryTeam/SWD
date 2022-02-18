@@ -14,5 +14,7 @@ namespace BusinessLayer.Interfaces.StoreOwner
     public interface IBrandService
     {
         Task<List<BrandViewModel>> GetBrandList(int userId);
+        Task<bool> AddUserToBrand(string phoneNo, string email, int brandId);
+
     }
 }

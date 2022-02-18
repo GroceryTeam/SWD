@@ -46,10 +46,17 @@ namespace BusinessLayer.Services.StoreOwner
         }
         public async Task CreateStore(StoreCreateModel model)
         {
-            var mappedStore = _mapper.Map<StoreCreateModel, Store>(model);
-            mappedStore.ApprovedStatus = Store.StoreApproveStatus.Pending;
+            //var mappedStore = _mapper.Map<StoreCreateModel, Store>(model);
+            //mappedStore.ApprovedStatus = Store.StoreApproveStatus.Pending;
+            var store = new Store()
+            {
+                BrandId = model.BrandId,
+                Address = model.Address,
+                ApprovedStatus = Store.StoreApproveStatus.Pending,
+                Name = model.Name,
+            };
 
-            await _unitOfWork.StoreRepository.Add(mappedStore);
+            await _unitOfWork.StoreRepository.Add(store);
             await _unitOfWork.SaveChangesAsync();
         }
         public async Task<bool> UpdateStore(int storeId, StoreCreateModel model)

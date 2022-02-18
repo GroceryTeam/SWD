@@ -28,9 +28,16 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
         [HttpGet]
         public async Task<IActionResult> Get(int BrandId, [FromQuery] PagingRequestModel paging)
         {
-            paging = PagingUtil.getDefaultPaging();
-            var categories = await _categoryService.GetCategoryList(BrandId, paging);
-            return Ok(categories);
+            try
+            {
+                paging = PagingUtil.getDefaultPaging();
+                var categories = await _categoryService.GetCategoryList(BrandId, paging);
+                return Ok(categories);
+            }catch(Exception e )
+            {
+                return Ok(e.Message);
+            }
+         
         }
 
     }

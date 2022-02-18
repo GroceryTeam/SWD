@@ -16,7 +16,6 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities;
-using static BusinessLayer.ResponseModels.ErrorModels.StoreOwner.SignupErrorModel;
 using static DataAcessLayer.Models.User;
 
 namespace BusinessLayer.Services.SystemAdmin

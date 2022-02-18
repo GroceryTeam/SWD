@@ -29,7 +29,7 @@ namespace BusinessLayer.Services.SystemAdmin
         public async Task<BasePagingViewModel<BrandViewModel>> GetBrandList(BrandSearchModel searchModel, PagingRequestModel paging)
         {
             var brandsData = await _unitOfWork.BrandRepository
-                .Get().Include(x=>x.UserBrands)
+                .Get().Include(x=>x.UserBrands).Include(x=>x.Stores)
                 .ToListAsync();
 
             var brands = brandsData
@@ -47,7 +47,17 @@ namespace BusinessLayer.Services.SystemAdmin
                                 {
                                     Id = x.Id,
                                     Name = x.Name,
-                                    Status = (int)x.Status
+                                    Status = (int)x.Status,
+                                    UserIdList = x.UserBrands.Select(x => x.UserId).ToList(),
+                                    StoreList = x.Stores.Select(store=>new StoreViewModel()
+                                    {
+                                         Id= store.Id,
+                                         Address = store.Address,
+                                         ApprovedStatus = (int)store.ApprovedStatus,
+                                         BrandId = store.BrandId,
+                                         Name = store.Name,
+                                    }
+                                    ).ToList()
                                 }
                                 )
                         .ToList();
@@ -63,20 +73,31 @@ namespace BusinessLayer.Services.SystemAdmin
                 PageSize = paging.PageSize,
                 TotalItem = totalItem,
                 TotalPage = (int)Math.Ceiling((decimal)totalItem / (decimal)paging.PageSize),
-                Data = brands
+                Data = brands,
             };
             return brandResult;
         }
         public async Task<BrandViewModel> GetBrandById(int brandId)
         {
             var brand = await _unitOfWork.BrandRepository
-              .Get().Where(x => x.Id == brandId)
+              .Get().Include(x => x.Stores).Where(x => x.Id == brandId)
               .Select
                 (x => new BrandViewModel()
                 {
                     Id = x.Id,
                     Name = x.Name,
-                    Status = (int)x.Status
+                    Status = (int)x.Status,
+                    UserIdList = x.UserBrands.Select(x => x.UserId).ToList(),
+
+                    StoreList = x.Stores.Select(store => new StoreViewModel()
+                    {
+                        Id = store.Id,
+                        Address = store.Address,
+                        ApprovedStatus = (int)store.ApprovedStatus,
+                        BrandId = store.BrandId,
+                        Name = store.Name,
+                    }
+                                    ).ToList()
                 }
                 ).FirstOrDefaultAsync();
             return brand;

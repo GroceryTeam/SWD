@@ -28,15 +28,14 @@ namespace BusinessLayer.Services.SystemAdmin
         {
             var storesData = await _unitOfWork.StoreRepository
                 .Get()
-                .Where(x => x.BrandId == searchModel.BrandId)
                 .Select
                 (x => new StoreViewModel()
                 {
-                      Id = x.Id,
-                      BrandId = x.BrandId,
-                      Address = x.Address,
-                      ApprovedStatus = (int)x.ApprovedStatus,
-                      Name = x.Name
+                    Id = x.Id,
+                    BrandId = x.BrandId,
+                    Address = x.Address,
+                    ApprovedStatus = (int)x.ApprovedStatus,
+                    Name = x.Name,
                 }
                 )
                 .ToListAsync();

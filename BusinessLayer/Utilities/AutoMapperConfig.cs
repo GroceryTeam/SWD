@@ -40,6 +40,7 @@ namespace BusinessLayer.Utilities
                    //create model
                    mc.CreateMap<Product, ProductCreateModel>().ReverseMap();
                    mc.CreateMap<User, StoreOwnerCreateModel>().ReverseMap();
+                   mc.CreateMap<Store, StoreOwnerCreateModel>().ReverseMap();
                    mc.CreateMap<EventDetail, EventDetailCreateModel>().ReverseMap();
                    mc.CreateMap<Event, EventCreateModel>().ReverseMap();
                    mc.CreateMap<Bill, BillViewModel>().ReverseMap();
