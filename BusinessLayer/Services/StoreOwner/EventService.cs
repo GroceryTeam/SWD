@@ -44,6 +44,7 @@ namespace BusinessLayer.Services.StoreOwner
                     Id = x.Id,
                     EventName = x.EventName,
                     Status = (int)x.Status,
+                    ProductCount = x.EventDetails.Count,
                     EventDetails =
                        (List<EventDetailViewModel>)x.EventDetails
                     .Select
@@ -73,6 +74,7 @@ namespace BusinessLayer.Services.StoreOwner
                     Id = x.Id,
                     EventName = x.EventName,
                     Status = (int)x.Status,
+                    ProductCount = x.EventDetails.Count,
                     EventDetails  =(List<EventDetailViewModel>)x.EventDetails.Select
                                             (detail => new EventDetailViewModel()
                                             {

@@ -11,8 +11,6 @@ namespace BusinessLayer.RequestModels.SearchModels.StoreOwner
         public string SearchTerm { get; set; }
         public int? MinimumSellingPrice { get; set; }
         public int? MaximumSellingPrice { get; set; }
-        public int? MinimumBuyingPrice { get; set; }
-        public int? MaximumBuyingPrice { get; set; }
         public int? CategoryId { get; set; }
         public ProductStatus? Status { get; set; }
     }

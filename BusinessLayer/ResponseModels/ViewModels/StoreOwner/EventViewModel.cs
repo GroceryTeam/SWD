@@ -12,6 +12,7 @@ namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
         public int Id { get; set; }
         public string EventName { get; set; }
         public int Status { get; set; }
+        public int ProductCount { get; set; }
         public List<EventDetailViewModel> EventDetails { get; set; }
     }
 }

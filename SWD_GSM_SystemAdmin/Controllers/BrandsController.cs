@@ -38,9 +38,9 @@ namespace SWD_GSM_SystemAdmin.Controllers.SystemAdmin
                 var user = await _brandService.GetBrandById(id);
                 return Ok(user);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return Ok(e.Message);
             }
         }
         [HttpGet]

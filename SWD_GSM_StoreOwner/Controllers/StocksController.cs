@@ -5,6 +5,7 @@ using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
+using BusinessLayer.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -21,82 +22,65 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
     [Authorize(Roles = Role)]
     public class StocksController : BaseStoreOwnerController
     {
-        private readonly IStoreService _storeService;
+        private readonly IStockService _stockService;
 
-        public StocksController(IStoreService storeService)
+        public StocksController(IStockService stockService)
         {
-            _storeService = storeService;
+            _stockService = stockService;
         }
         [HttpGet]
-        public async Task<IActionResult> Get(int BrandId, [FromQuery] ProductSearchModel searchModel, [FromQuery] PagingRequestModel paging)
+        public async Task<IActionResult> Get(int BrandId, [FromQuery] ProductStockSearchModel searchModel, [FromQuery] PagingRequestModel paging)
         {
-            return null;
+            if (searchModel is null)
+            {
+                throw new ArgumentNullException(nameof(searchModel));
+            }
+
+            try
+            {
+                //check storeId
+                paging = PagingUtil.checkDefaultPaging(paging);
+                var productStocks = await _stockService.GetProductIncludingStock(searchModel, paging);
+                return Ok(productStocks);
+            }
+            catch (Exception e)
+            {
+                return Ok(e.Message);
+            }
         }
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(int BrandId, int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            return null;
-        }
-        //Nhớ đặt tên lại bla bla, tào lao hết nhé
-        [HttpPost]
-        public async Task<IActionResult> CreateNewProduct(int BrandId, [FromBody] ProductCreateModel model)
-        {
-            //try
-            //{
-            //    if (model.ConversionRate <= 0
-            //        || model.BuyPrice < 0
-            //        || model.SellPrice < 0
-            //        || model.LowerThreshold < 0)
-            //    {
-            //        return BadRequest();
-            //    }
-            //    var id = await _productService.AddProduct(BrandId, model);
-            //}
-            //catch (Exception)
-            //{
-            //    return BadRequest();
-            //}
-            //return Ok();
-            return null;
+            try
+            {
+                var stock = await _stockService.GetStockById(id);
+                if (stock != null)
+                {
+                    return Ok(stock);
+                }
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int BrandId, int id, [FromBody] ProductCreateModel model)
+        public async Task<IActionResult> Put(int id, [FromBody] StockEditModel model)
         {
-            //try
-            //{
-            //    if (model.ConversionRate <= 0 || model.BuyPrice < 0 || model.SellPrice < 0 || model.LowerThreshold < 0)
-            //    {
-            //        return BadRequest();
-            //    }
-            //    await _productService.UpdateProduct(BrandId, id, model);
-            //}
-            //catch (Exception)
-            //{
-            //    return BadRequest();
-            //}
-            //return Ok();
-            return null;
-        }
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int BrandId, int id)
-        {
-            //try
-            //{
-            //    var result = await _productService.DeleteProduct(BrandId, id);
-            //    if (result.InverseUnpackedProducts.Count == 0)
-            //    {
-            //        return NoContent();
-            //    }
-            //    else
-            //    {
-            //        return Conflict(result);
-            //    }
-            //}
-            //catch (Exception)
-            //{
-            //    return NotFound();
-            //}
-            return null;
+            try
+            {
+                if (id <= 0 )
+                {
+                    return BadRequest();
+                }
+                await _stockService.UpdateStock(id, model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
     }
 }

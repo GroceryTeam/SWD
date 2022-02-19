@@ -69,7 +69,7 @@ namespace BusinessLayer.Services.Cashier
                                             OriginalPrice = x.SellPrice,
                                             EventPrice = eventPrice,
                                             CategoryId = x.CategoryId,
-                                            ConversionRate = x.ConversionRate,
+                                            ConversionRate = (int)x.ConversionRate,
                                             UnitLabel = x.UnitLabel,
                                             Quantity = x.Stocks
                                          .Where(a => a.StoreId == storeId)
@@ -128,7 +128,7 @@ namespace BusinessLayer.Services.Cashier
                     OriginalPrice = product.SellPrice,
                     EventPrice = eventPrice,
                     CategoryId = product.CategoryId,
-                    ConversionRate = product.ConversionRate,
+                    ConversionRate = (int)product.ConversionRate,
                     UnitLabel = product.UnitLabel,
                     Quantity = product.Stocks
                                     .Where(a => a.StoreId == storeId)

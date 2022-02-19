@@ -43,7 +43,7 @@ namespace BusinessLayer.Services.StoreOwner
                     SellPrice = x.SellPrice,
                     CategoryId = x.CategoryId,
                     CategoryName = x.Category.Name,
-                    ConversionRate = x.ConversionRate,
+                    ConversionRate = (int)x.ConversionRate,
                     UnitLabel = x.UnitLabel,
                     LowerThreshold = x.LowerThreshold,
                     Status = (int)x.Status
@@ -57,12 +57,6 @@ namespace BusinessLayer.Services.StoreOwner
                         .Where(x =>
                             StringNormalizer.VietnameseNormalize(x.Name)
                             .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
-                        .Where(x => (searchModel.MinimumBuyingPrice != null)
-                                            ? x.BuyPrice >= searchModel.MinimumBuyingPrice
-                                            : true)
-                        .Where(x => (searchModel.MaximumBuyingPrice != null)
-                                            ? x.BuyPrice <= searchModel.MaximumBuyingPrice
-                                            : true)
                         .Where(x => (searchModel.MinimumSellingPrice != null)
                                             ? x.SellPrice >= searchModel.MinimumSellingPrice
                                             : true)
