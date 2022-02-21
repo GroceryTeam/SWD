@@ -26,8 +26,10 @@ namespace BusinessLayer.Services.StoreOwner
         public async Task<BasePagingViewModel<BillViewModel>> GetBills(int storeId, BillSearchModel searchModel, PagingRequestModel paging)
         {
             var billData = await _unitOfWork.BillRepository.Get()
-                                    .Where(bill => bill.StoreId == storeId
-                                    ).Include(x=>x.Cashier)
+                                    .Where(bill => bill.StoreId == storeId)
+                                    .Include(x => x.Cashier)
+                                    .Include(x => x.BillDetails)
+                                    .ThenInclude(x => x.Product)
                                     .Select(bill => new BillViewModel()
                                     {
                                         Id = bill.Id,
@@ -36,9 +38,20 @@ namespace BusinessLayer.Services.StoreOwner
                                         DateCreated = bill.DateCreated,
                                         TotalPrice = bill.TotalPrice,
                                         CashierName = bill.Cashier.Name,
-                                    }).ToListAsync();
+                                        BillDetails = bill.BillDetails
+                                        .Select(detail => new BillDetailViewModel()
+                                        {
+                                            BuyPrice = detail.BuyPrice,
+                                            SellPrice = detail.SellPrice,
+                                            Quantity = detail.Quantity,
+                                            ProductId = detail.ProductId,
+                                            ProductName = detail.Product.Name,
+                                            StockId = detail.StockId
+                                        }).ToList()
+                                    })
+                                    .ToListAsync();
 
-
+            
             //var billsData = await _unitOfWork.BillRepository
             //    .Get()
             //    .Where(x => x.StoreId == storeId)
@@ -49,6 +62,7 @@ namespace BusinessLayer.Services.StoreOwner
             billData = billData
                 .Where(x => (x.DateCreated >= searchModel.StartDate) && (x.DateCreated <= searchModel.EndDate))
                 .ToList();
+
 
             int totalCount = billData.Count();
 
