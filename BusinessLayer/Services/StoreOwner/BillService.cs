@@ -38,7 +38,8 @@ namespace BusinessLayer.Services.StoreOwner
                                         DateCreated = bill.DateCreated,
                                         TotalPrice = bill.TotalPrice,
                                         CashierName = bill.Cashier.Name,
-                                        BillDetails = bill.BillDetails
+                                        BillDetails = 
+                                        (List<BillDetailViewModel>)bill.BillDetails
                                         .Select(detail => new BillDetailViewModel()
                                         {
                                             BuyPrice = detail.BuyPrice,
@@ -47,7 +48,7 @@ namespace BusinessLayer.Services.StoreOwner
                                             ProductId = detail.ProductId,
                                             ProductName = detail.Product.Name,
                                             StockId = detail.StockId
-                                        }).ToList()
+                                        })
                                     })
                                     .ToListAsync();
 
