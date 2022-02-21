@@ -2,6 +2,7 @@
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.CreateModels.Cashier;
 using BusinessLayer.RequestModels.SearchModels;
+using BusinessLayer.ResponseModels.ErrorModels.Cashier;
 using BusinessLayer.ResponseModels.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -13,6 +14,6 @@ namespace BusinessLayer.Interfaces.Cashier
 {
     public interface IBillService
     {
-        Task<int> AddBill(int storeId, int cashierId, BillCreateModel model);
+        Task<AddBillErrorModel> AddBill(int storeId, int cashierId, BillCreateModel model);
     }
 }

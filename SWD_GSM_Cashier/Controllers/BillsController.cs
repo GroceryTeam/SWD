@@ -32,12 +32,17 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
         {
             try
             {
-                await _billService.AddBill(StoreId, CashierId, model);
-            } catch (Exception e)
-            {
-                return Ok(e.Message);
+                var error = await _billService.AddBill(StoreId, CashierId, model);
+                if (error.ErrorProducts.Count() == 0) return Ok();
+                else
+                {
+                    return Conflict(error);
+                }
             }
-            return Ok();
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
     }
 }

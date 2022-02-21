@@ -2,6 +2,7 @@
 using BusinessLayer.Interfaces.SystemAdmin;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
+using BusinessLayer.RequestModels.CreateModels.SystemAdmin;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels.SystemAdmin;
@@ -65,6 +66,19 @@ namespace SWD_GSM_SystemAdmin.Controllers.SystemAdmin
             {
                 return BadRequest();
             }
+        }
+        [HttpPut("status/{id}")]
+        public async Task<IActionResult> ChangeStoreStatus(int id, [FromBody] StoreStatusModel model)
+        {
+            try
+            {
+                await _storeService.ChangeStoreStatus(id, model.Status);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
     }
 }

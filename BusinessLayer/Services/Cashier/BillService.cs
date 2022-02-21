@@ -4,6 +4,7 @@ using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.CreateModels.Cashier;
 using BusinessLayer.RequestModels.SearchModels;
+using BusinessLayer.ResponseModels.ErrorModels.Cashier;
 using BusinessLayer.ResponseModels.ViewModels;
 using BusinessLayer.Services;
 using DataAcessLayer.Interfaces;
@@ -25,79 +26,110 @@ namespace BusinessLayer.Services.Cashier
         {
             _productService = productService;
         }
-        public async Task<int> AddBill(int storeId, int cashierId, BillCreateModel model)
+        public async Task<AddBillErrorModel> AddBill(int storeId, int cashierId, BillCreateModel model)
         {
-            //var mappedBill = _mapper.Map<BillCreateModel, Bill>(model);
-            //mappedBill.StoreId = storeId;
-            //mappedBill.CashierId = cashierId;
-            //mappedBill.DateCreated = DateTime.Now;
-            var bill = new Bill()
+            //check so luong va tra loi
+            var error = new AddBillErrorModel()
             {
-               TotalPrice = model.TotalPrice,
-               CashierId = cashierId,
-               DateCreated = DateTime.Now,
-               StoreId = storeId,
+                ErrorProducts = new List<ProductErrorModel>()
             };
-            await _unitOfWork.BillRepository.Add(bill);
-            await _unitOfWork.SaveChangesAsync();
-            foreach (var detail in model.Details)
+            foreach (var _detail in model.Details)
             {
-                var remainingQuantity = detail.Quantity;
                 var productInDetail = _unitOfWork.ProductRepository
-                    .Get()
-                    .Where(x => x.Id == detail.ProductId)
-                    .Include(x => x.Stocks)
-                    .FirstOrDefault();
+                       .Get()
+                       .Where(x => x.Id == _detail.ProductId)
+                       .Include(x => x.Stocks)
+                       .FirstOrDefault();
                 var correspondingStocks = productInDetail.Stocks
                    .Where(x => x.StoreId == storeId)
                    .Where(x => x.ProductId == productInDetail.Id)
                    .ToList();
-                //de lay currentPrice
-                var productViewModel = await _productService.GetProductById(storeId, detail.ProductId);
-
-                do
-
+                int quantityInStock = 0;
+                foreach (var stock in correspondingStocks)
                 {
-                    //tim cai sellinng
-                    var sellingStock = correspondingStocks.Where(x => x.Status == Stock.StockDetail.Selling).FirstOrDefault();
-                    int quantityInThisBillDetail = Math.Min(sellingStock.Quantity, remainingQuantity);
-                    //tru ra 
+                    quantityInStock += stock.Quantity;
+                }
+                if (_detail.Quantity > quantityInStock)
+                {
+                    error.ErrorProducts.Add(new ProductErrorModel()
+                    {
+                        Id = _detail.ProductId,
+                        Name = productInDetail.Name
+                       ,
+                        RemainingQuantity = quantityInStock
+                    });
+                }
+            }
+            if (error.ErrorProducts.Count() == 0)
+            {
+                var bill = new Bill()
+                {
+                    TotalPrice = model.TotalPrice,
+                    CashierId = cashierId,
+                    DateCreated = DateTime.Now,
+                    StoreId = storeId,
+                };
+                await _unitOfWork.BillRepository.Add(bill);
+                await _unitOfWork.SaveChangesAsync();
+                foreach (var detail in model.Details)
+                {
+                    var remainingQuantity = detail.Quantity;
+                    var productInDetail = _unitOfWork.ProductRepository
+                        .Get()
+                        .Where(x => x.Id == detail.ProductId)
+                        .Include(x => x.Stocks)
+                        .FirstOrDefault();
+                    var correspondingStocks = productInDetail.Stocks
+                       .Where(x => x.StoreId == storeId)
+                       .Where(x => x.ProductId == productInDetail.Id)
+                       .ToList();
+                    //de lay currentPrice
+                    var productViewModel = await _productService.GetProductById(storeId, detail.ProductId);
 
-                    remainingQuantity -= quantityInThisBillDetail;
-                    sellingStock.Quantity -= quantityInThisBillDetail;
-                    _unitOfWork.StockRepository.Update(sellingStock);
-                    //va ghi vao bill
-                    bill.BillDetails.Add(new BillDetail
+                    do
+
                     {
-                        ProductId = detail.ProductId,
-                        BillId = bill.Id,
-                        BuyPrice = sellingStock.BuyPrice,
-                        SellPrice = productViewModel.EventPrice,
-                        Quantity = quantityInThisBillDetail,
-                         StockId = sellingStock.Id
-                    }); ;
-                    //xem thu het hang thi next thanh selling
-                    if (sellingStock.Quantity == 0)
-                    {
-                        sellingStock.Status = Stock.StockDetail.SoldOut;
-                        var availableStock = correspondingStocks
-                               .Where(x => x.Status == Stock.StockDetail.Available);
-                        var nextStockId = availableStock.Min(x => x.Id);
-                        var nextSellingStock = correspondingStocks.Where(x => x.Id == nextStockId).FirstOrDefault();
-                        if (nextSellingStock != null)
+                        //tim cai sellinng
+                        var sellingStock = correspondingStocks.Where(x => x.Status == Stock.StockDetail.Selling).FirstOrDefault();
+                        int quantityInThisBillDetail = Math.Min(sellingStock.Quantity, remainingQuantity);
+                        //tru ra 
+
+                        remainingQuantity -= quantityInThisBillDetail;
+                        sellingStock.Quantity -= quantityInThisBillDetail;
+                        _unitOfWork.StockRepository.Update(sellingStock);
+                        //va ghi vao bill
+                        bill.BillDetails.Add(new BillDetail
                         {
-                            nextSellingStock.Status = Stock.StockDetail.Selling;
-                            _unitOfWork.StockRepository.Update(nextSellingStock);
+                            ProductId = detail.ProductId,
+                            BillId = bill.Id,
+                            BuyPrice = sellingStock.BuyPrice,
+                            SellPrice = productViewModel.EventPrice,
+                            Quantity = quantityInThisBillDetail,
+                            StockId = sellingStock.Id
+                        }); ;
+                        //xem thu het hang thi next thanh selling
+                        if (sellingStock.Quantity == 0)
+                        {
+                            sellingStock.Status = Stock.StockDetail.SoldOut;
+                            var availableStock = correspondingStocks
+                                   .Where(x => x.Status == Stock.StockDetail.Available);
+                            var nextStockId = availableStock.Min(x => x.Id);
+                            var nextSellingStock = correspondingStocks.Where(x => x.Id == nextStockId).FirstOrDefault();
+                            if (nextSellingStock != null)
+                            {
+                                nextSellingStock.Status = Stock.StockDetail.Selling;
+                                _unitOfWork.StockRepository.Update(nextSellingStock);
+                            }
+
                         }
-                 
-                    }
-                } while (remainingQuantity > 0);
+                    } while (remainingQuantity > 0);
+                }
+
+                _unitOfWork.BillRepository.Update(bill);
+                await _unitOfWork.SaveChangesAsync();
             }
 
-             _unitOfWork.BillRepository.Update(bill);
-            await _unitOfWork.SaveChangesAsync();
-
-            return bill.Id;
+            return error;
 
         }
 

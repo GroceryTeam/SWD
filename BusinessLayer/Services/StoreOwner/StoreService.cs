@@ -24,6 +24,7 @@ namespace BusinessLayer.Services.StoreOwner
             var storesData = await _unitOfWork.StoreRepository
                 .Get()
                 .Where(x => x.BrandId == brandId)
+                .Where(x=>x.ApprovedStatus!=Store.StoreApproveStatus.Disabled)
                 .ToListAsync();
             var mappedStoresData = _mapper.Map<List<Store>, List<StoreViewModel>>(storesData);
             mappedStoresData.ForEach(x => x.ApprovedStatus = (int)x.ApprovedStatus);
