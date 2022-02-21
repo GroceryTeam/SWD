@@ -1,4 +1,6 @@
 using AutoMapper;
+using BusinessLayer.Interfaces.Cashier;
+using BusinessLayer.Services.Cashier;
 using BusinessLayer.Utilities;
 using DataAcessLayer;
 using DataAcessLayer.Interfaces;
@@ -134,6 +136,7 @@ namespace SWD_GSM_Cashier
                  BusinessLayer.Services.Cashier.ReceiptService>();
             services.AddTransient<BusinessLayer.Interfaces.Cashier.ICashierService,
                 BusinessLayer.Services.Cashier.CashierService>();
+            services.AddTransient<IEventService, EventService>();
             IMapper mapper = AutoMapperConfig.config.CreateMapper();
             services.AddSingleton(mapper);
         }

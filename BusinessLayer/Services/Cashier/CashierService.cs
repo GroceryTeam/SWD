@@ -22,12 +22,13 @@ namespace BusinessLayer.Services.Cashier
         public async Task<CashierViewModel> Login(LoginModel login)
         {
             var cashier = await _unitOfWork.CashierRepository
-                .Get().Where(x => x.Username == login.Username && x.Password == login.Password)
+                .Get().Include(x => x.Store).ThenInclude(x => x.Brand).Where(x => x.Username == login.Username && x.Password == login.Password)
                 .Where(x => x.Status == CashierStatus.Working)
                 .Select(x => new CashierViewModel()
                 {
                     Id = x.Id,
                     Username = x.Username,
+                    BrandId = x.Store.Brand.Name,
                     Name = x.Name,
                     StoreId = x.StoreId
                 }).FirstOrDefaultAsync();

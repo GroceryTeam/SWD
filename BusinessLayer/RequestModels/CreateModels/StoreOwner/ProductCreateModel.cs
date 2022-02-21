@@ -11,7 +11,6 @@ namespace BusinessLayer.RequestModels.CreateModels.StoreOwner
     {
         public string Name { get; set; }
         public int? UnpackedProductId { get; set; }
-        public int BuyPrice { get; set; }
         public int SellPrice { get; set; }
         public int CategoryId { get; set; }
         public int ConversionRate { get; set; }
