@@ -139,5 +139,29 @@ namespace BusinessLayer.Services.Cashier
             }
             return null;
         }
+
+        public async Task UnpackProduct(int productId, int number, int storeId)
+        {
+            var product = await _unitOfWork.ProductRepository.Get()
+                .Where(x => x.Id == productId)
+                .FirstOrDefaultAsync();
+            if (product.UnpackedProduct != null)
+            {
+                var stockOfThisProduct = await _unitOfWork.StockRepository.Get()
+                    .Where(x => x.ProductId == productId)
+                    .Where(x => x.StoreId == storeId)
+                    .Where(x => x.Status == Stock.StockDetail.Selling)
+                    .FirstOrDefaultAsync();
+                stockOfThisProduct.Quantity -= 1;
+                var stockOfUnpackedProduct = await _unitOfWork.StockRepository
+                    .Get()
+                    .Where(x => x.ProductId == product.UnpackedProductId)
+                    .Where(x => x.StoreId == storeId)
+                    .Where(x => x.Status == Stock.StockDetail.Selling)
+                    .FirstOrDefaultAsync();
+                stockOfUnpackedProduct.Quantity += (int)product.ConversionRate;
+            }
+            await _unitOfWork.SaveChangesAsync();
+        }
     }
 }

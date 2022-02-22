@@ -2,6 +2,7 @@
 using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
+using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.ResponseModels.ViewModels;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
@@ -64,16 +65,37 @@ namespace BusinessLayer.Services.StoreOwner
                 .FirstOrDefaultAsync();
             if (user == null) return false;
             else
-            {
-                var userBrand = new UserBrand()
+            { if (_unitOfWork.UserBrandRepository.Get().Where(x=>x.BrandId==brandId && x.UserId==user.Id).FirstOrDefault()!=null)
                 {
-                    BrandId = brandId,
-                    UserId = user.Id
-                };
-                await _unitOfWork.UserBrandRepository.Add(userBrand);
-                await _unitOfWork.SaveChangesAsync();
-                return true;
+                    var userBrand = new UserBrand()
+                    {
+                        BrandId = brandId,
+                        UserId = user.Id
+                    };
+                    await _unitOfWork.UserBrandRepository.Add(userBrand);
+                    await _unitOfWork.SaveChangesAsync();
+                }
+                    return true;
             }
+        }
+
+        public async Task<int> AddBrand(BrandCreateModel model)
+        {
+            var brand = new Brand()
+            {
+                Name = model.Name,
+                Status = Brand.BrandStatus.Enabled,
+            };
+            await _unitOfWork.BrandRepository.Add(brand);
+            await _unitOfWork.SaveChangesAsync();
+            var userBrand = new UserBrand()
+            {
+                BrandId = brand.Id,
+                UserId = model.UserId
+            };
+            await _unitOfWork. UserBrandRepository.Add(userBrand);
+            await _unitOfWork.SaveChangesAsync();
+            return brand.Id;
         }
     }
 }

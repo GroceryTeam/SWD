@@ -16,5 +16,6 @@ namespace BusinessLayer.Interfaces.Cashier
     {
         Task<BasePagingViewModel<ProductViewModel>> GetProductList(int brandId, ProductSearchModel searchModel, PagingRequestModel paging);
         Task<ProductViewModel> GetProductById(int storeId, int productId);
+        Task UnpackProduct(int productId, int number, int storeId);
     }
 }

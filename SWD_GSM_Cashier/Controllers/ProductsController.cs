@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Interfaces.Cashier;
 using BusinessLayer.RequestModels;
+using BusinessLayer.RequestModels.CreateModels.Cashier;
 using BusinessLayer.RequestModels.SearchModels.Cashier;
 using BusinessLayer.Utilities;
 using Microsoft.AspNetCore.Authorization;
@@ -21,7 +22,7 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
 
         public ProductsController(IProductService productService)
         {
-           _productService = productService;
+            _productService = productService;
         }
 
         [HttpGet]
@@ -60,6 +61,24 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
             {
                 return BadRequest();
             }
+        }
+        [HttpPost("unpack")]
+        public async Task<IActionResult> UnpackProduct(UnpackProductRequestModel model)
+        {
+            try
+            {
+                if (model.StoreId <= 0
+                    || model.ProductId <= 0)
+                {
+                    return BadRequest();
+                }
+                await _productService.UnpackProduct(model.ProductId, model.Quantity, model.StoreId);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
 
     }

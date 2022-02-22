@@ -62,7 +62,19 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
                 return BadRequest();
             }
         }
-
+        [HttpPost]
+        public async Task<IActionResult> CreateNewBrand([FromBody] BrandCreateModel model)
+        {
+            try
+            {
+                await _brandService.AddBrand(model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
+        }
     }
 }
 
