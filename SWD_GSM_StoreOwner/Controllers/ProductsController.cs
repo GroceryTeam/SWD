@@ -59,7 +59,7 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
             try
             {
                 var product = await _productService.GetProductById(BrandId, id);
-                if (product!=null)
+                if (product != null)
                 {
                     return Ok(product);
                 }
@@ -75,8 +75,8 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
         {
             try
             {
-                if (model.ConversionRate <= 0 
-                    || model.SellPrice < 0 
+                if (model.ConversionRate <= 0
+                    || model.SellPrice < 0
                     || model.LowerThreshold < 0)
                 {
                     return BadRequest();
@@ -94,7 +94,7 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
         {
             try
             {
-                if (model.ConversionRate <= 0  || model.SellPrice < 0 || model.LowerThreshold < 0)
+                if (model.ConversionRate <= 0 || model.SellPrice < 0 || model.LowerThreshold < 0)
                 {
                     return BadRequest();
                 }
@@ -111,11 +111,12 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
         {
             try
             {
-                var result = await _productService.DeleteProduct(BrandId,id);
-                if (result.InverseUnpackedProducts.Count==0)
+                var result = await _productService.DeleteProduct(BrandId, id);
+                if (result.InverseUnpackedProducts.Count == 0)
                 {
                     return NoContent();
-                }else
+                }
+                else
                 {
                     return Conflict(result);
                 }
@@ -125,7 +126,7 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
                 return NotFound();
             }
         }
-       
+
         //[NonAction]
         //private PagingRequestModel getDefaultPaging()
         //{

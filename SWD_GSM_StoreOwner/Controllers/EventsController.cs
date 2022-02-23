@@ -98,7 +98,7 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
             }
             return Ok();
         }
-        [HttpPut("change-status/{id}")]
+        [HttpPut("{id}/status")]
         public async Task<IActionResult> ChangeStatus(int id, [FromBody] EventCreateModel model)
         {
             try

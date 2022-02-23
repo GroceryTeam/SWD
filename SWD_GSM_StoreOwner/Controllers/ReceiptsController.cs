@@ -58,66 +58,23 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
                 return BadRequest();
             }
         }
-        //Nhớ đặt tên lại bla bla, tào lao hết nhé\
         [HttpPost]
-        public async Task<IActionResult> CreateNewProduct(int BrandId, [FromBody] ProductCreateModel model)
+        public async Task<IActionResult> CreateNewReceipt([FromBody] ReceiptCreateModel model)
         {
-            //try
-            //{
-            //    if (model.ConversionRate <= 0
-            //        || model.BuyPrice < 0
-            //        || model.SellPrice < 0
-            //        || model.LowerThreshold < 0)
-            //    {
-            //        return BadRequest();
-            //    }
-            //    var id = await _productService.AddProduct(BrandId, model);
-            //}
-            //catch (Exception)
-            //{
-            //    return BadRequest();
-            //}
-            //return Ok();
-            return null;
-        }
-        [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int BrandId, int id, [FromBody] ProductCreateModel model)
-        {
-            //try
-            //{
-            //    if (model.ConversionRate <= 0 || model.BuyPrice < 0 || model.SellPrice < 0 || model.LowerThreshold < 0)
-            //    {
-            //        return BadRequest();
-            //    }
-            //    await _productService.UpdateProduct(BrandId, id, model);
-            //}
-            //catch (Exception)
-            //{
-            //    return BadRequest();
-            //}
-            //return Ok();
-            return null;
-        }
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int BrandId, int id)
-        {
-            //try
-            //{
-            //    var result = await _productService.DeleteProduct(BrandId, id);
-            //    if (result.InverseUnpackedProducts.Count == 0)
-            //    {
-            //        return NoContent();
-            //    }
-            //    else
-            //    {
-            //        return Conflict(result);
-            //    }
-            //}
-            //catch (Exception)
-            //{
-            //    return NotFound();
-            //}
-            return null;
+            try
+            {
+                if (model.StoreId <= 0
+                    || model.TotalCost < 0)
+                {
+                    return BadRequest();
+                }
+                await _receiptService.AddReceipt(model);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+            return Ok();
         }
     }
 

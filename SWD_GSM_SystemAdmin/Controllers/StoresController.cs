@@ -67,7 +67,7 @@ namespace SWD_GSM_SystemAdmin.Controllers.SystemAdmin
                 return BadRequest();
             }
         }
-        [HttpPut("status/{id}")]
+        [HttpPut("{id}/status")]
         public async Task<IActionResult> ChangeStoreStatus(int id, [FromBody] StoreStatusModel model)
         {
             try

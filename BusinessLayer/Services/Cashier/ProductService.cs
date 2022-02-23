@@ -48,7 +48,7 @@ namespace BusinessLayer.Services.Cashier
                          .Where(x => x.Status == Product.ProductStatus.Selling)
                          .ToList();
            
-            var currentEvent = productsData[0].Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault();
+            var currentEvent = (productsData.Count>0)? productsData[0].Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault() : null;
             var products = productsData.Select
                                 (x =>
                                     {
@@ -107,8 +107,8 @@ namespace BusinessLayer.Services.Cashier
                  .ThenInclude(x => x.Product)
               .Include(x => x.InverseUnpackedProduct)
               .FirstOrDefaultAsync();
-            var currentEvent = product.Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault();
-
+           // var currentEvent = product.Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault();
+            var currentEvent = (product!=null) ? product.Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault() : null;
             if (product != null)
             {
                 int eventPrice = product.SellPrice;

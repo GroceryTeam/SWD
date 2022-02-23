@@ -88,9 +88,6 @@ namespace BusinessLayer.Services.StoreOwner
                 Status = CashierStatus.Working,
                 Password = model.Password,
             };
-            //var mappedProduct = _mapper.Map<ProductCreateModel, Product>(model);
-            //mappedProduct.BrandId = brandId;
-            //mappedProduct.Status = Product.ProductStatus.Selling;
 
             await _unitOfWork.CashierRepository.Add(cashier);
             await _unitOfWork.SaveChangesAsync();

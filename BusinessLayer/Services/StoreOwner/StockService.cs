@@ -30,22 +30,22 @@ namespace BusinessLayer.Services.StoreOwner
                 .Get()
                 .Include(x => x.UnpackedProduct)
                 .Include(x => x.Category)
+                .Include(x => x.Brand).ThenInclude(x => x.Stores)
                 .ToListAsync();
             var productsData = productsList
                         .Where(x => x.BrandId == searchModel.BrandId)
                         .Where(x => StringNormalizer.VietnameseNormalize(x.Name)
                                    .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
-                       .Where(x => (searchModel.StoreId != null)
-                                           ? x.Brand.Stores.Select(x => x.Id).ToList().Contains((int)searchModel.StoreId)
-                                           : true)
-                       .Where(x => (searchModel.ProductId != null)
-                                           ? x.Id == searchModel.ProductId
-                                           : true)
+                       .Where(x => searchModel.StoreId == null
+                                            || x.Brand.Stores.Select(x => x.Id).ToList().Contains((int)searchModel.StoreId))
+                       .Where(x => searchModel.ProductId == null
+                                            || x.Id == searchModel.ProductId)
                        .Where(x => (searchModel.CategoryId != null)
                                            ? x.CategoryId == searchModel.CategoryId
                                            : true)
                        .Select(x => new ProductStockViewModel()
                        {
+
                            Id = x.Id,
                            CategoryId = x.CategoryId,
                            CategoryName = x.Category.Name,

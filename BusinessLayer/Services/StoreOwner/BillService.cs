@@ -51,15 +51,6 @@ namespace BusinessLayer.Services.StoreOwner
                                         })
                                     })
                                     .ToListAsync();
-
-            
-            //var billsData = await _unitOfWork.BillRepository
-            //    .Get()
-            //    .Where(x => x.StoreId == storeId)
-            //    .ToListAsync();
-
-            //var mappedBillsData = _mapper.Map<List<Bill>, List<BillViewModel>>(billsData);
-            //mappedBillsData.ForEach(x=>)'
             billData = billData
                 .Where(x => (x.DateCreated >= searchModel.StartDate) && (x.DateCreated <= searchModel.EndDate))
                 .ToList();
@@ -103,7 +94,6 @@ namespace BusinessLayer.Services.StoreOwner
                 .Include(bill => bill.BillDetails)
                 .ThenInclude(bd => bd.Product)
                 .Where(x => x.Id == billId)
-                //.IgnoreAutoIncludes()
                 .Select(bill => new BillViewModel() { 
                     Id = bill.Id,
                     StoreId = bill.StoreId,
