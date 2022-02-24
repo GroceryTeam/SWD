@@ -65,7 +65,8 @@ namespace BusinessLayer.Services.StoreOwner
                 .FirstOrDefaultAsync();
             if (user == null) return false;
             else
-            { if (_unitOfWork.UserBrandRepository.Get().Where(x=>x.BrandId==brandId && x.UserId==user.Id).FirstOrDefault()!=null)
+            {
+                if (_unitOfWork.UserBrandRepository.Get().Where(x => x.BrandId == brandId && x.UserId == user.Id).FirstOrDefault() != null)
                 {
                     var userBrand = new UserBrand()
                     {
@@ -75,7 +76,7 @@ namespace BusinessLayer.Services.StoreOwner
                     await _unitOfWork.UserBrandRepository.Add(userBrand);
                     await _unitOfWork.SaveChangesAsync();
                 }
-                    return true;
+                return true;
             }
         }
 
@@ -93,9 +94,19 @@ namespace BusinessLayer.Services.StoreOwner
                 BrandId = brand.Id,
                 UserId = model.UserId
             };
-            await _unitOfWork. UserBrandRepository.Add(userBrand);
+            await _unitOfWork.UserBrandRepository.Add(userBrand);
             await _unitOfWork.SaveChangesAsync();
             return brand.Id;
+        }
+        public async Task DisableBrand(int brandId)
+        {
+            var brand = await _unitOfWork.BrandRepository.Get()
+                .Where(x => x.Id.Equals(brandId))
+                .FirstOrDefaultAsync();
+
+            brand.Status = Brand.BrandStatus.Disabled;
+            _unitOfWork.BrandRepository.Update(brand);
+            await _unitOfWork.SaveChangesAsync();
         }
     }
 }

@@ -75,6 +75,20 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
             }
             return Ok();
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _brandService.DisableBrand(id);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }
 

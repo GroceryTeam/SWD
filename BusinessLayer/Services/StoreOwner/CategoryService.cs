@@ -52,10 +52,9 @@ namespace BusinessLayer.Services.StoreOwner
             return mappedCategory.Id;
         }
 
-        public async Task<bool> UpdateCategory(int brandId, int categoryId, string CategoryName)
+        public async Task<bool> UpdateCategory(int categoryId, string CategoryName)
         {
             var category = await _unitOfWork.CategoryRepository.Get()
-                .Where(x => x.BrandId.Equals(brandId))
                 .Where(x => x.Id.Equals(categoryId))
                 .FirstOrDefaultAsync();
             if (category == null)

@@ -35,8 +35,9 @@ namespace BusinessLayer.Services.Cashier
                      .ThenInclude(x => x.Events)
                      .ThenInclude(x => x.EventDetails)
                      .ThenInclude(x => x.Product)
-
+ .Include(x => x.Brand).ThenInclude(x => x.Stores)
                  .Include(x => x.InverseUnpackedProduct)
+                  .Where(x => x.Brand.Stores.Select(x => x.Id).ToList().Contains(storeId))
                .ToListAsync();
             productsData = productsData
                         .Where(x =>
@@ -47,8 +48,8 @@ namespace BusinessLayer.Services.Cashier
                                             : true)
                          .Where(x => x.Status == Product.ProductStatus.Selling)
                          .ToList();
-           
-            var currentEvent = (productsData.Count>0)? productsData[0].Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault() : null;
+
+            var currentEvent = (productsData.Count > 0) ? productsData[0].Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault() : null;
             var products = productsData.Select
                                 (x =>
                                     {
@@ -99,16 +100,18 @@ namespace BusinessLayer.Services.Cashier
         {
             var product = await _unitOfWork.ProductRepository
               .Get()
-              .Where(x => x.Id == productId)
               .Include(x => x.Stocks)
               .Include(x => x.Brand)
                  .ThenInclude(x => x.Events)
                  .ThenInclude(x => x.EventDetails)
                  .ThenInclude(x => x.Product)
+               .Include(x => x.Brand).ThenInclude(x => x.Stores)
               .Include(x => x.InverseUnpackedProduct)
+              .Where(x => x.Brand.Stores.Select(x => x.Id).ToList().Contains(storeId))
+              .Where(x => x.Id == productId)
               .FirstOrDefaultAsync();
-           // var currentEvent = product.Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault();
-            var currentEvent = (product!=null) ? product.Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault() : null;
+            // var currentEvent = product.Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault();
+            var currentEvent = (product != null) ? product.Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault() : null;
             if (product != null)
             {
                 int eventPrice = product.SellPrice;

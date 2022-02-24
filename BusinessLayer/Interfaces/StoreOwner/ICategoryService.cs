@@ -14,6 +14,6 @@ namespace BusinessLayer.Interfaces.StoreOwner
     {
         Task<BasePagingViewModel<CategoryViewModel>> GetCategoryList(int brandId, PagingRequestModel paging);
         Task<int> AddCategory(int brandId, CategoryCreateModel model);
-        Task<bool> UpdateCategory(int brandId, int categoryId, string CategoryName);
+        Task<bool> UpdateCategory(int categoryId, string CategoryName);
     }
 }

@@ -150,11 +150,12 @@ namespace SWD_GSM
             services.AddTransient<BusinessLayer.Interfaces.StoreOwner.IStoreService,
                 BusinessLayer.Services.StoreOwner.StoreService>();
             services.AddTransient<IDailyRevenueService, DailyRevenueService>();
-            services.AddTransient<IEventService, EventService>();
+            services.AddTransient<BusinessLayer.Interfaces.StoreOwner.IEventService, BusinessLayer.Services.StoreOwner.EventService>();
             services.AddTransient<IStockService, StockService>();
             services.AddTransient<BusinessLayer.Interfaces.StoreOwner.ICashierService,
                 BusinessLayer.Services.StoreOwner.CashierSevice>();
             //cashier
+            services.AddTransient<BusinessLayer.Interfaces.Cashier.IEventService, BusinessLayer.Services.Cashier.EventService>();
             services.AddTransient<BusinessLayer.Interfaces.Cashier.IProductService,
                  BusinessLayer.Services.Cashier.ProductService>();
             services.AddTransient<BusinessLayer.Interfaces.Cashier.ICategoryService,

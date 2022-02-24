@@ -30,7 +30,7 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
         {
             try
             {
-                paging = PagingUtil.getDefaultPaging();
+                paging = PagingUtil.checkDefaultPaging(paging);
                 var categories = await _categoryService.GetCategoryList(BrandId, paging);
                 return Ok(categories);
             }catch(Exception e )

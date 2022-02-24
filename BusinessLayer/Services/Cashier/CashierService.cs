@@ -28,7 +28,8 @@ namespace BusinessLayer.Services.Cashier
                 {
                     Id = x.Id,
                     Username = x.Username,
-                    BrandId = x.Store.Brand.Name,
+                    BrandId = x.Store.Brand.Id,
+                    BrandName = x.Store.Brand.Name,
                     Name = x.Name,
                     StoreId = x.StoreId
                 }).FirstOrDefaultAsync();

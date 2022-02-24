@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using static DataAcessLayer.Models.Store;
 
 namespace SWD_GSM_SystemAdmin.Controllers.SystemAdmin
 {
@@ -42,7 +43,7 @@ namespace SWD_GSM_SystemAdmin.Controllers.SystemAdmin
             {
                 //check storeId
                 paging = PagingUtil.checkDefaultPaging(paging);
-                var stores = await _storeService.GetStoreList( searchModel, paging);
+                var stores = await _storeService.GetStoreList(searchModel, paging);
                 return Ok(stores);
             }
             catch (Exception)
@@ -80,6 +81,20 @@ namespace SWD_GSM_SystemAdmin.Controllers.SystemAdmin
             }
             return Ok();
         }
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            try
+            {
+                await _storeService.ChangeStoreStatus(id, (int)StoreApproveStatus.Disabled);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+
     }
 }
 
