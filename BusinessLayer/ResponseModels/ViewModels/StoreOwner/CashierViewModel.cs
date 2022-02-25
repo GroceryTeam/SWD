@@ -11,6 +11,7 @@ namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
         public int Id { get; set; }
         public string Name { get; set; }
         public int StoreId { get; set; }
+        public string StoreName { get; set; }
         public string Username { get; set; }
         public int Status { get; set; }
     }

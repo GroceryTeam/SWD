@@ -37,19 +37,29 @@ namespace BusinessLayer.Services.StoreOwner
                 .Where(x => searchModel.BrandId != null ? x.Store.Brand.Id == searchModel.BrandId : true)
                 .Where(x => searchModel.StoreId != null ? x.Store.Id == searchModel.StoreId : true)
                 .Where(x => searchModel.IncludeDisabledCashier ? true : x.Status == CashierStatus.Working)
+                .Select(x=> new CashierViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Status = (int)x.Status,
+                    StoreId = x.StoreId,
+                    StoreName = x.Store.Name,
+                    Username = x.Username
+                })
                 .ToListAsync();
-            var mappedCashiersData = _mapper.Map<List<DataAcessLayer.Models.Cashier>, List<CashierViewModel>>(cashiersData);
-            mappedCashiersData.ForEach(x => x.Status = (int)x.Status);
+            //var mappedCashiersData = _mapper.Map<List<DataAcessLayer.Models.Cashier>, List<CashierViewModel>>(cashiersData);
+            //mappedCashiersData.ForEach(x => x.Status = (int)x.Status).
+            //    .ForEach(x => x.Status = (int)x.Status);
 
-            mappedCashiersData = mappedCashiersData
+            cashiersData = cashiersData
                         .Where(x =>
                             StringNormalizer.VietnameseNormalize(x.Name)
                             .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
                         .ToList();
 
-            int totalItem = mappedCashiersData.Count;
+            int totalItem = cashiersData.Count;
 
-            mappedCashiersData = mappedCashiersData.Skip((paging.PageIndex - 1) * paging.PageSize)
+            cashiersData = cashiersData.Skip((paging.PageIndex - 1) * paging.PageSize)
                 .Take(paging.PageSize).ToList();
 
             var cashierResult = new BasePagingViewModel<CashierViewModel>()
@@ -58,7 +68,7 @@ namespace BusinessLayer.Services.StoreOwner
                 PageSize = paging.PageSize,
                 TotalItem = totalItem,
                 TotalPage = (int)Math.Ceiling((decimal)totalItem / (decimal)paging.PageSize),
-                Data = mappedCashiersData
+                Data = cashiersData
             };
             return cashierResult;
         }
