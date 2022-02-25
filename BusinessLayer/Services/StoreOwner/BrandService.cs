@@ -79,6 +79,15 @@ namespace BusinessLayer.Services.StoreOwner
                 return true;
             }
         }
+        public async Task DeleteUserFromBrand(int userId, int brandId)
+        {
+            var userBrand = await _unitOfWork.UserBrandRepository.Get()
+                .Where(x => x.UserId == userId)
+                .Where(x => x.BrandId == brandId)
+                .FirstOrDefaultAsync();
+            await _unitOfWork.UserBrandRepository.DeleteComplex(userBrand.UserId, userBrand.BrandId);
+            await _unitOfWork.SaveChangesAsync();
+        }
 
         public async Task<int> AddBrand(BrandCreateModel model)
         {

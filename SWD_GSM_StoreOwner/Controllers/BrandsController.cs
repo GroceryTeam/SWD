@@ -85,10 +85,22 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
             }
             catch (Exception)
             {
-                return BadRequest();
+                return NotFound();
             }
         }
-
+        [HttpDelete("users/{id}")]
+        public async Task<IActionResult> DeleteUserFromBrand(int id, int BrandId)
+        {
+            try
+            {
+                await _brandService.DeleteUserFromBrand(id, BrandId);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+        }
     }
 }
 

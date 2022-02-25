@@ -18,6 +18,7 @@ namespace BusinessLayer.Interfaces.StoreOwner
         Task<bool> AddUserToBrand(string phoneNo, string email, int brandId);
         Task<int> AddBrand(BrandCreateModel model);
         Task DisableBrand(int brandId);
+        Task DeleteUserFromBrand(int userId, int brandId);
 
     }
 }
