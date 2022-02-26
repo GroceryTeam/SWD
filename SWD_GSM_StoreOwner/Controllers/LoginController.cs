@@ -50,5 +50,27 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
                     return Unauthorized();
                 }
         }
+        [HttpPost("firebase")]
+        public async Task<IActionResult> Login([FromBody] LoginFirebaseModel login)
+        {
+            if (login == null)
+            {
+                return BadRequest();
+            }
+            var user = await _userService.LoginFirebase(login);
+            if (user != null)
+            {
+                string tokenString = CreateAuthenToken.GetToken(Role);
+                return Ok(new BaseLoginViewModel<UserViewModel>()
+                {
+                    Token = tokenString,
+                    Information = user
+                });
+            }
+            else
+            {
+                return Unauthorized();
+            }
+        }
     }
 }

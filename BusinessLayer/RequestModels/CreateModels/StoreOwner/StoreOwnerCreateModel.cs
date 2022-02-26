@@ -14,6 +14,5 @@ namespace BusinessLayer.RequestModels.CreateModels.StoreOwner
         public string Email { get; set; }
         public string Phone { get; set; }
         public string Name { get; set; }
-        public UserStatus Status { get; set; }
     }
 }

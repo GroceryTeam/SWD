@@ -14,5 +14,6 @@ namespace BusinessLayer.Interfaces.StoreOwner
     {
         Task<UserViewModel> Login(LoginModel login);
         Task<SignupErrorModel> Signup(StoreOwnerCreateModel model);
+        Task<UserViewModel> LoginFirebase(LoginFirebaseModel login);
     }
 }

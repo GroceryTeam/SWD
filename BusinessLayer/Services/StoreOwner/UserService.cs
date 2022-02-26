@@ -6,6 +6,8 @@ using BusinessLayer.ResponseModels.ErrorModels.StoreOwner;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
 using DataAcessLayer.Interfaces;
 using DataAcessLayer.Models;
+using FirebaseAdmin;
+using FirebaseAdmin.Auth;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,8 +21,13 @@ namespace BusinessLayer.Services.StoreOwner
 {
     public class UserService : BaseService, IUserService
     {
-        public UserService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        private readonly FirebaseApp _firebaseApp;
+        private readonly FirebaseAuth _firebaseAuth;
+        public UserService(IUnitOfWork unitOfWork, IMapper mapper,
+            FirebaseApp firebaseApp) : base(unitOfWork, mapper)
         {
+            _firebaseApp = firebaseApp;
+            _firebaseAuth = FirebaseAuth.GetAuth(_firebaseApp);
         }
         public async Task<UserViewModel> Login(LoginModel login)
         {
@@ -37,6 +44,27 @@ namespace BusinessLayer.Services.StoreOwner
                     Phone = x.Phone
                 }).FirstOrDefaultAsync();
             return cashier;
+        }
+        public async Task<UserViewModel> LoginFirebase(LoginFirebaseModel login)
+        {
+            var decodedToken = await _firebaseAuth
+                    .VerifyIdTokenAsync(login.IdToken);
+            string uid = decodedToken.Uid;
+            var userInfo = await _firebaseAuth.GetUserAsync(uid);
+
+            var user = await _unitOfWork.UserRepository
+                .Get()
+                .Where(x => x.Email == userInfo.Email)
+                .Where(x => x.Status == UserStatus.Enabled)
+                .Select(x => new UserViewModel()
+                {
+                    Id = x.Id,
+                    Username = x.Username,
+                    Name = x.Name,
+                    Email = x.Email,
+                    Phone = x.Phone
+                }).FirstOrDefaultAsync();
+            return user;
         }
         public async Task<SignupErrorModel> Signup(StoreOwnerCreateModel model)
         {
