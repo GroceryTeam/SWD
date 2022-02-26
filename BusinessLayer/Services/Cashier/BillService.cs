@@ -54,8 +54,7 @@ namespace BusinessLayer.Services.Cashier
                     error.ErrorProducts.Add(new ProductErrorModel()
                     {
                         Id = _detail.ProductId,
-                        Name = productInDetail.Name
-                       ,
+                        Name = productInDetail.Name,
                         RemainingQuantity = quantityInStock
                     });
                 }
@@ -87,7 +86,6 @@ namespace BusinessLayer.Services.Cashier
                     var productViewModel = await _productService.GetProductById(storeId, detail.ProductId);
 
                     do
-
                     {
                         //tim cai sellinng
                         var sellingStock = correspondingStocks.Where(x => x.Status == Stock.StockDetail.Selling).FirstOrDefault();
@@ -112,19 +110,27 @@ namespace BusinessLayer.Services.Cashier
                         {
                             sellingStock.Status = Stock.StockDetail.SoldOut;
                             var availableStock = correspondingStocks
-                                   .Where(x => x.Status == Stock.StockDetail.Available);
-                            var nextStockId = availableStock.Min(x => x.Id);
-                            var nextSellingStock = correspondingStocks.Where(x => x.Id == nextStockId).FirstOrDefault();
-                            if (nextSellingStock != null)
+                                   .Where(x => x.Status == Stock.StockDetail.Available).ToList();
+                            if (availableStock.Count()!=0)
                             {
-                                nextSellingStock.Status = Stock.StockDetail.Selling;
-                                _unitOfWork.StockRepository.Update(nextSellingStock);
+                                var nextStockId = availableStock.Min(x => x.Id);
+                                var nextSellingStock = correspondingStocks.Where(x => x.Id == nextStockId).FirstOrDefault();
+                                if (nextSellingStock != null)
+                                {
+                                    nextSellingStock.Status = Stock.StockDetail.Selling;
+                                    _unitOfWork.StockRepository.Update(nextSellingStock);
+                                }
                             }
-
                         }
                     } while (remainingQuantity > 0);
+                    int remainingQuantityInStore = 0;
+                    correspondingStocks.ForEach(x => remainingQuantityInStore += x.Quantity);
+                    if (remainingQuantityInStore <= productInDetail.LowerThreshold)
+                    {
+                        productInDetail.Status = Product.ProductStatus.NearlyOutOfStock;
+                        //fire noti
+                    }
                 }
-
                 _unitOfWork.BillRepository.Update(bill);
                 await _unitOfWork.SaveChangesAsync();
             }

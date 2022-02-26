@@ -43,6 +43,9 @@ namespace BusinessLayer.Services.StoreOwner
                        .Where(x => (searchModel.CategoryId != null)
                                            ? x.CategoryId == searchModel.CategoryId
                                            : true)
+                       .Where(x => (searchModel.OnlyNearlyOutOfStockProduct)
+                                           ? x.Status == Product.ProductStatus.NearlyOutOfStock
+                                           : true)
                        .Select(x => new ProductStockViewModel()
                        {
 
@@ -83,6 +86,9 @@ namespace BusinessLayer.Services.StoreOwner
                        .Where(x => (searchModel.CategoryId != null)
                                            ? x.Product.CategoryId == searchModel.CategoryId
                                            : true)
+                       .Where(x => (searchModel.OnlyNearlyOutOfStockProduct)
+                                           ? x.Product.Status ==  Product.ProductStatus.NearlyOutOfStock
+                                           : true)
                        .ToList().ForEach(stck =>
                              {
                                  if (stck.Quantity > 0 && stck.Status != Stock.StockDetail.SoldOut)
@@ -103,7 +109,6 @@ namespace BusinessLayer.Services.StoreOwner
                                      product.CurrentQuantity += stck.Quantity;
                                  }
                              });
-
 
             int totalItem = productsData.Count;
 

@@ -141,6 +141,18 @@ namespace BusinessLayer.Services.StoreOwner
                      ReceiptId = receipt.Id,
                 };
                 await _unitOfWork.StockRepository.Add(stock);
+                await _unitOfWork.SaveChangesAsync();
+
+                int remainingQuantityInStore = 0;
+                _unitOfWork.StockRepository.Get()
+                    .Where(x => x.ProductId == _detail.ProductId)
+                    .Where(x => x.StoreId == model.StoreId)
+                    .ToList().ForEach(x=>remainingQuantityInStore+=x.Quantity);
+                var product = await _unitOfWork.ProductRepository.Get().Where(x => x.Id == _detail.ProductId).FirstOrDefaultAsync();
+                if (remainingQuantityInStore > product.LowerThreshold)
+                {
+                    product.Status = Product.ProductStatus.Selling;
+                }
             }
             _unitOfWork.ReceiptRepository.Update(receipt);
             await _unitOfWork.SaveChangesAsync();

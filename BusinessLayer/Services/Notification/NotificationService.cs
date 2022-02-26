@@ -14,7 +14,11 @@ namespace BusinessLayer.Services.Notification
 {
     public class NotificationService : INotificationService
     {
-        public async Task SendNotification()
+        public async Task SendNotificationOutOfStockProduct(int productId)
+        {
+
+        } 
+        private async Task SendNotification(object _payload)
         {
             IConfiguration config = new ConfigurationBuilder()
            .SetBasePath(Directory.GetCurrentDirectory())
@@ -34,7 +38,7 @@ namespace BusinessLayer.Services.Notification
             httpClient.DefaultRequestHeaders.Accept
                     .Add(new MediaTypeWithQualityHeaderValue("application/json"));
             var fcm = new FcmSender(settings, httpClient);
-            var fcmSendResponse = await fcm.SendAsync("Hello");
+            var fcmSendResponse = await fcm.SendAsync(_payload);
         }
 
     }

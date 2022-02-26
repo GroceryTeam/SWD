@@ -29,9 +29,10 @@ namespace BusinessLayer.Services.StoreOwner
         {
             var userBrandData = await _unitOfWork.UserBrandRepository
                 .Get()
-                .Where(x => x.UserId == userId)
                 .Include(x => x.Brand)
                 .ThenInclude(x => x.Stores)
+                .Where(x => x.UserId == userId)
+                .Where(x => x.Brand.Status ==  Brand.BrandStatus.Enabled)
                 .Select(x => x.Brand)
                 .Select
                                 (x => new BrandViewModel()

@@ -18,7 +18,8 @@ namespace DataAcessLayer.Models
         public enum ProductStatus
         {
             Selling,
-            Disabled
+            Disabled,
+            NearlyOutOfStock
         }
 
         public int Id { get; set; }

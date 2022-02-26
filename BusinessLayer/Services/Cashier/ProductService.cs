@@ -37,7 +37,6 @@ namespace BusinessLayer.Services.Cashier
                      .ThenInclude(x => x.Product)
  .Include(x => x.Brand).ThenInclude(x => x.Stores)
                  .Include(x => x.InverseUnpackedProduct)
-                  .Where(x => x.Brand.Stores.Select(x => x.Id).ToList().Contains(storeId))
                .ToListAsync();
             productsData = productsData
                         .Where(x =>
@@ -46,7 +45,7 @@ namespace BusinessLayer.Services.Cashier
                          .Where(x => (searchModel.CategoryId != null)
                                             ? x.CategoryId == searchModel.CategoryId
                                             : true)
-                         .Where(x => x.Status == Product.ProductStatus.Selling)
+                         .Where(x => x.Status != Product.ProductStatus.Disabled)
                          .ToList();
 
             var currentEvent = (productsData.Count > 0) ? productsData[0].Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault() : null;
@@ -107,7 +106,6 @@ namespace BusinessLayer.Services.Cashier
                  .ThenInclude(x => x.Product)
                .Include(x => x.Brand).ThenInclude(x => x.Stores)
               .Include(x => x.InverseUnpackedProduct)
-              .Where(x => x.Brand.Stores.Select(x => x.Id).ToList().Contains(storeId))
               .Where(x => x.Id == productId)
               .FirstOrDefaultAsync();
             // var currentEvent = product.Brand.Events.Where(x => x.Status == EventStatus.Enabled).FirstOrDefault();
@@ -136,7 +134,7 @@ namespace BusinessLayer.Services.Cashier
                     Quantity = product.Stocks
                                     .Where(a => a.StoreId == storeId)
                                     .Where(a => a.ProductId == product.Id)
-                                    .FirstOrDefault().Quantity
+                                    .ToList().Select(x => x.Quantity).Sum()
                 };
                 return productData;
             }

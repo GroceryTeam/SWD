@@ -39,9 +39,9 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
                     return Conflict(error);
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return Ok(e.Message);
             }
         }
     }

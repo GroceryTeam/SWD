@@ -13,6 +13,7 @@ namespace BusinessLayer.RequestModels.CreateModels.StoreOwner
         public int? ProductId { get; set; }
         public string SearchTerm { get; set; }
         public int? CategoryId { get; set; }
+        public bool OnlyNearlyOutOfStockProduct { get; set; }
 
     }
 }

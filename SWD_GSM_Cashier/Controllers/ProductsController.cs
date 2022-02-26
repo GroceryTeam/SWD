@@ -40,9 +40,9 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
                 var products = await _productService.GetProductList(StoreId, searchModel, paging);
                 return Ok(products);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return Ok(e.Message);
             }
         }
         [HttpGet("{id}")]
