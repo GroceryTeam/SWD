@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLayer.Interfaces.Cashier;
+using BusinessLayer.Interfaces.Notification;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.RequestModels.CreateModels.Cashier;
@@ -22,9 +23,12 @@ namespace BusinessLayer.Services.Cashier
     public class BillService : BaseService, IBillService
     {
         private readonly IProductService _productService;
-        public BillService(IUnitOfWork unitOfWork, IMapper mapper, IProductService productService) : base(unitOfWork, mapper)
+        private readonly INotificationService _notiService;
+
+        public BillService(IUnitOfWork unitOfWork, IMapper mapper, IProductService productService, INotificationService notiService) : base(unitOfWork, mapper)
         {
             _productService = productService;
+            _notiService = notiService;
         }
         public async Task<AddBillErrorModel> AddBill(int storeId, int cashierId, BillCreateModel model)
         {
@@ -129,6 +133,7 @@ namespace BusinessLayer.Services.Cashier
                     {
                         productInDetail.Status = Product.ProductStatus.NearlyOutOfStock;
                         //fire noti
+                        await _notiService.SendNotificationOutOfStockProduct(productInDetail.Id,productInDetail.BrandId,productInDetail.Name);
                     }
                 }
                 _unitOfWork.BillRepository.Update(bill);

@@ -31,6 +31,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Utilities;
+using BusinessLayer.Services.Notification;
+using BusinessLayer.Interfaces.Notification;
 
 namespace SWD_GSM_SystemAdmin
 {
@@ -137,7 +139,7 @@ namespace SWD_GSM_SystemAdmin
             services.AddTransient<BusinessLayer.Interfaces.SystemAdmin.IUserService, BusinessLayer.Services.SystemAdmin.UserService>();
             IMapper mapper = AutoMapperConfig.config.CreateMapper();
             services.AddSingleton(mapper);
-
+            services.AddTransient<INotificationService,NotificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

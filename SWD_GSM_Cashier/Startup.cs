@@ -1,6 +1,8 @@
 using AutoMapper;
 using BusinessLayer.Interfaces.Cashier;
+using BusinessLayer.Interfaces.Notification;
 using BusinessLayer.Services.Cashier;
+using BusinessLayer.Services.Notification;
 using BusinessLayer.Utilities;
 using DataAcessLayer;
 using DataAcessLayer.Interfaces;
@@ -139,6 +141,7 @@ namespace SWD_GSM_Cashier
             services.AddTransient<IEventService, EventService>();
             IMapper mapper = AutoMapperConfig.config.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddTransient<INotificationService, NotificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

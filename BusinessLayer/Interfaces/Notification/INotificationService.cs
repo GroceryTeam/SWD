@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Interfaces.Notification
 {
-    interface INotificationService
+    public interface INotificationService
     {
-
+        Task SendNotificationOutOfStockProduct(int productId, int brandId, string productName);
+        Task SendNotificationStoreApproved(int storeId, int brandId, string storeName);
+        Task SendNotificationStoreRejected(int storeId, int brandId, string storeName);
     }
 }

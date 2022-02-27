@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.ResponseModels.Firebase
 {
-    public class OutOfStockFirebaseNotificationModel
+    public class StoreApprovedRejectedNotificationModel
     {
-        public int BrandId { get; set; }
-        public int ProductId { get; set; }
-        public string ProductName { get; set; }
+        public string StoreName { get; set; }
+        public int StoreId { get; set; }
 
+        public int BrandId { get; set; }
     }
 }

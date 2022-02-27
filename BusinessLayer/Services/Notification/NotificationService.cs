@@ -1,4 +1,5 @@
 ﻿using BusinessLayer.Interfaces.Notification;
+using BusinessLayer.ResponseModels.Firebase;
 using CorePush.Google;
 using Microsoft.Extensions.Configuration;
 using System;
@@ -14,10 +15,48 @@ namespace BusinessLayer.Services.Notification
 {
     public class NotificationService : INotificationService
     {
-        public async Task SendNotificationOutOfStockProduct(int productId)
+        public async Task SendNotificationOutOfStockProduct(int productId, int brandId, string productName)
         {
-
-        } 
+            var notiModel = new OutOfStockFirebaseNotificationModel()
+            {
+                BrandId = brandId,
+                ProductId = productId,
+                ProductName = productName
+            };
+            await SendNotification(new GeneralFirebaseNotificationModel<OutOfStockFirebaseNotificationModel>()
+            {
+                Data = notiModel,
+                Type = GeneralFirebaseNotificationModel<OutOfStockFirebaseNotificationModel>.NotiType.NearlyOutOfStock
+            });
+        }
+        public async Task SendNotificationStoreApproved(int storeId, int brandId, string storeName)
+        {
+            var notiModel = new StoreApprovedRejectedNotificationModel()
+            {
+                BrandId = brandId,
+                StoreId = storeId,
+                StoreName = storeName
+            };
+            await SendNotification(new GeneralFirebaseNotificationModel<StoreApprovedRejectedNotificationModel>()
+            {
+                Data = notiModel,
+                Type = GeneralFirebaseNotificationModel<StoreApprovedRejectedNotificationModel>.NotiType.StoreIsApproved
+            });
+        }
+        public async Task SendNotificationStoreRejected(int storeId, int brandId, string storeName)
+        {
+            var notiModel = new StoreApprovedRejectedNotificationModel()
+            {
+                BrandId = brandId,
+                StoreId = storeId,
+                StoreName = storeName
+            };
+            await SendNotification(new GeneralFirebaseNotificationModel<StoreApprovedRejectedNotificationModel>()
+            {
+                Data = notiModel,
+                Type = GeneralFirebaseNotificationModel<StoreApprovedRejectedNotificationModel>.NotiType.StoreIsRejected
+            });
+        }
         private async Task SendNotification(object _payload)
         {
             IConfiguration config = new ConfigurationBuilder()

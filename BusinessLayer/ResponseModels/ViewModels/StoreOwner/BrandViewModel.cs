@@ -12,7 +12,7 @@ namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
         public int Id { get; set; }
         public string Name { get; set; }
         public int Status { get; set; }
-        public List<int> UserIdList { get; set; }
+        public List<UserViewModel> UserList { get; set; }
 
         public List<StoreViewModel> StoreList { get; set; }
     }

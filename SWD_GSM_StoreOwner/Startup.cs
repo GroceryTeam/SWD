@@ -1,5 +1,7 @@
 using AutoMapper;
+using BusinessLayer.Interfaces.Notification;
 using BusinessLayer.Interfaces.StoreOwner;
+using BusinessLayer.Services.Notification;
 using BusinessLayer.Services.StoreOwner;
 using BusinessLayer.Utilities;
 using DataAcessLayer;
@@ -155,6 +157,7 @@ namespace SWD_GSM_StoreOwner
 
             IMapper mapper = AutoMapperConfig.config.CreateMapper();
             services.AddSingleton(mapper);
+            services.AddTransient<INotificationService, NotificationService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

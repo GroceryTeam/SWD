@@ -40,13 +40,21 @@ namespace BusinessLayer.Services.StoreOwner
                                     Id = x.Id,
                                     Name = x.Name,
                                     Status = (int)x.Status,
-                                    UserIdList = x.UserBrands.Select(x => x.UserId).ToList(),
+                                    UserList = x.UserBrands.Select(x => new UserViewModel()
+                                    {
+                                        Id = x.User.Id,
+                                        Email = x.User.Email,
+                                        Name = x.User.Name,
+                                        Phone = x.User.Phone,
+                                        Username = x.User.Username
+                                    }).ToList(),
                                     StoreList = x.Stores.Select(store => new StoreViewModel()
                                     {
                                         Id = store.Id,
                                         Address = store.Address,
-                                        ApprovedStatus = (int)store.ApprovedStatus,
+                                        BrandName = store.Brand.Name,
                                         BrandId = store.BrandId,
+                                        ApprovedStatus = (int)store.ApprovedStatus,
                                         Name = store.Name,
                                     }
                                     ).ToList()
