@@ -141,14 +141,14 @@ namespace BusinessLayer.Services.SystemAdmin
                 store.ApprovedStatus = (Store.StoreApproveStatus)status;
                 _unitOfWork.StoreRepository.Update(store);
                 await _unitOfWork.SaveChangesAsync();
-                //if (status == (int)Store.StoreApproveStatus.Approved)
-                //{
-                //    await _notiService.SendNotificationStoreApproved(storeId, store.Brand.Id, store.Name);
-                //}
-                //else if (status == (int)Store.StoreApproveStatus.Rejected)
-                //{
-                //    await _notiService.SendNotificationStoreRejected(storeId, store.Brand.Id, store.Name);
-                //}
+                if (status == (int)Store.StoreApproveStatus.Approved)
+                {
+                    await _notiService.SendNotificationStoreApproved(storeId, store.Brand.Id, store.Name);
+                }
+                else if (status == (int)Store.StoreApproveStatus.Rejected)
+                {
+                    await _notiService.SendNotificationStoreRejected(storeId, store.Brand.Id, store.Name);
+                }
             }
         }
     }

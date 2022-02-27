@@ -33,6 +33,8 @@ using System.Threading.Tasks;
 using Utilities;
 using BusinessLayer.Services.Notification;
 using BusinessLayer.Interfaces.Notification;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 
 namespace SWD_GSM_SystemAdmin
 {
@@ -140,6 +142,11 @@ namespace SWD_GSM_SystemAdmin
             IMapper mapper = AutoMapperConfig.config.CreateMapper();
             services.AddSingleton(mapper);
             services.AddTransient<INotificationService,NotificationService>();
+            services.AddSingleton(FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile(Configuration["Firebase:Admin"]),
+            })
+          );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

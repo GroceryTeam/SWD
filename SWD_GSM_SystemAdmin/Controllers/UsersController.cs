@@ -1,5 +1,6 @@
 ﻿using BusinessLayer.Constants;
 using BusinessLayer.Interfaces;
+using BusinessLayer.Interfaces.Notification;
 using BusinessLayer.Interfaces.SystemAdmin;
 using BusinessLayer.RequestModels;
 using BusinessLayer.RequestModels.CreateModels;
@@ -7,6 +8,7 @@ using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels.SystemAdmin;
+using BusinessLayer.Services.Notification;
 using BusinessLayer.Utilities;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -25,10 +27,11 @@ namespace SWD_GSM_SystemAdmin.Controllers.SystemAdmin
     public class UsersController : BaseSystemAdminController
     {
         private readonly IUserService _userService;
-
-        public UsersController(IUserService userService)
+        private readonly INotificationService _notiService;
+        public UsersController(IUserService userService, INotificationService notiService)
         {
             _userService = userService;
+            _notiService = notiService;
         }
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int id)
@@ -90,7 +93,19 @@ namespace SWD_GSM_SystemAdmin.Controllers.SystemAdmin
                 return NotFound();
             }
         }
-
+        //[HttpPost("ohnooooo")]
+        //public IActionResult MesssageSend(int id)
+        //{
+        //    try
+        //    {
+        //        _notiService.SendNotificationOutOfStockProduct(1, 1, "Aloooo");
+        //    }
+        //    catch (Exception e)
+        //    {
+        //        return Ok(e.Message);
+        //    }
+        //    return Ok();
+        //}
     }
 }
 

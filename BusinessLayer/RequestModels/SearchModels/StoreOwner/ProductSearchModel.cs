@@ -13,5 +13,6 @@ namespace BusinessLayer.RequestModels.SearchModels.StoreOwner
         public int? MaximumSellingPrice { get; set; }
         public int? CategoryId { get; set; }
         public ProductStatus? Status { get; set; }
+        public bool? IncludeDisabledProduct { get; set; }
     }
 }

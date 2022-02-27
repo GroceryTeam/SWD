@@ -75,9 +75,9 @@ namespace SWD_GSM_SystemAdmin.Controllers.SystemAdmin
             {
                 await _storeService.ChangeStoreStatus(id, model.Status);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return Ok(e.Message);
             }
             return Ok();
         }

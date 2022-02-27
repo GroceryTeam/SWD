@@ -66,6 +66,14 @@ namespace BusinessLayer.Services.StoreOwner
                         .Where(x => (searchModel.Status != null)
                                             ? x.Status == (int)searchModel.Status
                                             : true)
+                        .Where(x =>
+                        {
+                            if (searchModel.IncludeDisabledProduct == null) return true;
+                            else return
+                                    (!(bool)searchModel.IncludeDisabledProduct)
+                                    ? (x.Status == (int)ProductStatus.Selling || x.Status == (int)ProductStatus.NearlyOutOfStock)
+                                    : true;
+                        })
                          .Where(x => (searchModel.CategoryId != null)
                                             ? x.CategoryId == searchModel.CategoryId
                                             : true)

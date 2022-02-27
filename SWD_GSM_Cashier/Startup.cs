@@ -7,6 +7,8 @@ using BusinessLayer.Utilities;
 using DataAcessLayer;
 using DataAcessLayer.Interfaces;
 using DataAcessLayer.Models;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -142,6 +144,11 @@ namespace SWD_GSM_Cashier
             IMapper mapper = AutoMapperConfig.config.CreateMapper();
             services.AddSingleton(mapper);
             services.AddTransient<INotificationService, NotificationService>();
+            services.AddSingleton(FirebaseApp.Create(new AppOptions()
+            {
+                Credential = GoogleCredential.FromFile(Configuration["Firebase:Admin"]),
+            })
+          );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -167,6 +174,7 @@ namespace SWD_GSM_Cashier
             {
                 endpoints.MapControllers();
             });
+
         }
     }
 }

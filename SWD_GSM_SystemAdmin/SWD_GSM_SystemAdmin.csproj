@@ -5,10 +5,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="AppData\Firebase\SWD_GSM_storeowner_config.json" />
     <Content Remove="appsettings.json" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="AppData\Firebase\SWD_GSM_storeowner_config.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

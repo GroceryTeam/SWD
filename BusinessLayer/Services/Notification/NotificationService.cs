@@ -1,6 +1,9 @@
 ﻿using BusinessLayer.Interfaces.Notification;
 using BusinessLayer.ResponseModels.Firebase;
 using CorePush.Google;
+using FirebaseAdmin;
+using FirebaseAdmin.Messaging;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -8,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -15,6 +19,12 @@ namespace BusinessLayer.Services.Notification
 {
     public class NotificationService : INotificationService
     {
+        private readonly FirebaseApp _firebaseApp;
+        public NotificationService(FirebaseApp firebaseApp)
+        {
+            _firebaseApp = firebaseApp;
+        }
+
         public async Task SendNotificationOutOfStockProduct(int productId, int brandId, string productName)
         {
             var notiModel = new OutOfStockFirebaseNotificationModel()
@@ -23,11 +33,9 @@ namespace BusinessLayer.Services.Notification
                 ProductId = productId,
                 ProductName = productName
             };
-            await SendNotification(new GeneralFirebaseNotificationModel<OutOfStockFirebaseNotificationModel>()
-            {
-                Data = notiModel,
-                Type = GeneralFirebaseNotificationModel<OutOfStockFirebaseNotificationModel>.NotiType.NearlyOutOfStock
-            });
+            string title = "Sản phẩm hết hàng";
+            string body = $"Sản phẩm {productName} sắp hết hàng. Hãy nhập hàng ngay.";
+            await SendNotification(notiModel,"OutOfStock", title, body);
         }
         public async Task SendNotificationStoreApproved(int storeId, int brandId, string storeName)
         {
@@ -37,11 +45,9 @@ namespace BusinessLayer.Services.Notification
                 StoreId = storeId,
                 StoreName = storeName
             };
-            await SendNotification(new GeneralFirebaseNotificationModel<StoreApprovedRejectedNotificationModel>()
-            {
-                Data = notiModel,
-                Type = GeneralFirebaseNotificationModel<StoreApprovedRejectedNotificationModel>.NotiType.StoreIsApproved
-            });
+            string title = "Yêu cầu được phê duyệt";
+            string body = $"Yêu cầu mở tiệm \"{storeName}\" của bạn đã được admin phê duyệt. Hãy bắt đầu quản lý ngay nào.";
+            await SendNotification(notiModel, "StoreApproved", title,body);
         }
         public async Task SendNotificationStoreRejected(int storeId, int brandId, string storeName)
         {
@@ -51,33 +57,37 @@ namespace BusinessLayer.Services.Notification
                 StoreId = storeId,
                 StoreName = storeName
             };
-            await SendNotification(new GeneralFirebaseNotificationModel<StoreApprovedRejectedNotificationModel>()
-            {
-                Data = notiModel,
-                Type = GeneralFirebaseNotificationModel<StoreApprovedRejectedNotificationModel>.NotiType.StoreIsRejected
-            });
+            string title = "Yêu cầu bị từ chối";
+            string body = $"Yêu cầu mở tiệm \"{storeName}\" của bạn đã bị từ chối. Liên hệ chúng tôi để biết thêm chi tiết.";
+            await SendNotification(notiModel, "StoreRejected",title, body);
         }
-        private async Task SendNotification(object _payload)
+        private async Task SendNotification(object data,string topic, string title, string body)
         {
-            IConfiguration config = new ConfigurationBuilder()
-           .SetBasePath(Directory.GetCurrentDirectory())
-           .AddJsonFile("appsettings.json", true, true)
-           .Build();
-
-            FcmSettings settings = new FcmSettings()
+            try
             {
-                SenderId = config["FcmNotification:SenderId"],
-                ServerKey = config["FcmNotification:ServerKey"]
-            };
-            HttpClient httpClient = new HttpClient();
+                var dataForMesssage = new Dictionary<string, string>();
 
-            string authorizationKey = string.Format("keyy={0}", settings.ServerKey);
-
-            httpClient.DefaultRequestHeaders.TryAddWithoutValidation("Authorization", authorizationKey);
-            httpClient.DefaultRequestHeaders.Accept
-                    .Add(new MediaTypeWithQualityHeaderValue("application/json"));
-            var fcm = new FcmSender(settings, httpClient);
-            var fcmSendResponse = await fcm.SendAsync(_payload);
+                foreach (PropertyInfo prop in data.GetType().GetProperties())
+                {
+                    dataForMesssage.Add(prop.Name, prop.GetValue(data).ToString());
+                }
+                var message = new Message()
+                {
+                    Notification = new FirebaseAdmin.Messaging.Notification()
+                    {
+                        Body = body,
+                        Title = title
+                    },
+                    Topic = "all",
+                    Data = dataForMesssage,
+                };
+                string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
+                // Response is a message ID string.
+                Console.WriteLine("Successfully sent message: " + response);
+            }catch (Exception e)
+            {
+                Console.WriteLine("Successfully sent message: " + e.Message);
+            }
         }
 
     }
