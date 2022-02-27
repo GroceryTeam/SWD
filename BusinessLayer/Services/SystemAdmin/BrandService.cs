@@ -29,7 +29,7 @@ namespace BusinessLayer.Services.SystemAdmin
         public async Task<BasePagingViewModel<BrandViewModel>> GetBrandList(BrandSearchModel searchModel, PagingRequestModel paging)
         {
             var brandsData = await _unitOfWork.BrandRepository
-                .Get().Include(x=>x.UserBrands).Include(x=>x.Stores)
+                .Get().Include(x=>x.UserBrands).ThenInclude(x=>x.User).Include(x=>x.Stores).ThenInclude(x=>x.Brand)
                 .ToListAsync();
 
             var brands = brandsData
@@ -48,13 +48,21 @@ namespace BusinessLayer.Services.SystemAdmin
                                     Id = x.Id,
                                     Name = x.Name,
                                     Status = (int)x.Status,
-                                    UserIdList = x.UserBrands.Select(x => x.UserId).ToList(),
+                                    UserList = x.UserBrands.Select(x => new UserViewModel() { 
+                                        Id= x.User.Id,
+                                        Email= x.User.Email,
+                                        Name = x.User.Name,
+                                        Phone = x.User.Phone,
+                                        Status = (int)x.User.Status,
+                                        Username = x.User.Username
+                                    }).ToList(),
                                     StoreList = x.Stores.Select(store=>new StoreViewModel()
                                     {
                                          Id= store.Id,
                                          Address = store.Address,
                                          ApprovedStatus = (int)store.ApprovedStatus,
                                          BrandId = store.BrandId,
+                                         BrandName = store.Brand.Name,
                                          Name = store.Name,
                                     }
                                     ).ToList()
@@ -80,14 +88,26 @@ namespace BusinessLayer.Services.SystemAdmin
         public async Task<BrandViewModel> GetBrandById(int brandId)
         {
             var brand = await _unitOfWork.BrandRepository
-              .Get().Include(x => x.Stores).Where(x => x.Id == brandId)
+              .Get()
+              .Include(x => x.Stores).ThenInclude(x => x.Brand)
+              .Include(x=>x.UserBrands)
+                .ThenInclude(x=>x.User)
+              .Where(x => x.Id == brandId)
               .Select
                 (x => new BrandViewModel()
                 {
                     Id = x.Id,
                     Name = x.Name,
                     Status = (int)x.Status,
-                    UserIdList = x.UserBrands.Select(x => x.UserId).ToList(),
+                    UserList = x.UserBrands.Select(x => new UserViewModel()
+                    {
+                        Id = x.User.Id,
+                        Email = x.User.Email,
+                        Name = x.User.Name,
+                        Phone = x.User.Phone,
+                        Status = (int)x.User.Status,
+                        Username = x.User.Username
+                    }).ToList(),
 
                     StoreList = x.Stores.Select(store => new StoreViewModel()
                     {
@@ -95,6 +115,7 @@ namespace BusinessLayer.Services.SystemAdmin
                         Address = store.Address,
                         ApprovedStatus = (int)store.ApprovedStatus,
                         BrandId = store.BrandId,
+                        BrandName = store.Brand.Name,
                         Name = store.Name,
                     }
                                     ).ToList()

@@ -28,11 +28,13 @@ namespace BusinessLayer.Services.SystemAdmin
         {
             var storesData = await _unitOfWork.StoreRepository
                 .Get()
+                .Include(x=>x.Brand)
                 .Select
                 (x => new StoreViewModel()
                 {
                     Id = x.Id,
                     BrandId = x.BrandId,
+                    BrandName = x.Brand.Name,
                     Address = x.Address,
                     ApprovedStatus = (int)x.ApprovedStatus,
                     Name = x.Name,
