@@ -18,13 +18,23 @@ using BusinessLayer.ResponseModels.ViewModels.Cashier;
 using BusinessLayer.RequestModels.SearchModels.Cashier;
 using static DataAcessLayer.Models.Event;
 using AutoMapper;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace BusinessLayer.Services.Cashier
 {
     public class ProductService : BaseService, IProductService
     {
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        private readonly IDistributedCache _distributedCache;
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper,IDistributedCache distributedCache) : base(unitOfWork, mapper)
         {
+            _distributedCache = distributedCache;
+        }
+        public string TestRedis()
+        {
+           var options = new DistributedCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(5));
+            // Nạp lại giá trị mới cho cache
+            _distributedCache.SetString("ABC", DateTime.Now.ToString(), options);
+            return _distributedCache.GetString("ABC");
         }
         public async Task<BasePagingViewModel<ProductViewModel>> GetProductList(int storeId, ProductSearchModel searchModel, PagingRequestModel paging)
         {
