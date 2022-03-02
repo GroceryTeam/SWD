@@ -1,9 +1,12 @@
-﻿using BusinessLayer.Interfaces.Notification;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces.Notification;
 using BusinessLayer.ResponseModels.Firebase;
 using CorePush.Google;
+using DataAcessLayer.Interfaces;
 using FirebaseAdmin;
 using FirebaseAdmin.Messaging;
 using Google.Apis.Auth.OAuth2;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -17,14 +20,16 @@ using System.Threading.Tasks;
 
 namespace BusinessLayer.Services.Notification
 {
-    public class NotificationService : INotificationService
+    public class NotificationService : BaseService, INotificationService
     {
         private readonly FirebaseApp _firebaseApp;
-        public NotificationService(FirebaseApp firebaseApp)
+        private readonly IFCMTokenService _tokenService;
+
+        public NotificationService(FirebaseApp firebaseApp, IFCMTokenService tokenService, IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
             _firebaseApp = firebaseApp;
+            _tokenService = tokenService;
         }
-
         public async Task SendNotificationOutOfStockProduct(int productId, int brandId, string productName)
         {
             var notiModel = new OutOfStockFirebaseNotificationModel()
@@ -35,7 +40,7 @@ namespace BusinessLayer.Services.Notification
             };
             string title = "Sản phẩm hết hàng";
             string body = $"Sản phẩm {productName} sắp hết hàng. Hãy nhập hàng ngay.";
-            await SendNotification(notiModel,"OutOfStock", title, body);
+            await SendNotification(notiModel, "OutOfStock", title, body,brandId);
         }
         public async Task SendNotificationStoreApproved(int storeId, int brandId, string storeName)
         {
@@ -47,7 +52,7 @@ namespace BusinessLayer.Services.Notification
             };
             string title = "Yêu cầu được phê duyệt";
             string body = $"Yêu cầu mở tiệm \"{storeName}\" của bạn đã được admin phê duyệt. Hãy bắt đầu quản lý ngay nào.";
-            await SendNotification(notiModel, "StoreApproved", title,body);
+            await SendNotification(notiModel, "StoreApproved", title, body, brandId);
         }
         public async Task SendNotificationStoreRejected(int storeId, int brandId, string storeName)
         {
@@ -59,34 +64,39 @@ namespace BusinessLayer.Services.Notification
             };
             string title = "Yêu cầu bị từ chối";
             string body = $"Yêu cầu mở tiệm \"{storeName}\" của bạn đã bị từ chối. Liên hệ chúng tôi để biết thêm chi tiết.";
-            await SendNotification(notiModel, "StoreRejected",title, body);
+            await SendNotification(notiModel, "StoreRejected", title, body, brandId);
         }
-        private async Task SendNotification(object data,string topic, string title, string body)
+        private async Task SendNotification(object data, string topic, string title, string body, int brandId)
         {
             try
             {
+                var userIDList = await _unitOfWork.UserBrandRepository.Get().Where(x => x.BrandId == brandId).Select(x => x.UserId).ToListAsync();
                 var dataForMesssage = new Dictionary<string, string>();
 
                 foreach (PropertyInfo prop in data.GetType().GetProperties())
                 {
                     dataForMesssage.Add(prop.Name, prop.GetValue(data).ToString());
                 }
-                var message = new Message()
+                List<string> tokenList = new List<string>();
+                userIDList.ForEach(x => tokenList.AddRange(_tokenService.GetTokenList(x)));
+                List<Message> messageList = new List<Message>();
+                tokenList.ForEach(_token => messageList.Add(new Message()
                 {
+                    Token = _token,
                     Notification = new FirebaseAdmin.Messaging.Notification()
                     {
                         Body = body,
                         Title = title
                     },
-                    Topic = "all",
                     Data = dataForMesssage,
-                };
-                string response = await FirebaseMessaging.DefaultInstance.SendAsync(message);
+                }));
+                var response = await FirebaseMessaging.DefaultInstance.SendAllAsync(messageList);
                 // Response is a message ID string.
-                Console.WriteLine("Successfully sent message: " + response);
-            }catch (Exception e)
+                Console.WriteLine("Successfully sent message: " + response.ToString());
+            }
+            catch (Exception e)
             {
-                Console.WriteLine("Successfully sent message: " + e.Message);
+                Console.WriteLine("Debug exception: " + e.Message);
             }
         }
 

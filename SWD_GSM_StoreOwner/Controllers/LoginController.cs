@@ -1,4 +1,5 @@
-﻿using BusinessLayer.Interfaces.StoreOwner;
+﻿using BusinessLayer.Interfaces.Notification;
+using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels.CreateModels;
 using BusinessLayer.ResponseModels.ViewModels;
 using BusinessLayer.ResponseModels.ViewModels.StoreOwner;
@@ -23,10 +24,37 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
     public class LoginController : BaseStoreOwnerController
     {
         private readonly IUserService _userService;
-
-        public LoginController(IUserService userService)
+        private readonly IFCMTokenService _fcmService;
+        public LoginController(IUserService userService, IFCMTokenService fcmService)
         {
             _userService = userService;
+            _fcmService = fcmService;
+        }
+        [HttpPost("token")]
+        public IActionResult RegisterDevice([FromBody] FcmTokenModel model)
+        {
+            try
+            {
+                _fcmService.AddToken(model.TokenId, model.UserId);
+                return Ok();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpDelete("token")]
+        public async Task<IActionResult> UnregisterDevice([FromBody] FcmTokenModel model)
+        {
+            try
+            {
+                await _fcmService.DeleteToken(model.TokenId, model.UserId);
+                return NoContent();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
         }
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginModel login)

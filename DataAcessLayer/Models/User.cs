@@ -10,6 +10,7 @@ namespace DataAcessLayer.Models
         public User()
         {
             UserBrands = new HashSet<UserBrand>();
+            FcmtokenMobiles = new HashSet<FcmtokenMobile>();
         }
         public enum UserStatus
         {
@@ -25,5 +26,6 @@ namespace DataAcessLayer.Models
         public UserStatus Status { get; set; }
 
         public virtual ICollection<UserBrand> UserBrands { get; set; }
+        public virtual ICollection<FcmtokenMobile> FcmtokenMobiles { get; set; }
     }
 }

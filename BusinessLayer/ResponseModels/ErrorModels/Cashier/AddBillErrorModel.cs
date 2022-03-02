@@ -11,6 +11,7 @@ namespace BusinessLayer.ResponseModels.ErrorModels.Cashier
         public int Id { get; set; }
         public string Name { get; set; }
         public int RemainingQuantity { get; set; }
+        public string UnitLabel { get; set; }
     }
     public class AddBillErrorModel
     {

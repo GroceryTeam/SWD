@@ -24,6 +24,7 @@ namespace DataAcessLayer.Interfaces
         IGenericRepository<Stock> StockRepository { get; }
         IGenericRepository<Store> StoreRepository { get; }
         IGenericRepository<User> UserRepository { get; }
+        IGenericRepository<FcmtokenMobile> FcmTokenMobileRepository { get; }
         GroceryCloud18th2Context Context();
 
         Task SaveChangesAsync();

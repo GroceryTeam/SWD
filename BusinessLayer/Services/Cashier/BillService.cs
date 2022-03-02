@@ -59,7 +59,8 @@ namespace BusinessLayer.Services.Cashier
                     {
                         Id = _detail.ProductId,
                         Name = productInDetail.Name,
-                        RemainingQuantity = quantityInStock
+                        RemainingQuantity = quantityInStock,
+                        UnitLabel = productInDetail.UnitLabel,
                     });
                 }
             }

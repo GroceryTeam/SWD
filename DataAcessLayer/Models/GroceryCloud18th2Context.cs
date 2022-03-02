@@ -25,6 +25,7 @@ namespace DataAcessLayer.Models
         public virtual DbSet<DailyRevenue> DailyRevenues { get; set; }
         public virtual DbSet<Event> Events { get; set; }
         public virtual DbSet<EventDetail> EventDetails { get; set; }
+        public virtual DbSet<FcmtokenMobile> FcmtokenMobiles { get; set; }
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Receipt> Receipts { get; set; }
         public virtual DbSet<ReceiptDetail> ReceiptDetails { get; set; }
@@ -38,7 +39,7 @@ namespace DataAcessLayer.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=groceryserverswd.database.windows.net;Initial Catalog=GroceryCloud18th2;User ID=groceryAdmin;Password=SWD@123123;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                optionsBuilder.UseSqlServer("Data Source=grocerycloudsqlserver.database.windows.net;Initial Catalog=GroceryCloud18th2;User ID=groceryAdmin;Password=SWD@123123;Connect Timeout=30;Encrypt=True;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             }
         }
 
@@ -90,7 +91,6 @@ namespace DataAcessLayer.Models
 
             modelBuilder.Entity<Brand>(entity =>
             {
-                entity.Property(e => e.Status).HasConversion<int>();
                 entity.ToTable("Brand");
 
                 entity.Property(e => e.Name).IsRequired();
@@ -99,8 +99,8 @@ namespace DataAcessLayer.Models
             modelBuilder.Entity<Cashier>(entity =>
             {
                 entity.ToTable("Cashier");
-                entity.Property(e => e.Status).HasConversion<int>();
-                entity.HasIndex(e => e.Username, "UQ__Cashier__536C85E459DF47AC")
+
+                entity.HasIndex(e => e.Username, "UQ__Cashier__536C85E43F04794A")
                     .IsUnique();
 
                 entity.Property(e => e.Name).IsRequired();
@@ -157,7 +157,7 @@ namespace DataAcessLayer.Models
             modelBuilder.Entity<Event>(entity =>
             {
                 entity.ToTable("Event");
-                entity.Property(e => e.Status).HasConversion<int>();
+
                 entity.Property(e => e.EventName).IsRequired();
 
                 entity.HasOne(d => d.Brand)
@@ -170,7 +170,7 @@ namespace DataAcessLayer.Models
             modelBuilder.Entity<EventDetail>(entity =>
             {
                 entity.HasKey(e => new { e.EventId, e.ProductId })
-                    .HasName("PK__EventDet__B204047CE496EBB4");
+                    .HasName("PK__EventDet__B204047C89EAA0E2");
 
                 entity.ToTable("EventDetail");
 
@@ -185,6 +185,19 @@ namespace DataAcessLayer.Models
                     .HasForeignKey(d => d.ProductId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK__EventDeta__Produ__0D7A0286");
+            });
+
+            modelBuilder.Entity<FcmtokenMobile>(entity =>
+            {
+                entity.ToTable("FCMTokenMobile");
+
+                entity.Property(e => e.TokenId).IsRequired();
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.FcmtokenMobiles)
+                    .HasForeignKey(d => d.UserId)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK__FCMTokenM__UserI__123EB7A3");
             });
 
             modelBuilder.Entity<Product>(entity =>
@@ -226,7 +239,7 @@ namespace DataAcessLayer.Models
             modelBuilder.Entity<ReceiptDetail>(entity =>
             {
                 entity.HasKey(e => new { e.ReceiptId, e.ProductId })
-                    .HasName("PK__ReceiptD__0748084C2DEB1024");
+                    .HasName("PK__ReceiptD__0748084C45C23191");
 
                 entity.ToTable("ReceiptDetail");
 
@@ -246,7 +259,7 @@ namespace DataAcessLayer.Models
             modelBuilder.Entity<Stock>(entity =>
             {
                 entity.ToTable("Stock");
-                entity.Property(e => e.Status).HasConversion<int>();
+
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Stocks)
                     .HasForeignKey(d => d.ProductId)
@@ -269,7 +282,7 @@ namespace DataAcessLayer.Models
             modelBuilder.Entity<Store>(entity =>
             {
                 entity.ToTable("Store");
-                entity.Property(e => e.ApprovedStatus).HasConversion<int>();
+
                 entity.Property(e => e.Name).IsRequired();
 
                 entity.HasOne(d => d.Brand)
@@ -282,14 +295,14 @@ namespace DataAcessLayer.Models
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("User");
-                entity.Property(e => e.Status).HasConversion<int>();
-                entity.HasIndex(e => e.Username, "UQ__User__536C85E4926FF840")
+
+                entity.HasIndex(e => e.Username, "UQ__User__536C85E4CB167563")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Phone, "UQ__User__5C7E359E869C9140")
+                entity.HasIndex(e => e.Phone, "UQ__User__5C7E359EBBF7F3E3")
                     .IsUnique();
 
-                entity.HasIndex(e => e.Email, "UQ__User__A9D1053462E6BED6")
+                entity.HasIndex(e => e.Email, "UQ__User__A9D10534B78CEFC2")
                     .IsUnique();
 
                 entity.Property(e => e.Email)
@@ -312,7 +325,7 @@ namespace DataAcessLayer.Models
             modelBuilder.Entity<UserBrand>(entity =>
             {
                 entity.HasKey(e => new { e.UserId, e.BrandId })
-                    .HasName("PK__UserBran__EA258349E5397B4C");
+                    .HasName("PK__UserBran__EA2583497B5AC241");
 
                 entity.ToTable("UserBrand");
 

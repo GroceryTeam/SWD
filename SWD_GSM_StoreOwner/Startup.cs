@@ -154,10 +154,13 @@ namespace SWD_GSM_StoreOwner
             services.AddTransient<IStockService, StockService>();
             services.AddTransient<BusinessLayer.Interfaces.StoreOwner.ICashierService,
                 BusinessLayer.Services.StoreOwner.CashierSevice>();
-
+            
+          
             IMapper mapper = AutoMapperConfig.config.CreateMapper();
             services.AddSingleton(mapper);
             services.AddTransient<INotificationService, NotificationService>();
+            services.AddTransient<BusinessLayer.Interfaces.Notification.IFCMTokenService,
+               BusinessLayer.Services.Notification.FCMTokenService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

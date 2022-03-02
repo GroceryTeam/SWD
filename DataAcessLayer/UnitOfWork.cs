@@ -12,6 +12,8 @@ namespace DataAcessLayer
     {
         private readonly GroceryCloud18th2Context _dbContext;
 
+
+
         public IGenericRepository<Product> ProductRepository { get; }
         public IGenericRepository<Category> CategoryRepository { get; }
         public IGenericRepository<Bill> BillRepository { get; }
@@ -27,6 +29,7 @@ namespace DataAcessLayer
         public IGenericRepository<Stock> StockRepository { get; }
         public IGenericRepository<Store> StoreRepository { get; }
         public IGenericRepository<User> UserRepository { get; }
+        public IGenericRepository<FcmtokenMobile> FcmTokenMobileRepository { get; }
         public UnitOfWork(GroceryCloud18th2Context dbContext,
             IGenericRepository<Product> productRepository,
             IGenericRepository<Category> categoryRepository,
@@ -42,7 +45,8 @@ namespace DataAcessLayer
             IGenericRepository<Stock> stockRepository,
             IGenericRepository<Store> storeRepository,
             IGenericRepository<User> userRepository,
-            IGenericRepository<UserBrand> userBrandRepository
+            IGenericRepository<UserBrand> userBrandRepository,
+            IGenericRepository<FcmtokenMobile> fcmTokenMobileRepository
             )
         {
             _dbContext = dbContext;
@@ -62,6 +66,7 @@ namespace DataAcessLayer
             StoreRepository = storeRepository;
             UserRepository = userRepository;
             UserBrandRepository = userBrandRepository;
+            FcmTokenMobileRepository = fcmTokenMobileRepository;
         }
 
         public GroceryCloud18th2Context Context()

@@ -29,9 +29,24 @@ namespace BusinessLayer.Services.StoreOwner
             _firebaseApp = firebaseApp;
             _firebaseAuth = FirebaseAuth.GetAuth(_firebaseApp);
         }
+        public async Task<UserViewModel> GetInformation(int userId)
+        {
+            var storeowner = await _unitOfWork.UserRepository
+              .Get()
+             .Where(x => x.Id == userId)
+              .Select(x => new UserViewModel()
+              {
+                  Id = x.Id,
+                  Username = x.Username,
+                  Name = x.Name,
+                  Email = x.Email,
+                  Phone = x.Phone
+              }).FirstOrDefaultAsync();
+            return storeowner;
+        }
         public async Task<UserViewModel> Login(LoginModel login)
         {
-            var cashier = await _unitOfWork.UserRepository
+            var storeowner = await _unitOfWork.UserRepository
                 .Get()
                 .Where(x => x.Username == login.Username && x.Password == login.Password)
                 .Where(x => x.Status == UserStatus.Enabled)
@@ -43,7 +58,7 @@ namespace BusinessLayer.Services.StoreOwner
                     Email = x.Email,
                     Phone = x.Phone
                 }).FirstOrDefaultAsync();
-            return cashier;
+            return storeowner;
         }
         public async Task<UserViewModel> LoginFirebase(LoginFirebaseModel login)
         {
