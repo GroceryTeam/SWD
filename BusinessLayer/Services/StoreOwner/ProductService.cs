@@ -20,64 +20,85 @@ using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using static DataAcessLayer.Models.Product;
 using BusinessLayer.ResponseModels.ErrorModels.StoreOwner;
 using AutoMapper;
+using Microsoft.Extensions.Caching.Distributed;
+using BusinessLayer.Services.Redis;
+using Newtonsoft.Json;
 
 namespace BusinessLayer.Services.StoreOwner
 {
     public class ProductService : BaseService, IProductService
     {
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
+        private readonly IDistributedCache _distributedCache;
+        private readonly RedisService _redisService;
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper, IDistributedCache distributedCache) : base(unitOfWork, mapper)
         {
+            _distributedCache = distributedCache;
+            _redisService = new RedisService(_distributedCache);
+
         }
+
         public async Task<BasePagingViewModel<ProductViewModel>> GetProductList(int brandId, ProductSearchModel searchModel, PagingRequestModel paging)
         {
-            var productsData = await _unitOfWork.ProductRepository
-                .Get()
-                .Where(x => x.BrandId == brandId)
-                .Select
-                (x => new ProductViewModel()
-                {
-                    Id = x.Id,
-                    Name = x.Name,
-                    UnpackedProductId = x.UnpackedProductId,
-                    UnpackedProductName = x.UnpackedProduct.Name,
-                    SellPrice = x.SellPrice,
-                    CategoryId = x.CategoryId,
-                    CategoryName = x.Category.Name,
-                    ConversionRate = (int)x.ConversionRate,
-                    UnitLabel = x.UnitLabel,
-                    LowerThreshold = x.LowerThreshold,
-                    Status = (int)x.Status
-                }
-                )
-                .ToListAsync();
-            //var mappedProductsData = _mapper.Map<List<Product>, List<ProductViewModel>>(productsData);
-            //mappedProductsData.ForEach(x => x.Status = (int)x.Status);
+            string redisKey = $"product-storeowner-id-brand{brandId}-category{searchModel.CategoryId}-searchterm{StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)}";
+            string dataFromRedis = _redisService.GetValueFromKey(redisKey);
+            List<ProductViewModel> productsData = new List<ProductViewModel>();
+            if (!String.IsNullOrEmpty(dataFromRedis))
+            {
+                productsData = JsonConvert.DeserializeObject<List<ProductViewModel>>(dataFromRedis);
+            }
+            else
+            {
+                productsData = await _unitOfWork.ProductRepository
+               .Get()
+               .Where(x => x.BrandId == brandId)
+               .Select
+               (x => new ProductViewModel()
+               {
+                   Id = x.Id,
+                   Name = x.Name,
+                   UnpackedProductId = x.UnpackedProductId,
+                   UnpackedProductName = x.UnpackedProduct.Name,
+                   SellPrice = x.SellPrice,
+                   CategoryId = x.CategoryId,
+                   CategoryName = x.Category.Name,
+                   ConversionRate = (int)x.ConversionRate,
+                   UnitLabel = x.UnitLabel,
+                   LowerThreshold = x.LowerThreshold,
+                   Status = (int)x.Status
+               }
+               )
+               .ToListAsync();
+                //var mappedProductsData = _mapper.Map<List<Product>, List<ProductViewModel>>(productsData);
+                //mappedProductsData.ForEach(x => x.Status = (int)x.Status);
 
-            productsData = productsData
-                        .Where(x =>
-                            StringNormalizer.VietnameseNormalize(x.Name)
-                            .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
-                        .Where(x => (searchModel.MinimumSellingPrice != null)
-                                            ? x.SellPrice >= searchModel.MinimumSellingPrice
-                                            : true)
-                        .Where(x => (searchModel.MaximumSellingPrice != null)
-                                            ? x.SellPrice <= searchModel.MaximumSellingPrice
-                                            : true)
-                        .Where(x => (searchModel.Status != null)
-                                            ? x.Status == (int)searchModel.Status
-                                            : true)
-                        .Where(x =>
-                        {
-                            if (searchModel.IncludeDisabledProduct == null) return true;
-                            else return
-                                    (!(bool)searchModel.IncludeDisabledProduct)
-                                    ? (x.Status == (int)ProductStatus.Selling || x.Status == (int)ProductStatus.NearlyOutOfStock)
-                                    : true;
-                        })
-                         .Where(x => (searchModel.CategoryId != null)
-                                            ? x.CategoryId == searchModel.CategoryId
-                                            : true)
-                        .ToList();
+                productsData = productsData
+                            .Where(x =>
+                                StringNormalizer.VietnameseNormalize(x.Name)
+                                .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
+                            .Where(x => (searchModel.MinimumSellingPrice != null)
+                                                ? x.SellPrice >= searchModel.MinimumSellingPrice
+                                                : true)
+                            .Where(x => (searchModel.MaximumSellingPrice != null)
+                                                ? x.SellPrice <= searchModel.MaximumSellingPrice
+                                                : true)
+                            .Where(x => (searchModel.Status != null)
+                                                ? x.Status == (int)searchModel.Status
+                                                : true)
+                            .Where(x =>
+                            {
+                                if (searchModel.IncludeDisabledProduct == null) return true;
+                                else return
+                                        (!(bool)searchModel.IncludeDisabledProduct)
+                                        ? (x.Status == (int)ProductStatus.Selling || x.Status == (int)ProductStatus.NearlyOutOfStock)
+                                        : true;
+                            })
+                             .Where(x => (searchModel.CategoryId != null)
+                                                ? x.CategoryId == searchModel.CategoryId
+                                                : true)
+                            .ToList();
+                _redisService.SetValueToKey(redisKey, JsonConvert.SerializeObject(productsData));
+            }
+
 
             int totalItem = productsData.Count;
 
@@ -216,7 +237,16 @@ namespace BusinessLayer.Services.StoreOwner
             }
             return result;
         }
-
+        public string TestRedis(bool justGet)
+        {
+            var options = new DistributedCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromHours(1));
+            // Nạp lại giá trị mới cho cache
+            if (!justGet)
+            {
+                _distributedCache.SetString("ABC", DateTime.Now.ToString(), options);
+            }
+            return _distributedCache.GetString("ABC");
+        }
 
     }
 }

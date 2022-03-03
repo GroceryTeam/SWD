@@ -62,6 +62,7 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
                 return BadRequest();
             }
         }
+      
         [HttpPost("unpack")]
         public async Task<IActionResult> UnpackProduct(UnpackProductRequestModel model)
         {

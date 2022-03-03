@@ -147,6 +147,8 @@ namespace SWD_GSM_SystemAdmin
                 Credential = GoogleCredential.FromFile(Configuration["Firebase:Admin"]),
             })
           );
+            services.AddTransient<BusinessLayer.Interfaces.Notification.IFCMTokenService,
+       BusinessLayer.Services.Notification.FCMTokenService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

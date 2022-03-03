@@ -22,13 +22,20 @@ namespace BusinessLayer.Services.Notification
         }
         public async Task AddToken(string tokenId, int userId)
         {
-            FcmtokenMobile token = new FcmtokenMobile()
+            try
             {
-                TokenId = tokenId,
-                UserId = userId
-            };
-            await _unitOfWork.FcmTokenMobileRepository.Add(token);
-            await _unitOfWork.SaveChangesAsync();
+                FcmtokenMobile token = new FcmtokenMobile()
+                {
+                    TokenId = tokenId,
+                    UserId = userId
+                };
+                await _unitOfWork.FcmTokenMobileRepository.Add(token);
+                await _unitOfWork.SaveChangesAsync();
+            } catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+           
         }
         public async Task DeleteToken(string tokenId, int userId)
         {

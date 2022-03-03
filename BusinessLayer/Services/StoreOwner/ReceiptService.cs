@@ -124,6 +124,15 @@ namespace BusinessLayer.Services.StoreOwner
                     ReceiptId = receipt.Id,
                     BuyPrice = _detail.BuyPrice,
                 };
+                var product = _unitOfWork.ProductRepository.Get()
+                    .Where(x => x.Id == _detail.ProductId)
+                    .Include(x=>x.Brand)
+                    .ThenInclude(x=>x.Stores)
+                    .FirstOrDefault();
+                if (!product.Brand.Stores.Select(x=>x.Id).ToList().Contains(model.StoreId))
+                {
+                    throw new Exception("Product invalid!");
+                }
                 receipt.ReceiptDetails.Add(detailModel);
                 var stock = new Stock()
                 {
@@ -148,7 +157,6 @@ namespace BusinessLayer.Services.StoreOwner
                     .Where(x => x.ProductId == _detail.ProductId)
                     .Where(x => x.StoreId == model.StoreId)
                     .ToList().ForEach(x=>remainingQuantityInStore+=x.Quantity);
-                var product = await _unitOfWork.ProductRepository.Get().Where(x => x.Id == _detail.ProductId).FirstOrDefaultAsync();
                 if (remainingQuantityInStore > product.LowerThreshold)
                 {
                     product.Status = Product.ProductStatus.Selling;

@@ -134,21 +134,12 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
         //}
         //get appliedEvent
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int BrandId, int id)
+        public async Task<IActionResult> Delete(int eventId)
         {
             try
             {
-                //var result = await _eventService.DeleteEvent(BrandId, id);
-                //if (result.InverseUnpackedProducts.Count == 0)
-                //{
-                //    return NoContent();
-                //}
-                //else
-                //{
-                //    return Conflict(result);
-                //}
-                return Ok();
-
+                await _eventService.DeleteEvent(eventId);
+                return NoContent();
             }
             catch (Exception)
             {

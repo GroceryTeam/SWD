@@ -14,7 +14,6 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Utilities;
-using BusinessLayer.Interfaces.StoreOwner;
 using BusinessLayer.RequestModels.CreateModels.StoreOwner;
 using BusinessLayer.RequestModels.SearchModels.StoreOwner;
 using BusinessLayer.ResponseModels.ErrorModels.StoreOwner;

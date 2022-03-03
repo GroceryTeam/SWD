@@ -31,11 +31,11 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
             _fcmService = fcmService;
         }
         [HttpPost("token")]
-        public IActionResult RegisterDevice([FromBody] FcmTokenModel model)
+        public async Task<IActionResult> RegisterDevice([FromBody] FcmTokenModel model)
         {
             try
             {
-                _fcmService.AddToken(model.TokenId, model.UserId);
+                await _fcmService.AddToken(model.TokenId, model.UserId);
                 return Ok();
             }
             catch (Exception)

@@ -70,10 +70,12 @@ namespace BusinessLayer.Services.StoreOwner
                 .Include(x => x.Product)
                 .ThenInclude(x => x.Category)
                 .Include(x => x.Store)
+                .ThenInclude(x => x.Brand)
                 .ToListAsync();
 
 
             stocksData
+                        .Where(x => x.Store.Brand.Id == searchModel.BrandId)
                        .Where(x =>
                            StringNormalizer.VietnameseNormalize(x.Product.Name)
                            .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
@@ -87,7 +89,7 @@ namespace BusinessLayer.Services.StoreOwner
                                            ? x.Product.CategoryId == searchModel.CategoryId
                                            : true)
                        .Where(x => (searchModel.OnlyNearlyOutOfStockProduct)
-                                           ? x.Product.Status ==  Product.ProductStatus.NearlyOutOfStock
+                                           ? x.Product.Status == Product.ProductStatus.NearlyOutOfStock
                                            : true)
                        .ToList().ForEach(stck =>
                              {

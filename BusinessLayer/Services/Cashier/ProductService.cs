@@ -24,18 +24,10 @@ namespace BusinessLayer.Services.Cashier
 {
     public class ProductService : BaseService, IProductService
     {
-        private readonly IDistributedCache _distributedCache;
-        public ProductService(IUnitOfWork unitOfWork, IMapper mapper,IDistributedCache distributedCache) : base(unitOfWork, mapper)
+        public ProductService(IUnitOfWork unitOfWork, IMapper mapper) : base(unitOfWork, mapper)
         {
-            _distributedCache = distributedCache;
         }
-        public string TestRedis()
-        {
-           var options = new DistributedCacheEntryOptions().SetSlidingExpiration(TimeSpan.FromSeconds(5));
-            // Nạp lại giá trị mới cho cache
-            _distributedCache.SetString("ABC", DateTime.Now.ToString(), options);
-            return _distributedCache.GetString("ABC");
-        }
+
         public async Task<BasePagingViewModel<ProductViewModel>> GetProductList(int storeId, ProductSearchModel searchModel, PagingRequestModel paging)
         {
             var productsData = await _unitOfWork.ProductRepository

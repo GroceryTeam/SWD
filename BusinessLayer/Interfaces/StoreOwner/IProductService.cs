@@ -21,5 +21,6 @@ namespace BusinessLayer.Interfaces.StoreOwner
         Task<int> AddProduct(int brandId, ProductCreateModel model);
         Task<bool> UpdateProduct(int brandÍd, int productId, ProductCreateModel model);
         Task<DeleteProductErrorModel> DeleteProduct(int brandId, int productId);
+        string TestRedis(bool justGet);
     }
 }

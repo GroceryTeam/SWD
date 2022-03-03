@@ -46,9 +46,10 @@ namespace SWD_GSM_StoreOwner
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDistributedMemoryCache();
             services.AddStackExchangeRedisCache(options =>
             {
-                options.Configuration = "redis-19822.c53.west-us.azure.cloud.redislabs.com:19822";
+                options.Configuration = "redis-19822.c53.west-us.azure.cloud.redislabs.com:19822,password=2uAjtMUBLf8j4BQjzKG7L5EjtBqug0S6,ssl=False,abortConnect=False";
                 options.InstanceName = "SWDRedisCache";
             });
             services.AddRouting(option =>
