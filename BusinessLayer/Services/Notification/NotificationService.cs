@@ -38,8 +38,8 @@ namespace BusinessLayer.Services.Notification
                 ProductId = productId,
                 ProductName = productName
             };
-            string title = "Sản phẩm hết hàng";
-            string body = $"Sản phẩm {productName} sắp hết hàng. Hãy nhập hàng ngay.";
+            string title = "SẮP HẾT HÀNG";
+            string body = $"Sản phẩm \"{productName}\" sắp hết hàng. Hãy nhập hàng ngay!";
             await SendNotification(notiModel, "OutOfStock", title, body,brandId);
         }
         public async Task SendNotificationStoreApproved(int storeId, int brandId, string storeName)
@@ -50,7 +50,7 @@ namespace BusinessLayer.Services.Notification
                 StoreId = storeId,
                 StoreName = storeName
             };
-            string title = "Yêu cầu được phê duyệt";
+            string title = "YÊU CẦU ĐƯỢC PHÊ DUYỆT";
             string body = $"Yêu cầu mở tiệm \"{storeName}\" của bạn đã được admin phê duyệt. Hãy bắt đầu quản lý ngay nào.";
             await SendNotification(notiModel, "StoreApproved", title, body, brandId);
         }
@@ -62,7 +62,7 @@ namespace BusinessLayer.Services.Notification
                 StoreId = storeId,
                 StoreName = storeName
             };
-            string title = "Yêu cầu bị từ chối";
+            string title = "YÊU CẦU BỊ TỪ CHỐI";
             string body = $"Yêu cầu mở tiệm \"{storeName}\" của bạn đã bị từ chối. Liên hệ chúng tôi để biết thêm chi tiết.";
             await SendNotification(notiModel, "StoreRejected", title, body, brandId);
         }

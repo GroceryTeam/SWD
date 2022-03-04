@@ -22,8 +22,6 @@ namespace BusinessLayer.Services.Notification
         }
         public async Task AddToken(string tokenId, int userId)
         {
-            try
-            {
                 FcmtokenMobile token = new FcmtokenMobile()
                 {
                     TokenId = tokenId,
@@ -31,11 +29,6 @@ namespace BusinessLayer.Services.Notification
                 };
                 await _unitOfWork.FcmTokenMobileRepository.Add(token);
                 await _unitOfWork.SaveChangesAsync();
-            } catch (Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-           
         }
         public async Task DeleteToken(string tokenId, int userId)
         {
