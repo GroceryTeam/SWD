@@ -8,6 +8,7 @@ namespace BusinessLayer.RequestModels.SearchModels.Cashier
 {
     public class ProductSearchModel
     {
+        public string Sku { get; set; }
         public string SearchTerm { get; set; }
         public int? CategoryId { get; set; }
     }

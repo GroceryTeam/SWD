@@ -39,7 +39,7 @@ namespace BusinessLayer.Services.StoreOwner
 
         public async Task<BasePagingViewModel<ProductViewModel>> GetProductList(int brandId, ProductSearchModel searchModel, PagingRequestModel paging)
         {
-            string redisKey = $"product-storeowner-id-brand{brandId}-category{searchModel.CategoryId}-searchterm{StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)}";
+            string redisKey = $"product-storeowner-id-brand{brandId}-sku-{searchModel.Sku}-category{searchModel.CategoryId}-searchterm{StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)}";
             string dataFromRedis = _redisService.GetValueFromKey(redisKey);
             List<ProductViewModel> productsData = new List<ProductViewModel>();
             if (!String.IsNullOrEmpty(dataFromRedis))
@@ -64,13 +64,11 @@ namespace BusinessLayer.Services.StoreOwner
                    ConversionRate = (int)x.ConversionRate,
                    UnitLabel = x.UnitLabel,
                    LowerThreshold = x.LowerThreshold,
-                   Status = (int)x.Status
+                   Status = (int)x.Status,
+                   Sku = x.Sku,
                }
                )
                .ToListAsync();
-                //var mappedProductsData = _mapper.Map<List<Product>, List<ProductViewModel>>(productsData);
-                //mappedProductsData.ForEach(x => x.Status = (int)x.Status);
-
                 productsData = productsData
                             .Where(x =>
                                 StringNormalizer.VietnameseNormalize(x.Name)
@@ -84,6 +82,9 @@ namespace BusinessLayer.Services.StoreOwner
                             .Where(x => (searchModel.Status != null)
                                                 ? x.Status == (int)searchModel.Status
                                                 : true)
+                            .Where(x => (!string.IsNullOrEmpty(searchModel.Sku))
+                                           ? x.Sku.Contains(searchModel.Sku)
+                                           : true)
                             .Where(x =>
                             {
                                 if (searchModel.IncludeDisabledProduct == null) return true;
@@ -180,7 +181,9 @@ namespace BusinessLayer.Services.StoreOwner
                 .Where(x => x.BrandId.Equals(brandId))
                 .Where(x => x.Id.Equals(productId))
                 .FirstOrDefaultAsync();
-            if (product == null)
+            var productWithSameSku = await _unitOfWork.ProductRepository.Get()
+                .Where(x => x.BrandId.Equals(brandId)).Where(x => x.Sku == model.Sku).FirstOrDefaultAsync();
+            if (product == null && productWithSameSku!=null)
             {
                 return false;
             }
@@ -193,7 +196,7 @@ namespace BusinessLayer.Services.StoreOwner
             product.UnitLabel = model.UnitLabel;
             product.LowerThreshold = model.LowerThreshold;
             product.Status = model.Status;
-
+            product.Sku = model.Sku;
             //product = _mapper.Map<ProductCreateModel, Product>(model);
             //product.BrandId = brandId;
             //product.Id = productId;

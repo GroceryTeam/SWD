@@ -43,6 +43,9 @@ namespace BusinessLayer.Services.StoreOwner
                        .Where(x => (searchModel.CategoryId != null)
                                            ? x.CategoryId == searchModel.CategoryId
                                            : true)
+                       .Where(x => (!string.IsNullOrEmpty(searchModel.Sku))
+                                           ? x.Sku == searchModel.Sku
+                                           : true)
                        .Where(x => (searchModel.OnlyNearlyOutOfStockProduct)
                                            ? x.Status == Product.ProductStatus.NearlyOutOfStock
                                            : true)
@@ -59,6 +62,7 @@ namespace BusinessLayer.Services.StoreOwner
                            Status = (int)x.Status,
                            UnitLabel = x.UnitLabel,
                            BrandId = x.BrandId,
+                           Sku=x.Sku,
                            //init current quantity, add later
                            CurrentQuantity = 0,
                            UnpackedProductName = x.UnpackedProduct != null ? x.UnpackedProduct.Name : null,

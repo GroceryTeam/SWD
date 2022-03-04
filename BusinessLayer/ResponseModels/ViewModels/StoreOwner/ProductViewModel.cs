@@ -19,6 +19,7 @@ namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
         public string UnitLabel { get; set; }
         public int? LowerThreshold { get; set; }
         public int Status { get; set; }
+        public string Sku { get; set; }
     }
 
 }

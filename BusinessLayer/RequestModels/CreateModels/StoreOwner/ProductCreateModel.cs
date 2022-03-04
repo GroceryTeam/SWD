@@ -14,6 +14,7 @@ namespace BusinessLayer.RequestModels.CreateModels.StoreOwner
         public int SellPrice { get; set; }
         public int CategoryId { get; set; }
         public int ConversionRate { get; set; }
+        public string Sku { get; set; }
         public string UnitLabel { get; set; }
         public int? LowerThreshold { get; set; }
         public ProductStatus Status { get; set; }

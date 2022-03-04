@@ -20,6 +20,7 @@ namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
         public int LowerThreshold { get; set; }
         public int Status { get; set; }
         public int CurrentQuantity { get; set; }
+        public string Sku { get; set; }
         public List<StockViewModel> Stocks { get; set; }
 
     }

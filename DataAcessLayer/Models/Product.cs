@@ -7,6 +7,12 @@ namespace DataAcessLayer.Models
 {
     public partial class Product
     {
+        public enum ProductStatus
+        {
+            Selling,
+            Disabled,
+            NearlyOutOfStock
+        }
         public Product()
         {
             BillDetails = new HashSet<BillDetail>();
@@ -14,12 +20,6 @@ namespace DataAcessLayer.Models
             InverseUnpackedProduct = new HashSet<Product>();
             ReceiptDetails = new HashSet<ReceiptDetail>();
             Stocks = new HashSet<Stock>();
-        }
-        public enum ProductStatus
-        {
-            Selling,
-            Disabled,
-            NearlyOutOfStock
         }
 
         public int Id { get; set; }
@@ -32,6 +32,7 @@ namespace DataAcessLayer.Models
         public int BrandId { get; set; }
         public int? LowerThreshold { get; set; }
         public ProductStatus Status { get; set; }
+        public string Sku { get; set; }
 
         public virtual Brand Brand { get; set; }
         public virtual Category Category { get; set; }

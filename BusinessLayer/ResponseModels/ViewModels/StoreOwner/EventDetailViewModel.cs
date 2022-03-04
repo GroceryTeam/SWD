@@ -13,6 +13,6 @@ namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
         public string ProductName { get; set; }
         public int NewPrice { get; set; }
         public int OriginalPrice { get; set; }
-
+        public string Sku { get; set; }
     }
 }

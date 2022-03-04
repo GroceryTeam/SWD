@@ -54,7 +54,8 @@ namespace BusinessLayer.Services.Cashier
                             NewPrice = x.NewPrice,
                             OriginalPrice = x.Product.SellPrice,
                             ProductId = x.ProductId,
-                            ProductName = x.Product.Name
+                            ProductName = x.Product.Name,
+                            Sku = x.Product.Sku,
                         }
                         )
                 }).FirstOrDefaultAsync<EventViewModel>();

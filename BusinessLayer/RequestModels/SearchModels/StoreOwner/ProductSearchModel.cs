@@ -8,6 +8,7 @@ namespace BusinessLayer.RequestModels.SearchModels.StoreOwner
 {
     public class ProductSearchModel
     {
+        public string Sku { get; set; }
         public string SearchTerm { get; set; }
         public int? MinimumSellingPrice { get; set; }
         public int? MaximumSellingPrice { get; set; }

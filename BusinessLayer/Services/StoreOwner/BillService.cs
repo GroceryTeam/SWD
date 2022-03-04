@@ -47,7 +47,8 @@ namespace BusinessLayer.Services.StoreOwner
                                             Quantity = detail.Quantity,
                                             ProductId = detail.ProductId,
                                             ProductName = detail.Product.Name,
-                                            StockId = detail.StockId
+                                            StockId = detail.StockId,
+                                            Sku = detail.Product.Sku,
                                         })
                                     })
                                     .ToListAsync();
@@ -85,7 +86,8 @@ namespace BusinessLayer.Services.StoreOwner
                     Quantity = bd.Quantity,
                     ProductName = bd.Product.Name,
                     ProductId = bd.Product.Id,
-                    StockId = bd.StockId
+                    StockId = bd.StockId,
+                    Sku = bd.Product.Sku,
                 })
                 .ToListAsync();
 

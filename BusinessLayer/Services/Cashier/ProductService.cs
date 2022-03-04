@@ -47,6 +47,9 @@ namespace BusinessLayer.Services.Cashier
                          .Where(x => (searchModel.CategoryId != null)
                                             ? x.CategoryId == searchModel.CategoryId
                                             : true)
+                         .Where(x => (!string.IsNullOrEmpty(searchModel.Sku))
+                                           ? x.Sku == searchModel.Sku
+                                           : true)
                          .Where(x => x.Status != Product.ProductStatus.Disabled)
                          .ToList();
 
@@ -73,6 +76,7 @@ namespace BusinessLayer.Services.Cashier
                                             CategoryId = x.CategoryId,
                                             ConversionRate = (int)x.ConversionRate,
                                             UnitLabel = x.UnitLabel,
+                                            Sku = x.Sku,
                                             Quantity = x.Stocks
                                          .Where(a => a.StoreId == storeId)
                                          .Where(a => a.ProductId == x.Id)
@@ -133,6 +137,7 @@ namespace BusinessLayer.Services.Cashier
                     CategoryId = product.CategoryId,
                     ConversionRate = (int)product.ConversionRate,
                     UnitLabel = product.UnitLabel,
+                    Sku = product.Sku,
                     Quantity = product.Stocks
                                     .Where(a => a.StoreId == storeId)
                                     .Where(a => a.ProductId == product.Id)

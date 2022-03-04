@@ -53,7 +53,8 @@ namespace BusinessLayer.Services.StoreOwner
                             NewPrice = x.NewPrice,
                             OriginalPrice = x.Product.SellPrice,
                             ProductId = x.ProductId,
-                            ProductName = x.Product.Name
+                            ProductName = x.Product.Name,
+                            Sku = x.Product.Sku,
                         }
                         )
                 }).FirstOrDefaultAsync<EventViewModel>();
@@ -81,7 +82,8 @@ namespace BusinessLayer.Services.StoreOwner
                                                 NewPrice = detail.NewPrice,
                                                 OriginalPrice = detail.Product.SellPrice,
                                                 ProductId = detail.ProductId,
-                                                ProductName = detail.Product.Name
+                                                ProductName = detail.Product.Name,
+                                                Sku = detail.Product.Sku,
                                             })
                 }
                 ).ToListAsync();

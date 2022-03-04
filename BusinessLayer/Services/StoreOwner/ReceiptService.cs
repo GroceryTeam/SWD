@@ -51,7 +51,8 @@ namespace BusinessLayer.Services.StoreOwner
                             ProductId = x.ProductId,
                             ProductName = x.Product.Name,
                             BuyPrice = x.BuyPrice,
-                            Quantity = x.Quantity
+                            Quantity = x.Quantity,
+                            Sku = x.Product.Sku,
                         })
               }
               ).FirstOrDefaultAsync();
@@ -78,7 +79,8 @@ namespace BusinessLayer.Services.StoreOwner
                                                 ProductId = x.ProductId,
                                                 ProductName = x.Product.Name,
                                                 BuyPrice = x.BuyPrice,
-                                                Quantity = x.Quantity
+                                                Quantity = x.Quantity,
+                                                Sku = x.Product.Sku,
                                             })
                                     }).ToListAsync();
 
