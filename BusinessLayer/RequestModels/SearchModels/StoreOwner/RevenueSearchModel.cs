@@ -12,7 +12,7 @@ namespace BusinessLayer.RequestModels.SearchModels.StoreOwner
         public DateTime EndDate { get; set; }
         public bool ReturnDateResult { get; set; }
         public bool  ReturnMonthResult { get; set; }
-        public int BrandId { get; set; }
-        public int StoreId { get; set; }
+        public int? BrandId { get; set; }
+        public int? StoreId { get; set; }
     }
 }

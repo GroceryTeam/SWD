@@ -159,8 +159,10 @@ namespace SWD_GSM_StoreOwner
             services.AddTransient<IStockService, StockService>();
             services.AddTransient<BusinessLayer.Interfaces.StoreOwner.ICashierService,
                 BusinessLayer.Services.StoreOwner.CashierSevice>();
-            
-          
+            services.AddTransient<IStatisticService,
+                StatisticService>();
+
+
             IMapper mapper = AutoMapperConfig.config.CreateMapper();
             services.AddSingleton(mapper);
             services.AddTransient<INotificationService, NotificationService>();

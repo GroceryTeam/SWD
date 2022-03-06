@@ -35,7 +35,9 @@ namespace BusinessLayer.Services.StoreOwner
             var productsData = productsList
                         .Where(x => x.BrandId == searchModel.BrandId)
                         .Where(x => StringNormalizer.VietnameseNormalize(x.Name)
-                                   .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
+                                   .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)) ||
+                             StringNormalizer.VietnameseNormalize(x.Sku)
+                            .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
                        .Where(x => searchModel.StoreId == null
                                             || x.Brand.Stores.Select(x => x.Id).ToList().Contains((int)searchModel.StoreId))
                        .Where(x => searchModel.ProductId == null
@@ -82,7 +84,9 @@ namespace BusinessLayer.Services.StoreOwner
                         .Where(x => x.Store.Brand.Id == searchModel.BrandId)
                        .Where(x =>
                            StringNormalizer.VietnameseNormalize(x.Product.Name)
-                           .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
+                           .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)) ||
+                             StringNormalizer.VietnameseNormalize(x.Product.Sku)
+                            .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
                        .Where(x => (searchModel.StoreId != null)
                                            ? x.StoreId == searchModel.StoreId
                                            : true)

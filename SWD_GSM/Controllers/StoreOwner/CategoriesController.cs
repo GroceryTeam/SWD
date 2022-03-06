@@ -58,7 +58,7 @@ namespace SWD_GSM.Controllers.StoreOwner
                 {
                     return BadRequest();
                 }
-                await _categoryService.UpdateCategory(model.BrandId, id, model.Name);
+                await _categoryService.UpdateCategory(id, model.Name);
             }
             catch (Exception)
             {

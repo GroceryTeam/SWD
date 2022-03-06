@@ -19,28 +19,35 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
     [ApiController]
     //[ApiExplorerSettings(GroupName = Role)]
     //[Authorize(Roles = Role)]
-    public class DailyRevenuesController : BaseStoreOwnerController
+    public class StatisticController : BaseStoreOwnerController
     {
-        private readonly IDailyRevenueService _dailyRevenuesService;
+        private readonly IStatisticService _statisticService;
 
-        public DailyRevenuesController(IDailyRevenueService dailyRevenuesService)
+        public StatisticController(IStatisticService statisticService)
         {
-            _dailyRevenuesService = dailyRevenuesService;
+            _statisticService = statisticService;
         }
-        [NonAction]
-    
 
         [HttpGet]
-        public async Task<IActionResult> Get(int BrandId, [FromQuery] ProductSearchModel searchModel, [FromQuery] PagingRequestModel paging)
+        public IActionResult Get([FromQuery] RevenueSearchModel searchModel)
         {
-            return null;
+            if (searchModel.StoreId != null)
+            {
+                return Ok(_statisticService.GetStoreRevenue(searchModel));
+            }
+            else
+            {
+                return Ok(_statisticService.GetBrandRevenue(searchModel));
+            }
         }
+
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(int BrandId, int id)
         {
             return null;
         }
-       
+
     }
 }
 

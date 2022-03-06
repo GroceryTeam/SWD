@@ -72,7 +72,9 @@ namespace BusinessLayer.Services.StoreOwner
                 productsData = productsData
                             .Where(x =>
                                 StringNormalizer.VietnameseNormalize(x.Name)
-                                .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
+                                .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)) ||
+                             StringNormalizer.VietnameseNormalize(x.Sku)
+                            .Contains(StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)))
                             .Where(x => (searchModel.MinimumSellingPrice != null)
                                                 ? x.SellPrice >= searchModel.MinimumSellingPrice
                                                 : true)
