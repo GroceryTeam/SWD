@@ -20,8 +20,8 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
     [Route(StoreOwnerRoute)]
     [ApiController]
     //[ApiExplorerSettings(GroupName = Role)]
-    [Authorize]
-    [Authorize(Roles = "StoreOwner")]
+    //[Authorize]
+    //[Authorize(Roles = "StoreOwner")]
 
     public class ProductsController : BaseStoreOwnerController
     {

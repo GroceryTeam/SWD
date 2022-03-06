@@ -48,7 +48,7 @@ namespace BusinessLayer.Services.Cashier
                                             ? x.CategoryId == searchModel.CategoryId
                                             : true)
                          .Where(x => (!string.IsNullOrEmpty(searchModel.Sku))
-                                           ? x.Sku == searchModel.Sku
+                                           ? x.Sku.ToUpper().Contains(searchModel.Sku.ToUpper())
                                            : true)
                          .Where(x => x.Status != Product.ProductStatus.Disabled)
                          .ToList();

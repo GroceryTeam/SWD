@@ -18,7 +18,7 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
     [Route(StoreOwnerRoute)]
     [ApiController]
     //[ApiExplorerSettings(GroupName = Role)]
-    [Authorize(Roles = Role)]
+    //[Authorize(Roles = Role)]
     public class DailyRevenuesController : BaseStoreOwnerController
     {
         private readonly IDailyRevenueService _dailyRevenuesService;

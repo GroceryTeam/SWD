@@ -20,7 +20,7 @@ namespace SWD_GSM_Cashier.Controllers.StoreOwner
     [Route(CashierRoute)]
     [ApiController]
     //[ApiExplorerSettings(GroupName = Role)]
-    [Authorize(Roles = Role)]
+    //[Authorize(Roles = Role)]
 
     public class EventsController : BaseCashierController
     {

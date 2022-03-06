@@ -83,7 +83,7 @@ namespace BusinessLayer.Services.StoreOwner
                                                 ? x.Status == (int)searchModel.Status
                                                 : true)
                             .Where(x => (!string.IsNullOrEmpty(searchModel.Sku))
-                                           ? x.Sku.Contains(searchModel.Sku)
+                                           ? x.Sku.ToUpper().Contains(searchModel.Sku.ToUpper())
                                            : true)
                             .Where(x =>
                             {
