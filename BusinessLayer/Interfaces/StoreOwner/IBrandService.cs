@@ -15,7 +15,7 @@ namespace BusinessLayer.Interfaces.StoreOwner
     public interface IBrandService
     {
         Task<List<BrandViewModel>> GetBrandList(int userId);
-        Task<bool> AddUserToBrand(string phoneNo, string email, int brandId);
+        Task<bool> AddUserToBrand(string phoneNo, string email,string username, int brandId);
         Task<int> AddBrand(BrandCreateModel model);
         Task DisableBrand(int brandId);
         Task DeleteUserFromBrand(int userId, int brandId);

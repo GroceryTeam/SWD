@@ -12,6 +12,7 @@ namespace BusinessLayer.ResponseModels.ViewModels.StoreOwner
         public int ProductId { get; set; }
         public int StoreId { get; set; }
         public int ReceiptId { get; set; }
+        public DateTime ReceiptCreateDate { get; set; }
         public int Quantity { get; set; }
         public int BuyPrice { get; set; }
         public int Status { get; set; }

@@ -11,6 +11,10 @@ namespace BusinessLayer.ResponseModels.Firebase
         public int BrandId { get; set; }
         public int ProductId { get; set; }
         public string ProductName { get; set; }
+        public string ClickAction { get; set; }
+        public string Screen { get; set; }
+
+
 
     }
 }

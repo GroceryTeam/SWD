@@ -15,7 +15,7 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
     [Route(CashierRoute)]
     [ApiController]
     //[ApiExplorerSettings(GroupName = Role)]
-    //[Authorize(Roles = Role)]
+    [Authorize(Roles = Role)]
     public class ProductsController : BaseCashierController
     {
         private readonly IProductService _productService;

@@ -55,7 +55,33 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
             }
             return Ok();
         }
-
+        [HttpGet]
+        public async Task<IActionResult> GetBySearchTerm([FromQuery] string SearchTerm)
+        {
+            try
+            {
+                var paging = PagingUtil.getDefaultPaging();
+                var users = await _userService.GetUserByPhoneNoOrEmailOrUsername(SearchTerm);
+                return Ok(users);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetById(int id)
+        {
+            try
+            {
+                var user = await _userService.GetUserById(id);
+                return Ok(user);
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
+        }
     }
 }
 

@@ -66,25 +66,28 @@ namespace BusinessLayer.Services.StoreOwner
 
             return userBrandData;
         }
-        public async Task<bool> AddUserToBrand(string phoneNo, string email, int brandId)
+        public async Task<bool> AddUserToBrand(string phoneNo, string email, string username, int brandId)
         {
             var user = await _unitOfWork.UserRepository.Get()
                 .Where(x => (phoneNo != null) ? x.Phone.Contains(phoneNo.Trim()) : true)
                 .Where(x => (email != null) ? x.Email.Contains(email.Trim()) : true)
+                .Where(x => (username != null) ? x.Username.Contains(username.Trim()) : true)
                 .FirstOrDefaultAsync();
             if (user == null) return false;
             else
             {
-                if (_unitOfWork.UserBrandRepository.Get().Where(x => x.BrandId == brandId && x.UserId == user.Id).FirstOrDefault() != null)
-                {
-                    var userBrand = new UserBrand()
+                try {
+                    if (_unitOfWork.UserBrandRepository.Get().Where(x => x.BrandId == brandId && x.UserId == user.Id).FirstOrDefault() != null)
                     {
-                        BrandId = brandId,
-                        UserId = user.Id
-                    };
-                    await _unitOfWork.UserBrandRepository.Add(userBrand);
-                    await _unitOfWork.SaveChangesAsync();
-                }
+                        var userBrand = new UserBrand()
+                        {
+                            BrandId = brandId,
+                            UserId = user.Id
+                        };
+                        await _unitOfWork.UserBrandRepository.Add(userBrand);
+                        await _unitOfWork.SaveChangesAsync();
+                    }
+                } catch (Exception) { }
                 return true;
             }
         }

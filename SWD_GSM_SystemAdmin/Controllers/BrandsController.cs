@@ -19,7 +19,7 @@ namespace SWD_GSM_SystemAdmin.Controllers.SystemAdmin
     [Route(SystemAdminRoute)]
     [ApiController]
     //[ApiExplorerSettings(GroupName = Role)]
-    //[Authorize(Roles = Role)]
+    [Authorize(Roles = Role)]
 
     public class BrandsController : BaseSystemAdminController
     {

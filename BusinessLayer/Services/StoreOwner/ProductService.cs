@@ -39,15 +39,15 @@ namespace BusinessLayer.Services.StoreOwner
 
         public async Task<BasePagingViewModel<ProductViewModel>> GetProductList(int brandId, ProductSearchModel searchModel, PagingRequestModel paging)
         {
-            string redisKey = $"product-storeowner-id-brand{brandId}-sku-{searchModel.Sku}-category{searchModel.CategoryId}-searchterm{StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)}";
-            string dataFromRedis = _redisService.GetValueFromKey(redisKey);
+            //string redisKey = $"product-storeowner-id-brand{brandId}-sku-{searchModel.Sku}-category{searchModel.CategoryId}-searchterm{StringNormalizer.VietnameseNormalize(searchModel.SearchTerm)}";
+            //string dataFromRedis = _redisService.GetValueFromKey(redisKey);
             List<ProductViewModel> productsData = new List<ProductViewModel>();
-            if (!String.IsNullOrEmpty(dataFromRedis))
-            {
-                productsData = JsonConvert.DeserializeObject<List<ProductViewModel>>(dataFromRedis);
-            }
-            else
-            {
+            //if (!String.IsNullOrEmpty(dataFromRedis))
+            //{
+            //    productsData = JsonConvert.DeserializeObject<List<ProductViewModel>>(dataFromRedis);
+            //}
+            //else
+            //{
                 productsData = await _unitOfWork.ProductRepository
                .Get()
                .Where(x => x.BrandId == brandId)
@@ -99,8 +99,8 @@ namespace BusinessLayer.Services.StoreOwner
                                                 ? x.CategoryId == searchModel.CategoryId
                                                 : true)
                             .ToList();
-                _redisService.SetValueToKey(redisKey, JsonConvert.SerializeObject(productsData));
-            }
+             //   _redisService.SetValueToKey(redisKey, JsonConvert.SerializeObject(productsData));
+            //}
 
 
             int totalItem = productsData.Count;

@@ -18,7 +18,7 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
     [Route(CashierRoute)]
     [ApiController]
     //[ApiExplorerSettings(GroupName = Role)]
-    //[Authorize(Roles = Role)]
+    [Authorize(Roles = Role)]
     public class BillsController : BaseCashierController
     {
         private readonly IBillService _billService;

@@ -86,6 +86,7 @@ namespace BusinessLayer.Services.StoreOwner
 
             receiptData = receiptData
                 .Where(x => (x.DateCreated >= model.StartDate) && (x.DateCreated <= model.EndDate))
+                .OrderByDescending(x => x.DateCreated)
                 .ToList();
 
             int totalCount = receiptData.Count();

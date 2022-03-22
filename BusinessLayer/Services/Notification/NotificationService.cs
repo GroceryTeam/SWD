@@ -36,7 +36,9 @@ namespace BusinessLayer.Services.Notification
             {
                 BrandId = brandId,
                 ProductId = productId,
-                ProductName = productName
+                ProductName = productName,
+                ClickAction = "FLUTTER_NOTIFICATION_CLICK",
+                Screen = "/outOfStock",
             };
             string title = "SẮP HẾT HÀNG";
             string body = $"Sản phẩm \"{productName}\" sắp hết hàng. Hãy nhập hàng ngay!";
@@ -48,7 +50,9 @@ namespace BusinessLayer.Services.Notification
             {
                 BrandId = brandId,
                 StoreId = storeId,
-                StoreName = storeName
+                StoreName = storeName,
+                ClickAction = "FLUTTER_NOTIFICATION_CLICK",
+                Screen = "/stores",
             };
             string title = "YÊU CẦU ĐƯỢC PHÊ DUYỆT";
             string body = $"Yêu cầu mở tiệm \"{storeName}\" của bạn đã được admin phê duyệt. Hãy bắt đầu quản lý ngay nào.";
@@ -60,7 +64,9 @@ namespace BusinessLayer.Services.Notification
             {
                 BrandId = brandId,
                 StoreId = storeId,
-                StoreName = storeName
+                StoreName = storeName,
+                ClickAction = "FLUTTER_NOTIFICATION_CLICK",
+                Screen = "/stores",
             };
             string title = "YÊU CẦU BỊ TỪ CHỐI";
             string body = $"Yêu cầu mở tiệm \"{storeName}\" của bạn đã bị từ chối. Liên hệ chúng tôi để biết thêm chi tiết.";

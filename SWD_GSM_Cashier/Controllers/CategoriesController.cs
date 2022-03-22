@@ -15,7 +15,7 @@ namespace SWD_GSM_Cashier.Controllers.Cashier
     [Route(CashierRoute)]
     [ApiController]
     //[ApiExplorerSettings(GroupName = Role)]
-    //[Authorize(Roles = Role)]
+    [Authorize(Roles = Role)]
     public class CategoriesController : BaseCashierController
     {
         private readonly ICategoryService _categoryService;

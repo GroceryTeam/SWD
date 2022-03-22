@@ -13,8 +13,10 @@ namespace BusinessLayer.Interfaces.StoreOwner
     public interface IUserService
     {
         Task<UserViewModel> GetInformation(int userId);
+        Task<List<UserViewModel>> GetUserByPhoneNoOrEmailOrUsername(string searchTerm);
         Task<UserViewModel> Login(LoginModel login);
         Task<SignupErrorModel> Signup(StoreOwnerCreateModel model);
         Task<UserViewModel> LoginFirebase(LoginFirebaseModel login);
+        Task<UserViewModel> GetUserById(int userId);
     }
 }

@@ -54,6 +54,7 @@ namespace BusinessLayer.Services.StoreOwner
                                     .ToListAsync();
             billData = billData
                 .Where(x => (x.DateCreated >= searchModel.StartDate) && (x.DateCreated <= searchModel.EndDate))
+                .OrderByDescending(x => x.DateCreated)
                 .ToList();
 
 

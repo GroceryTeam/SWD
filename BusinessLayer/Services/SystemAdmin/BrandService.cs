@@ -139,7 +139,7 @@ namespace BusinessLayer.Services.SystemAdmin
             var brand = await _unitOfWork.BrandRepository.Get()
                 .Where(x => x.Id.Equals(brandId))
                 .FirstOrDefaultAsync();
-            brand.Status = BrandStatus.Disabled;
+            brand.Status = BrandStatus.Enabled;
             _unitOfWork.BrandRepository.Update(brand);
             await _unitOfWork.SaveChangesAsync();
             return true;

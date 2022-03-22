@@ -44,6 +44,42 @@ namespace BusinessLayer.Services.StoreOwner
               }).FirstOrDefaultAsync();
             return storeowner;
         }
+        public async Task<UserViewModel> GetUserById(int userId)
+        {
+            var user = await _unitOfWork.UserRepository
+              .Get().Where(x => x.Id == userId)
+              .Select
+                (x => new UserViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Username = x.Username,
+                    Email = x.Email,
+                    Phone = x.Phone,
+                }
+                ).FirstOrDefaultAsync();
+            return user;
+        }
+        public async Task<List<UserViewModel> > GetUserByPhoneNoOrEmailOrUsername(string searchTerm)
+        {
+            var userList = await _unitOfWork.UserRepository
+              .Get()
+              .Select
+                (x => new UserViewModel()
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Username = x.Username,
+                    Email = x.Email,
+                    Phone = x.Phone,
+                }
+                ).ToListAsync();
+            userList = userList.Where(x => x.Username.Contains(searchTerm)
+            || x.Email.Contains(searchTerm)
+             || x.Phone.Contains(searchTerm)
+            ).ToList();
+            return userList;
+        }
         public async Task<UserViewModel> Login(LoginModel login)
         {
             var storeowner = await _unitOfWork.UserRepository

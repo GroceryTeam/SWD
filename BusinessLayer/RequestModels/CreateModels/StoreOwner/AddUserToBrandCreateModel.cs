@@ -10,6 +10,8 @@ namespace BusinessLayer.RequestModels.CreateModels.StoreOwner
     {
         public string PhoneNo { get; set; }
         public string Email { get; set; }
+        public string Username { get; set; }
+
         public int BrandId { get; set; }
     }
 }

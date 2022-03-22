@@ -77,6 +77,7 @@ namespace BusinessLayer.Services.StoreOwner
                 .ThenInclude(x => x.Category)
                 .Include(x => x.Store)
                 .ThenInclude(x => x.Brand)
+                .Include(x => x.Receipt)
                 .ToListAsync();
 
 
@@ -114,7 +115,8 @@ namespace BusinessLayer.Services.StoreOwner
                                          ReceiptId = stck.ReceiptId,
                                          StoreId = stck.StoreId,
                                          BuyPrice = stck.BuyPrice,
-                                         Status = (int)stck.Status
+                                         Status = (int)stck.Status,
+                                         ReceiptCreateDate = stck.Receipt.DateCreated
                                      });
                                      product.CurrentQuantity += stck.Quantity;
                                  }

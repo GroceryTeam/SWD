@@ -18,7 +18,7 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
     [Route(StoreOwnerRoute)]
     [ApiController]
     //[ApiExplorerSettings(GroupName = Role)]
-    //[Authorize(Roles = Role)]
+    [Authorize(Roles = Role)]
     public class BrandsController : BaseStoreOwnerController
     {
         private readonly IBrandService _brandService;
@@ -46,20 +46,19 @@ namespace SWD_GSM_StoreOwner.Controllers.StoreOwner
         {
             try
             {
-                var result = await _brandService.AddUserToBrand(model.PhoneNo, model.Email, model.BrandId);
+                var result = await _brandService.AddUserToBrand(model.PhoneNo, model.Email, model.Username, model.BrandId);
                 if (result == true)
                 {
                     return Ok();
-
                 }
                 else
                 {
                     return Conflict("Email/Phone number doesn't exist");
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest();
+                return Ok(e.Message);
             }
         }
         [HttpPost]
