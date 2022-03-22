@@ -155,6 +155,7 @@ namespace BusinessLayer.Services.Cashier
         public async Task UnpackProduct(int productId, int number, int storeId)
         {
             var product = await _unitOfWork.ProductRepository.Get()
+                .Include(x=>x.UnpackedProduct)
                 .Where(x => x.Id == productId)
                 .FirstOrDefaultAsync();
             if (product.UnpackedProduct != null)
@@ -164,14 +165,23 @@ namespace BusinessLayer.Services.Cashier
                     .Where(x => x.StoreId == storeId)
                     .Where(x => x.Status == Stock.StockDetail.Selling)
                     .FirstOrDefaultAsync();
-                stockOfThisProduct.Quantity -= 1;
+                stockOfThisProduct.Quantity -= number;
                 var stockOfUnpackedProduct = await _unitOfWork.StockRepository
                     .Get()
                     .Where(x => x.ProductId == product.UnpackedProductId)
                     .Where(x => x.StoreId == storeId)
                     .Where(x => x.Status == Stock.StockDetail.Selling)
                     .FirstOrDefaultAsync();
-                stockOfUnpackedProduct.Quantity += (int)product.ConversionRate;
+                if (stockOfUnpackedProduct==null )
+                {
+                    stockOfUnpackedProduct = await _unitOfWork.StockRepository
+                    .Get()
+                    .Where(x => x.ProductId == product.UnpackedProductId)
+                    .Where(x => x.StoreId == storeId)
+                    .OrderByDescending(x => x.Id)
+                    .FirstOrDefaultAsync();
+                }
+                stockOfUnpackedProduct.Quantity += ((int)product.ConversionRate)*number;
             }
             await _unitOfWork.SaveChangesAsync();
         }
